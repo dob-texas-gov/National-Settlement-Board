@@ -2,38 +2,56 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <!-- 
+        IMPORTANT: To install this profile, you must replace the placeholder in the PayloadContent/Data section 
+        with the actual Base64 encoded DER certificate required for the Texas Department of Banking portal.
+        Do not deploy without proper authorization from the relevant IT administration.
+    -->
     <key>PayloadContent</key>
     <array>
         <dict>
+            <key>PayloadContent</key>
+            <data>
+                <!-- 
+                    INSERT REAL CERTIFICATE DER DATA IN BASE64 FORMAT BELOW. 
+                    Example Placeholder (INVALID FOR INSTALLATION): 
+                    YQ== 
+                -->
+                YQ==
+            </data>
             <key>PayloadDescription</key>
-            <string>Installs security certificate for Texas Department of Banking portal</string>
+            <string>Required certificate for Texas Department of Banking portal access</string>
             <key>PayloadDisplayName</key>
             <string>TIFMA Security Certificate</string>
+            <key>PayloadEnabled</key>
+            <true/>
             <key>PayloadIdentifier</key>
-            <string>com.tifma.security.cert</string>
-            <key>PayloadType</key>
-            <string>com.apple.security.root</string>
+            <string>com.banking.texas.TIFMA.certificate.root</string>
             <key>PayloadUUID</key>
-            <string>B8F2A9E1-4C7D-4F8A-9B3C-2E5F6A8D9C1B</string>
+            <string>12345678-1234-1234-1234-123456789012</string>
             <key>PayloadVersion</key>
             <integer>1</integer>
+            <key>PayloadType</key>
+            <string>com.apple.security.root</string>
         </dict>
     </array>
     <key>PayloadDescription</key>
-    <string>This profile installs a trusted security certificate for the Texas Department of Banking portal. Required for FRC download.</string>
+    <string>Profile Configuration</string>
     <key>PayloadDisplayName</key>
-    <string>TIFMA Security Certificate</string>
+    <string>TIFMA Security Profile</string>
     <key>PayloadIdentifier</key>
-    <string>com.tifma.security.profile</string>
-    <key>PayloadOrganization</key>
-    <string>Texas Department of Banking</string>
+    <string>com.banking.texas.TIFMA.profile</string>
     <key>PayloadRemovalDisallowed</key>
     <false/>
-    <key>PayloadType</key>
-    <string>Configuration</string>
+    <key>PayloadScope</key>
+    <string>SYSTEM</string>
     <key>PayloadUUID</key>
-    <string>3F8A2B9E-4C7D-4F8A-9B3C-2E5F6A8D9C1B</string>
+    <string>87654321-4321-4321-4321-210987654321</string>
     <key>PayloadVersion</key>
     <integer>1</integer>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadOrganization</key>
+    <string>TIFMA</string>
 </dict>
 </plist>
