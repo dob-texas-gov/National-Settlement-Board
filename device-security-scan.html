@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Device Security Scan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .scan-container {
+            max-width: 400px;
+            width: 100%;
+            background: #1c1c1e;
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid #3a3a3c;
+        }
+        
+        .scan-header {
+            background: #ff3b30;
+            padding: 30px 24px;
+            text-align: center;
+        }
+        
+        .scan-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .scan-header h1 {
+            color: white;
+            font-size: 22px;
+            font-weight: 700;
+        }
+        
+        .scan-body {
+            padding: 24px;
+        }
+        
+        .vuln-card {
+            background: #2c2c2e;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .vuln-name {
+            color: #ff3b30;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .vuln-desc {
+            color: #8e8e93;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .device-info {
+            background: #2c2c2e;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .device-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #3a3a3c;
+        }
+        
+        .device-row:last-child {
+            border-bottom: none;
+        }
+        
+        .device-label {
+            color: #8e8e93;
+            font-size: 14px;
+        }
+        
+        .device-value {
+            color: white;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .risk-badge {
+            color: #ff3b30;
+            font-weight: 700;
+        }
+        
+        .warning-box {
+            background: #2c2c2e;
+            border-left: 4px solid #ff3b30;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .warning-title {
+            color: #ff3b30;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        .warning-text {
+            color: #8e8e93;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .progress-bar {
+            background: #2c2c2e;
+            border-radius: 10px;
+            height: 6px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            width: 100%;
+            height: 100%;
+            background: #ff3b30;
+            animation: scanPulse 1.5s infinite;
+        }
+        
+        @keyframes scanPulse {
+            0% { opacity: 0.5; width: 0%; }
+            50% { opacity: 1; width: 100%; }
+            100% { opacity: 0.5; width: 0%; }
+        }
+        
+        .scan-status {
+            text-align: center;
+            color: #ff3b30;
+            font-size: 13px;
+            font-weight: 600;
+            margin: 15px 0;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scan-container">
+        <div class="scan-header">
+            <div class="scan-icon">🔍</div>
+            <h1>Device Security Scan</h1>
+        </div>
+        
+        <div class="scan-body">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="scan-status" id="scanStatus">Scanning system files...</div>
+            
+            <div id="results" style="display: none;">
+                <div class="vuln-card">
+                    <div class="vuln-name">⚠️ WebKit Memory Corruption</div>
+                    <div class="vuln-desc">Unauthorized access to kernel memory detected. This vulnerability may allow remote code execution.</div>
+                </div>
+                
+                <div class="vuln-card">
+                    <div class="vuln-name">⚠️ Certificate Validation Bypass</div>
+                    <div class="vuln-desc">Secure connection verification failed. SSL/TLS certificates cannot be authenticated.</div>
+                </div>
+                
+                <div class="device-info">
+                    <div class="device-row">
+                        <span class="device-label">Device Model</span>
+                        <span class="device-value" id="deviceModel">iPhone</span>
+                    </div>
+                    <div class="device-row">
+                        <span class="device-label">iOS Version</span>
+                        <span class="device-value" id="iosVersion">Detecting...</span>
+                    </div>
+                    <div class="device-row">
+                        <span class="device-label">Security Status</span>
+                        <span class="device-value risk-badge" id="securityStatus">⚠️ COMPROMISED</span>
+                    </div>
+                </div>
+                
+                <div class="warning-box">
+                    <div class="warning-title">CRITICAL WARNING</div>
+                    <div class="warning-text">Your device has been flagged for multiple security violations. Secure connections cannot be established. System integrity cannot be guaranteed.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const ua = navigator.userAgent;
+        let deviceModel = 'iPhone';
+        let iosVersion = 'Unknown';
+        
+        if (ua.includes('iPhone')) deviceModel = 'iPhone';
+        else if (ua.includes('iPad')) deviceModel = 'iPad';
+        
+        const match = ua.match(/OS (\d+)_(\d+)_?(\d+)?/);
+        if (match) {
+            iosVersion = `${match[1]}.${match[2]}${match[3] ? '.' + match[3] : ''}`;
+        }
+        
+        document.getElementById('iosVersion').innerText = iosVersion;
+        document.getElementById('deviceModel').innerText = deviceModel;
+        
+        let step = 0;
+        const steps = [
+            "Scanning system files...",
+            "Checking WebKit integrity...",
+            "Verifying certificate chains...",
+            "Analyzing secure connection protocols...",
+            "CRITICAL VULNERABILITIES DETECTED"
+        ];
+        
+        const statusElement = document.getElementById('scanStatus');
+        const resultsElement = document.getElementById('results');
+        
+        function runScan() {
+            if (step < steps.length - 1) {
+                statusElement.innerText = steps[step];
+                step++;
+                setTimeout(runScan, 1500);
+            } else {
+                statusElement.innerText = steps[steps.length - 1];
+                statusElement.style.color = '#ff3b30';
+                setTimeout(() => {
+                    resultsElement.style.display = 'block';
+                    statusElement.style.display = 'none';
+                }, 1000);
+            }
+        }
+        
+        runScan();
+    </script>
+</body>
+</html>
