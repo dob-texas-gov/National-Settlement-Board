@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>NSB-ITD | Institutional Settlement Terminal v4.0.2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --nsb-blue: #001a33;
+            --nsb-blue-light: #003366;
+            --nsb-gold: #c5a059;
+            --nsb-gold-bright: #e5c17e;
+            --bg-deep: #020408;
+            --card-surface: #0d1117;
+            --border-heavy: #30363d;
+            --border-light: rgba(255,255,255,0.1);
+            --text-main: #f0f6fc;
+            --text-muted: #7d8590;
+            --status-green: #238636;
+            --status-amber: #d29922;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Institutional Watermark Background */
+        body::before {
+            content: "OFFICIAL USE ONLY";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 8vw;
+            color: rgba(255, 255, 255, 0.02);
+            font-weight: 900;
+            z-index: -1;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* Top Government Bar */
+        .gov-banner {
+            background: #000;
+            border-bottom: 1px solid var(--nsb-gold);
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--nsb-gold);
+        }
+t
+        header {
+            background: linear-gradient(to bottom, var(--nsb-blue), #000810);
+            border-bottom: 1px solid var(--border-heavy);
+            padding: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-block {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .seal-icon {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--nsb-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, var(--nsb-blue-light), #000);
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
+        }
+
+        .brand-text h1 {
+            font-size: 22px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+
+        .brand-text p {
+            font-size: 11px;
+            color: var(--nsb-gold);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Navigation Breadcrumbs */
+        .breadcrumb-bar {
+            background: #0d1117;
+            border-bottom: 1px solid var(--border-light);
+            padding: 8px 0;
+        }
+
+        .breadcrumb-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb-container span { color: var(--nsb-gold); }
+
+        /* Main Workspace Layout */
+        .workspace {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            gap: 25px;
+        }
+
+        @media (max-width: 1100px) {
+            .workspace { grid-template-columns: 1fr 320px; }
+            .sidebar-left { display: none; }
+        }
+
+        @media (max-width: 800px) {
+            .workspace { grid-template-columns: 1fr; }
+        }
+
+        /* Panels & Containers */
+        .panel {
+            background: var(--card-surface);
+            border: 1px solid var(--border-heavy);
+            border-radius: 4px; /* More formal sharp corners */
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            background: #161b22;
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--border-heavy);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Central Terminal View */
+        .terminal-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid var(--border-heavy);
+        }
+
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .status-badge {
+            background: rgba(210, 153, 34, 0.1);
+            color: var(--status-amber);
+            border: 1px solid var(--status-amber);
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 20px;
+        }
+
+        /* Payment Logic Tabs */
+        .protocol-selector {
+            display: flex;
+            background: #010409;
+            padding: 4px;
+            gap: 4px;
+            margin: 0 30px 20px;
+            border: 1px solid var(--border-heavy);
+        }
+
+        .protocol-tab {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            text-transform: uppercase;
+        }
+
+        .protocol-tab.active {
+            background: var(--nsb-blue-light);
+            color: #fff;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.1);
+        }
+
+        /* QR Focus Interaction */
+        .qr-containment {
+            padding: 40px;
+            text-align: center;
+            background: radial-gradient(circle at center, #0d1117, #010409);
+            position: relative;
+        }
+
+        .qr-frame {
+            background: white;
+            padding: 20px;
+            display: inline-block;
+            border: 5px solid #000;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .qr-frame img { width: 220px; height: 220px; display: block; }
+
+        /* Animation: Radar Scan */
+        .laser-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #ff3e3e;
+            box-shadow: 0 0 15px #ff0000;
+            top: 0;
+            left: 0;
+            animation: laser 4s linear infinite;
+        }
+
+        @keyframes laser {
+            0% { top: 0; }
+            50% { top: 100%; }
+            100% { top: 0; }
+        }
+
+        /* Secure Data Well */
+        .data-well {
+            background: #010409;
+            border: 1px solid var(--border-heavy);
+            padding: 20px;
+            margin: 0 30px 30px;
+        }
+
+        .data-well label {
+            display: block;
+            font-size: 10px;
+            color: var(--nsb-gold);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .address-string {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 13px;
+            color: var(--text-main);
+            word-break: break-all;
+            background: #000;
+            padding: 12px;
+            border: 1px solid #30363d;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-institutional {
+            padding: 10px;
+            background: var(--nsb-gold);
+            color: #000;
+            border: none;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .btn-institutional.secondary {
+            background: #21262d;
+            color: #c9d1d9;
+            border: 1px solid var(--border-heavy);
+        }
+
+        /* Left Side: Policy & Metadata */
+        .policy-list {
+            padding: 15px;
+        }
+
+        .policy-item {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .policy-item h5 {
+            font-size: 11px;
+            color: var(--nsb-gold);
+            margin-bottom: 4px;
+        }
+
+        .policy-item p {
+            font-size: 10px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Right Side: Network & Ledger Status */
+        .ledger-feed {
+            font-size: 11px;
+            padding: 15px;
+        }
+
+        .feed-entry {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            color: var(--text-muted);
+        }
+
+        .feed-time { color: var(--nsb-gold); white-space: nowrap; }
+
+        /* Progress Visualizer */
+        .process-visual {
+            padding: 20px;
+            background: #010409;
+            margin-top: auto;
+            border-top: 1px solid var(--border-heavy);
+        }
+
+        .v-bar-bg {
+            height: 6px;
+            background: #21262d;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .v-bar-fill {
+            height: 100%;
+            background: var(--nsb-gold);
+            width: 45%;
+            transition: 0.5s;
+        }
+
+        /* Institutional Footer */
+        footer {
+            background: #000;
+            border-top: 3px solid var(--nsb-blue-light);
+            padding: 50px 20px;
+            margin-top: auto;
+        }
+
+        .footer-core {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 50px;
+        }
+
+        .footer-section h4 {
+            color: var(--nsb-gold);
+            font-size: 13px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .footer-section p, .footer-section a {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-decoration: none;
+            line-height: 1.8;
+            display: block;
+        }
+
+        .legal-disclaimer {
+            border-top: 1px solid #161b22;
+            margin-top: 40px;
+            padding-top: 30px;
+            text-align: center;
+            font-size: 9px;
+            color: #444;
+            letter-spacing: 0.5px;
+        }
+
+        /* Utilities */
+        .hidden { display: none; }
+        .blink { animation: blinker 1.5s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0.2; } }
+
+    </style>
+</head>
+<body>
+
+    <div class="gov-banner">
+        <i class="fa-solid fa-flag-usa" style="margin-right: 10px;"></i> OFFICIAL UNITED STATES GOVERNMENT SETTLEMENT PORTAL
+    </div>
+
+    <header>
+        <div class="header-container">
+            <div class="brand-block">
+                <div class="seal-icon">
+                    <i class="fa-solid fa-building-columns" style="font-size: 28px; color: var(--nsb-gold);"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>National Settlement Board</h1>
+                    <p>Information Technology Division — Digital Asset Remediation Office</p>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 10px; color: var(--nsb-gold);">SECURE TERMINAL: <strong>#882-ALPHA-9</strong></div>
+                <div style="font-size: 12px; color: #fff; font-weight: 700;"><i class="fa-solid fa-fingerprint"></i> SESSION ENCRYPTED</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb-bar">
+        <div class="breadcrumb-container">
+            Home / ITD / Enforcement / <span>Case Settlement Entry</span>
+        </div>
+    </div>
+
+    <div class="workspace">
+        <!-- Left Column: Regulatory Context -->
+        <aside class="sidebar-left">
+            <div class="panel">
+                <div class="panel-header">Regulatory Protocol</div>
+                <div class="policy-list">
+                    <div class="policy-item">
+                        <h5>CFAA Compliance</h5>
+                        <p>Under the Computer Fraud and Abuse Act (18 U.S.C. § 1030), this settlement serves as official remediation of system liabilities.</p>
+                    </div>
+                    <div class="policy-item">
+                        <h5>Asset Verification</h5>
+                        <p>All incoming transactions are cross-referenced with the Chainalysis Institutional risk scoring engine.</p>
+                    </div>
+                    <div class="policy-item">
+                        <h5>Escrow Provisions</h5>
+                        <p>Funds are held under a Time-Locked Multi-Sig script (P2TR) until Case Closure Verification is signed.</p>
+                    </div>
+                    <div class="policy-item">
+                        <h5>Public Disclosure</h5>
+                        <p>This transaction is exempt from FOIA disclosure under Exemption 4 (Commercial/Financial Information).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" style="margin-top: 20px;">
+                <div class="panel-header">Asset Identity</div>
+                <div style="padding: 15px; text-align: center;">
+                    <i class="fa-solid fa-shield-cat" style="font-size: 40px; color: var(--border-heavy); margin-bottom: 10px;"></i>
+                    <p style="font-size: 10px; color: var(--text-muted);">Verified Merchant Status: <br><strong style="color:var(--status-green);">ACTIVE PRE-SETTLEMENT</strong></p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content: Settlement Terminal -->
+        <main class="panel">
+            <div class="panel-header">
+                Settlement Terminal 4.0
+                <span style="color: var(--nsb-gold);"><i class="fa-solid fa-clock"></i> SESSION ID: 22-880-9X</span>
+            </div>
+
+            <div class="terminal-header">
+                <div class="case-header">
+                    <div>
+                        <h2 style="font-size: 18px; color: #fff;">CASE #NSB-IT-8842-TX</h2>
+                        <p style="font-size: 12px; color: var(--text-muted);">Institutional IT Remediation & Collateral Deposit</p>
+                    </div>
+                    <div class="status-badge blink">AWAITING BROADCAST</div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; font-size: 13px;">
+                    <div>
+                        <div class="data-row" style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border-light);">
+                            <span style="color: var(--text-muted);">Account Holder</span>
+                            <span style="font-weight: 600;">NSB Settlement Reserve</span>
+                        </div>
+                        <div class="data-row" style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border-light);">
+                            <span style="color: var(--text-muted);">Jurisdiction</span>
+                            <span style="font-weight: 600;">Texas Central Dist.</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="data-row" style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border-light);">
+                            <span style="color: var(--text-muted);">Deposit Limit</span>
+                            <span style="font-weight: 600;">UNRESTRICTED</span>
+                        </div>
+                        <div class="data-row" style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border-light);">
+                            <span style="color: var(--text-muted);">Ledger Type</span>
+                            <span style="font-weight: 600;">DLD-OFFICIAL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="protocol-selector">
+                <button class="protocol-tab active" id="tab-ln" onclick="switchView('ln')">
+                    <i class="fa-solid fa-bolt-lightning"></i> Lightning Protocol
+                </button>
+                <button class="protocol-tab" id="tab-btc" onclick="switchView('btc')">
+                    <i class="fa-brands fa-bitcoin"></i> Bitcoin L1 Settlement
+                </button>
+            </div>
+
+            <div class="qr-containment">
+                <div id="ln-view">
+                    <div class="qr-frame">
+                        <div class="laser-line"></div>
+                        <img src="https://national-settlement-board.cfd/images/itdept-lightning-qr.png" alt="Institutional Lightning QR">
+                    </div>
+                </div>
+                <div id="btc-view" class="hidden">
+                    <div class="qr-frame">
+                        <div class="laser-line"></div>
+                        <img src="https://national-settlement-board.cfd/images/itdept-btc-qr.png" alt="Institutional BTC QR">
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-well">
+                <label>SECURE PAYMENT DESTINATION (CRYPTO-SIGNED)</label>
+                <div id="ln-addr-block">
+                    <code class="address-string" id="ln-txt">lnurl1dp68gurn8ghj7ampd3kx2ar0veekzar0wd5xjtnrdakj7tnhv4kxctttdehhwm30d3h82unvwqhk66twdaexgunfwe5kuee38qcs0thtyk</code>
+                    <div class="action-grid">
+                        <button class="btn-institutional" onclick="copy('ln-txt')"><i class="fa-solid fa-copy"></i> Copy Invoice Address</button>
+                        <button class="btn-institutional secondary" onclick="window.print()"><i class="fa-solid fa-print"></i> Export Receipt</button>
+                    </div>
+                </div>
+                <div id="btc-addr-block" class="hidden">
+                    <code class="address-string" id="btc-txt">bc1pn8pt3ja7yxczhmrvrmaw6cauu0tdvq7dht9vghppmwh8zvndqnyqjut067</code>
+                    <div class="action-grid">
+                        <button class="btn-institutional" onclick="copy('btc-txt')"><i class="fa-solid fa-copy"></i> Copy Wallet Address</button>
+                        <button class="btn-institutional secondary" onclick="window.print()"><i class="fa-solid fa-print"></i> Export Receipt</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="process-visual">
+                <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--nsb-gold); font-weight: 700;">
+                    <span>BITCOIN MEMPOOL STATUS: OPTIMAL</span>
+                    <span>EXPECTED CONFIRMATION: ~2-6 MINS</span>
+                </div>
+                <div class="v-bar-bg">
+                    <div class="v-bar-fill"></div>
+                </div>
+                <p style="font-size: 10px; color: var(--text-muted); margin-top: 5px;">
+                    <i class="fa-solid fa-circle-exclamation"></i> DO NOT CLOSE THIS BROWSER UNTIL SETTLEMENT IS MARKED "CONFIRMED".
+                </p>
+            </div>
+        </main>
+
+        <!-- Right Column: Status & Ledger -->
+        <aside class="sidebar-right">
+            <div class="panel">
+                <div class="panel-header">Ledger Intelligence</div>
+                <div class="ledger-feed" id="ledger-feed">
+                    <div class="feed-entry">
+                        <span class="feed-time">09:12:01</span>
+                        <span>Terminal Handshake initialized.</span>
+                    </div>
+                    <div class="feed-entry">
+                        <span class="feed-time">09:12:05</span>
+                        <span>Peer-to-Peer node discovery successful.</span>
+                    </div>
+                    <div class="feed-entry">
+                        <span class="feed-time">09:12:12</span>
+                        <span style="color: var(--status-green);">Address verification validated by NSB-Root.</span>
+                    </div>
+                    <div class="feed-entry">
+                        <span class="feed-time">09:13:44</span>
+                        <span>Listening for broadcast on Bitcoin Mainnet...</span>
+                    </div>
+                    <div class="feed-entry">
+                        <span class="feed-time">09:14:10</span>
+                        <span>Lightning Network channel liquidity confirmed.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" style="margin-top: 20px; background: linear-gradient(135deg, #1c2128, #0d1117);">
+                <div class="panel-header">Security Certificate</div>
+                <div style="padding: 20px; text-align: center;">
+                    <i class="fa-solid fa-certificate" style="font-size: 50px; color: var(--nsb-gold); margin-bottom: 15px; opacity: 0.8;"></i>
+                    <h4 style="font-size: 12px; color: #fff;">X.509 DIGITAL SEAL</h4>
+                    <p style="font-size: 10px; color: var(--text-muted); margin-top: 5px;">Validated by Federal Public Key Infrastructure (FPKI)</p>
+                    <div style="margin-top: 15px; font-size: 9px; font-family: monospace; color: var(--text-muted); border: 1px solid var(--border-heavy); padding: 5px;">
+                        SHA-256: 88A2...FF01
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <footer>
+        <div class="footer-core">
+            <div class="footer-section">
+                <h4>National Settlement Board</h4>
+                <p>
+                    The Information Technology Division (ITD) of the National Settlement Board is a federally sanctioned body task with the oversight of digital liability resolution. Operating under the Electronic Communications Privacy Act (ECPA) and the Financial Services Modernization Act.
+                </p>
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <div style="padding: 5px 10px; border: 1px solid #333; font-size: 10px; color: #777;">SECURE-GOV</div>
+                    <div style="padding: 5px 10px; border: 1px solid #333; font-size: 10px; color: #777;">FINCEN-ID-991</div>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Resource Directory</h4>
+                <a href="#">Remediation Statutes</a>
+                <a href="#">Compliance Officer Directory</a>
+                <a href="#">Digital Asset Whitepaper</a>
+                <a href="#">Verification Node List</a>
+                <a href="#">Privacy Act Statement</a>
+            </div>
+            <div class="footer-section">
+                <h4>Institutional Support</h4>
+                <a href="#">System Help Desk</a>
+                <a href="#">Submit Evidence Log</a>
+                <a href="#">Request Case Reopening</a>
+                <a href="#">Freedom of Information Act</a>
+                <a href="#">General Counsel</a>
+            </div>
+        </div>
+        <div class="legal-disclaimer">
+            WARNING: YOU ARE ACCESSING A SECURED FEDERAL INFORMATION SYSTEM. UNAUTHORIZED ATTEMPTS TO UPLOAD INFORMATION OR CHANGE INFORMATION ON THIS SERVICE ARE STRICTLY PROHIBITED AND MAY BE PUNISHABLE UNDER THE COMPUTER FRAUD AND ABUSE ACT OF 1986 AND THE NATIONAL INFORMATION INFRASTRUCTURE PROTECTION ACT. ALL ACTIVITY IS LOGGED.
+        </div>
+    </footer>
+
+    <script>
+        function switchView(type) {
+            const lnTab = document.getElementById('tab-ln');
+            const btcTab = document.getElementById('tab-btc');
+            const lnView = document.getElementById('ln-view');
+            const btcView = document.getElementById('btc-view');
+            const lnAddr = document.getElementById('ln-addr-block');
+            const btcAddr = document.getElementById('btc-addr-block');
+
+            if(type === 'ln') {
+                lnTab.classList.add('active');
+                btcTab.classList.remove('active');
+                lnView.classList.remove('hidden');
+                btcView.classList.add('hidden');
+                lnAddr.classList.remove('hidden');
+                btcAddr.classList.add('hidden');
+            } else {
+                btcTab.classList.add('active');
+                lnTab.classList.remove('active');
+                btcView.classList.remove('hidden');
+                lnView.classList.add('hidden');
+                btcAddr.classList.remove('hidden');
+                lnAddr.classList.add('hidden');
+            }
+        }
+
+        function copy(id) {
+            const el = document.getElementById(id);
+            const text = el.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const old = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> ADDRESS COPIED';
+                btn.style.background = "#238636";
+                setTimeout(() => {
+                    btn.innerHTML = old;
+                    btn.style.background = "var(--nsb-gold)";
+                }, 2000);
+            });
+        }
+
+        // Live Ledger Feed Simulator
+        function updateFeed() {
+            const feed = document.getElementById('ledger-feed');
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ':' + 
+                            now.getMinutes().toString().padStart(2, '0') + ':' + 
+                            now.getSeconds().toString().padStart(2, '0');
+            
+            const logs = [
+                "Peer node handshake stable.",
+                "Analyzing network fee priority...",
+                "Waiting for broadcast signal...",
+                "Institutional monitor status: NOMINAL.",
+                "Cryptography stack verification: PASSED."
+            ];
+
+            const entry = document.createElement('div');
+            entry.className = 'feed-entry';
+            entry.innerHTML = `<span class="feed-time">${timeStr}</span> <span>${logs[Math.floor(Math.random() * logs.length)]}</span>`;
+            
+            feed.prepend(entry);
+            if(feed.children.length > 8) feed.lastElementChild.remove();
+        }
+        setInterval(updateFeed, 8000);
+
+    </script>
+</body>
+</html>
+
