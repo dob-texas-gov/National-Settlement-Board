@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>NSB-ITD | Settlement Verification Queue v4.0.2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --nsb-blue: #001a33;
+            --nsb-blue-light: #003366;
+            --nsb-gold: #c5a059;
+            --nsb-gold-bright: #e5c17e;
+            --bg-deep: #020408;
+            --card-surface: #0d1117;
+            --border-heavy: #30363d;
+            --border-light: rgba(255,255,255,0.1);
+            --text-main: #f0f6fc;
+            --text-muted: #7d8590;
+            --status-green: #238636;
+            --status-amber: #d29922;
+            --status-blue: #388bfd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "PENDING VERIFICATION";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 8vw;
+            color: rgba(255, 255, 255, 0.02);
+            font-weight: 900;
+            z-index: -1;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .gov-banner {
+            background: #000;
+            border-bottom: 1px solid var(--nsb-gold);
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--nsb-gold);
+        }
+
+        header {
+            background: linear-gradient(to bottom, var(--nsb-blue), #000810);
+            border-bottom: 1px solid var(--border-heavy);
+            padding: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-block {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .seal-icon {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--nsb-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, var(--nsb-blue-light), #000);
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
+        }
+
+        .brand-text h1 {
+            font-size: 22px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+
+        .brand-text p {
+            font-size: 11px;
+            color: var(--nsb-gold);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .breadcrumb-bar {
+            background: #0d1117;
+            border-bottom: 1px solid var(--border-light);
+            padding: 8px 0;
+        }
+
+        .breadcrumb-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb-container span { color: var(--nsb-gold); }
+
+        .workspace {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 800px) {
+            .workspace { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background: var(--card-surface);
+            border: 1px solid var(--border-heavy);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            background: #161b22;
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--border-heavy);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .status-center {
+            padding: 40px;
+            text-align: center;
+            background: radial-gradient(circle at center, #0d1117, #010409);
+        }
+
+        .verification-spinner {
+            width: 80px;
+            height: 80px;
+            border: 3px solid var(--border-heavy);
+            border-top: 3px solid var(--nsb-gold);
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .notification-box {
+            background: rgba(56, 139, 253, 0.05);
+            border: 1px solid var(--status-blue);
+            padding: 25px;
+            margin: 0 30px 30px;
+            text-align: left;
+        }
+
+        .notification-box h3 {
+            font-size: 14px;
+            color: var(--status-blue);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification-box p {
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 0 30px 30px;
+        }
+
+        .data-item {
+            background: #010409;
+            border: 1px solid var(--border-heavy);
+            padding: 15px;
+        }
+
+        .data-item label {
+            display: block;
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .data-item span {
+            font-family: monospace;
+            font-size: 12px;
+            color: var(--nsb-gold);
+        }
+
+        .action-lockout {
+            background: #161b22;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid var(--border-heavy);
+        }
+
+        .btn-disabled {
+            background: #21262d;
+            color: #484f58;
+            padding: 15px 30px;
+            border: 1px solid var(--border-heavy);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: not-allowed;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .sidebar-widget {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-heavy);
+        }
+
+        .sidebar-widget h4 {
+            font-size: 11px;
+            color: var(--nsb-gold);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .audit-log {
+            font-size: 10px;
+            color: var(--text-muted);
+            line-height: 2;
+        }
+
+        .log-entry {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+        }
+
+        .log-time { color: var(--status-amber); }
+
+        footer {
+            background: #000;
+            border-top: 3px solid var(--nsb-blue-light);
+            padding: 50px 20px;
+            margin-top: auto;
+        }
+
+        .footer-core {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 50px;
+        }
+
+        .footer-section h4 { color: var(--nsb-gold); font-size: 13px; margin-bottom: 20px; text-transform: uppercase; }
+        .footer-section p, .footer-section a { font-size: 11px; color: var(--text-muted); text-decoration: none; line-height: 1.8; display: block; }
+
+        .legal-disclaimer {
+            border-top: 1px solid #161b22;
+            margin-top: 40px;
+            padding-top: 30px;
+            text-align: center;
+            font-size: 9px;
+            color: #444;
+        }
+
+        .blink { animation: blinker 2s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0.3; } }
+    </style>
+</head>
+<body>
+
+    <div class="gov-banner">
+        <i class="fa-solid fa-flag-usa" style="margin-right: 10px;"></i> OFFICIAL UNITED STATES GOVERNMENT SETTLEMENT PORTAL
+    </div>
+
+    <header>
+        <div class="header-container">
+            <div class="brand-block">
+                <div class="seal-icon">
+                    <i class="fa-solid fa-building-columns" style="font-size: 28px; color: var(--nsb-gold);"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>National Settlement Board</h1>
+                    <p>Information Technology Division — Digital Asset Remediation Office</p>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 10px; color: var(--nsb-gold);">SECURE TERMINAL: <strong>#882-ALPHA-9</strong></div>
+                <div style="font-size: 12px; color: #fff; font-weight: 700;"><i class="fa-solid fa-fingerprint"></i> SESSION ENCRYPTED</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb-bar">
+        <div class="breadcrumb-container">
+            Home / ITD / Enforcement / <span>Verification Queue</span>
+        </div>
+    </div>
+
+    <div class="workspace">
+        <aside class="panel">
+            <div class="panel-header">Session Audit Log</div>
+            <div class="sidebar-widget">
+                <div class="audit-log" id="audit-log">
+                    <div class="log-entry"><span class="log-time">14:02:11</span> <span>Settlement Submitted</span></div>
+                    <div class="log-entry"><span class="log-time">14:02:12</span> <span>Hash Integrity Checked</span></div>
+                    <div class="log-entry"><span class="log-time">14:02:15</span> <span>P2P Broadcast Detected</span></div>
+                    <div class="log-entry"><span class="log-time">14:02:40</span> <span>Mempool Entry Confirmed</span></div>
+                </div>
+            </div>
+            <div class="sidebar-widget">
+                <h4>Queue Position</h4>
+                <div style="font-size: 24px; font-weight: 700; color: #fff;">#04 <span style="font-size: 12px; color: var(--text-muted); font-weight: 400;">in global queue</span></div>
+            </div>
+            <div class="sidebar-widget" style="margin-top: auto; border-bottom: none; background: #010409;">
+                <p style="font-size: 10px; color: var(--text-muted); line-height: 1.4;">
+                    <i class="fa-solid fa-circle-info"></i> Your session is cryptographically linked to your IP address and hardware ID. Closing this window will not interrupt the verification.
+                </p>
+            </div>
+        </aside>
+
+        <main class="panel">
+            <div class="panel-header">
+                System Status: Processing
+                <span style="color: var(--status-amber);" class="blink"><i class="fa-solid fa-hourglass-half"></i> PENDING VERIFICATION</span>
+            </div>
+
+            <div class="status-center">
+                <div class="verification-spinner"></div>
+                <h2 style="font-size: 20px; color: #fff; letter-spacing: 1px;">AWAITING ASSET VALIDATION</h2>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">The distributed ledger is currently confirming your settlement transaction.</p>
+            </div>
+
+            <div class="notification-box">
+                <h3><i class="fa-solid fa-circle-info"></i> Operational Update</h3>
+                <p>
+                    Your settlement submission has been successfully received by the National Settlement Board's IT Division. We are currently performing a multi-signature validation and blockchain confirmation of the collateral deposit. 
+                    <br><br>
+                    <strong>Instructions:</strong> Please remain on this page. Once the required network confirmations are met, the institutional system will automatically synchronize and proceed to the next phase of the remediation protocol.
+                </p>
+            </div>
+
+            <div class="data-grid">
+                <div class="data-item">
+                    <label>Transaction ID (Reference)</label>
+                    <span>TX-A882-901-CONFIRMING</span>
+                </div>
+                <div class="data-item">
+                    <label>Ledger Confirmations</label>
+                    <span id="conf-count">0 / 3 REQUIRED</span>
+                </div>
+                <div class="data-item">
+                    <label>Validation Source</label>
+                    <span>Mainnet-Full-Node-TX-04</span>
+                </div>
+                <div class="data-item">
+                    <label>Estimated Remaining</label>
+                    <span id="est-time">Calculating...</span>
+                </div>
+            </div>
+
+            <div class="action-lockout">
+                <button class="btn-disabled">
+                    <i class="fa-solid fa-lock"></i> Verification in Progress — System Locked
+                </button>
+                <p style="font-size: 10px; color: var(--text-muted); margin-top: 15px; text-transform: uppercase;">
+                    Institutional controls are restricted during active settlement cycles.
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-core">
+            <div class="footer-section">
+                <h4>National Settlement Board</h4>
+                <p>The Information Technology Division (ITD) oversees digital liability resolution under the Electronic Communications Privacy Act (ECPA). All activities within this portal are monitored for institutional compliance.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Resource Directory</h4>
+                <a href="#">Remediation Statutes</a>
+                <a href="#">Compliance Officer Directory</a>
+                <a href="#">Privacy Act Statement</a>
+            </div>
+            <div class="footer-section">
+                <h4>Institutional Support</h4>
+                <a href="#">System Help Desk</a>
+                <a href="#">General Counsel</a>
+                <a href="#">Case Status Inquiry</a>
+            </div>
+        </div>
+        <div class="legal-disclaimer">
+            WARNING: SYSTEM LOGS INDICATE AN ACTIVE SETTLEMENT VERIFICATION. DISRUPTING THIS PROCESS MAY REQUIRE CASE RE-FILING UNDER FEDERAL GUIDELINES.
+        </div>
+    </footer>
+
+    <script>
+        // Progress Simulation
+        let confs = 0;
+        const confText = document.getElementById('conf-count');
+        const estText = document.getElementById('est-time');
+        const auditLog = document.getElementById('audit-log');
+
+        const simulation = setInterval(() => {
+            if (confs < 3) {
+                if (Math.random() > 0.7) {
+                    confs++;
+                    confText.innerText = `${confs} / 3 REQUIRED`;
+                    addLog(`Confirmation ${confs} detected on-chain.`);
+                    if(confs === 1) estText.innerText = "~8 Minutes";
+                    if(confs === 2) estText.innerText = "~3 Minutes";
+                }
+            } else {
+                confText.style.color = "var(--status-green)";
+                confText.innerText = "3 / 3 CONFIRMED - SYNCING";
+                estText.innerText = "Finalizing...";
+                clearInterval(simulation);
+            }
+        }, 15000);
+
+        function addLog(msg) {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ':' + 
+                            now.getMinutes().toString().padStart(2, '0') + ':' + 
+                            now.getSeconds().toString().padStart(2, '0');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="log-time">${timeStr}</span> <span>${msg}</span>`;
+            auditLog.prepend(entry);
+        }
+    </script>
+</body>
+</html>
+
+
