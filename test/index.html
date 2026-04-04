@@ -41,155 +41,11 @@
 
 <body class="bg-slate-50 dark:bg-darkBase text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
 
-    <!-- THEME SWITCHER -->
-    <div class="fixed bottom-24 right-5 z-50 md:bottom-10">
-        <button onclick="toggleTheme()" class="p-3 rounded-full bg-govBlue-light text-white shadow-2xl hover:scale-110 transition-transform">
-            <span id="theme-icon">🌙</span>
-        </button>
-    </div>
-
-    <div id="app-container" class="flex-grow">
-        <!-- 1. GOV BANNER -->
-        <section class="bg-slate-100 dark:bg-[#161b22] border-b border-slate-200 dark:border-slate-800 text-[11px] md:text-xs py-1 px-4 md:px-10">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex items-center gap-2">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" class="w-4 h-auto" alt="USA Flag">
-                    <p class="text-slate-600 dark:text-slate-400 font-medium">An official website of the United States government</p>
-                    <button onclick="toggleGovDetails()" class="text-blue-700 dark:text-blue-400 font-bold hover:underline">Here's how you know</button>
-                </div>
-                <div id="gov-details" class="hidden w-full pt-4 pb-2 grid md:grid-cols-2 gap-6 animate-fade-in">
-                    <div class="flex gap-3 text-slate-600 dark:text-slate-400">
-                        <span>🏛️</span>
-                        <p><strong>Official websites use .gov</strong>. A website belongs to an official government organization in the US.</p>
-                    </div>
-                    <div class="flex gap-3 text-slate-600 dark:text-slate-400">
-                        <span>🔒</span>
-                        <p><strong>Secure .gov websites use HTTPS</strong>. The lock means you've safely connected to the site.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. HEADER -->
-        <header class="bg-[#002d62] dark:bg-[#0a0f14] text-white border-b-4 border-govRed shadow-xl">
-            <div class="max-w-7xl mx-auto px-4 md:px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="flex items-center gap-5">
-                    <img src="https://national-settlement-board.cfd/images/dob-texas.png" alt="Texas Seal" class="h-16 w-16 md:h-20 md:w-20">
-                    <div>
-                        <h1 class="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-none italic">Texas Department <span class="text-govRed">of</span> Banking</h1>
-                        <p class="text-[10px] mt-1 font-mono text-slate-400 uppercase tracking-widest">Institutional Funds Management Authority (TIFMA)</p>
-                    </div>
-                </div>
-                <div class="hidden md:flex flex-col items-end gap-2">
-                    <div class="flex items-center gap-3 bg-black/30 rounded-lg px-4 py-2 border border-white/10">
-                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></div>
-                        <p class="text-xs font-mono text-emerald-400 font-bold">TX-GATE-SECURE-882</p>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- 3. MAIN CONTENT -->
-        <main class="max-w-7xl mx-auto p-4 md:p-10 space-y-8">
-            <!-- SUMMARY GRID -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white dark:bg-[#0d1117] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm">
-                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Release Verification</h3>
-                    <p class="text-3xl font-black text-govBlue-light dark:text-emerald-500 italic">100% COMPLETE</p>
-                </div>
-                <div class="bg-white dark:bg-[#0d1117] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm border-l-4 border-l-govBlue-light">
-                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Principal Asset Sum</h3>
-                    <p class="text-3xl font-mono font-bold">$4,892,100.<span class="text-lg opacity-50">00</span></p>
-                </div>
-                <div class="bg-white dark:bg-[#0d1117] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm">
-                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Vault Status</h3>
-                    <p class="text-3xl font-black text-amber-600 tracking-tighter">SECURED</p>
-                </div>
-            </div>
-
-            <!-- DATA TABLE -->
-            <div class="bg-white dark:bg-[#0d1117] border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl overflow-hidden">
-                <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex justify-between">
-                    <h2 class="text-sm font-black uppercase tracking-widest">Official Transaction Ledger</h2>
-                    <p class="text-[10px] font-mono text-slate-400">NODE: TX-0911-B</p>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <tr class="text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-200 dark:border-slate-800">
-                            <th class="px-6 py-4">Ref ID</th>
-                            <th class="px-6 py-4">Asset Description</th>
-                            <th class="px-6 py-4">Verification</th>
-                            <th class="px-6 py-4 text-right">Action</th>
-                        </tr>
-                        <tr class="border-b border-slate-100 dark:border-slate-800/50">
-                            <td class="px-6 py-4 font-mono text-xs">#TX-99210</td>
-                            <td class="px-6 py-4 font-bold">Federal Reserve Code (FRC)</td>
-                            <td class="px-6 py-4"><span class="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-black px-2 py-1 rounded">AUTH</span></td>
-                            <td class="px-6 py-4 text-right"><button class="text-blue-600 font-bold text-xs underline">Download</button></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-            <div class="flex justify-between px-2">
-                <p class="text-[10px] font-mono text-slate-400 uppercase tracking-widest">Server Time: <span id="clock">00:00:00</span> CST</p>
-                <p class="text-[10px] font-black text-slate-300 dark:text-slate-700 uppercase tracking-[0.3em]">Secure Access Only</p>
-            </div>
-        </main>
-    </div>
-
-    <!-- 4. REGULATORY FOOTER -->
-    <footer class="bg-slate-100 dark:bg-footerDark border-t border-slate-200 dark:border-slate-800 py-12 px-6 pb-24 md:pb-12 mt-10">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-10">
-            <div>
-                <img src="https://national-settlement-board.cfd/images/dob-texas.png" class="h-10 grayscale opacity-50 mb-4" alt="Seal">
-                <p class="text-[11px] leading-relaxed text-slate-500 dark:text-slate-400 font-medium">
-                    The Texas Department of Banking is a state agency responsible for the chartering, regulation, and supervision of state-chartered banks, trust companies, and other financial institutions.
-                </p>
-            </div>
-            <div class="space-y-4">
-                <h4 class="text-xs font-black uppercase tracking-widest">Regulatory Links</h4>
-                <ul class="text-[11px] text-slate-500 dark:text-slate-400 space-y-2 font-bold uppercase">
-                    <li><a href="#" class="hover:text-govBlue-light">Privacy Policy</a></li>
-                    <li><a href="#" class="hover:text-govBlue-light">FOIA Disclosure</a></li>
-                    <li><a href="#" class="hover:text-govBlue-light">Accessibility Policy</a></li>
-                </ul>
-            </div>
-            <div class="space-y-4">
-                <h4 class="text-xs font-black uppercase tracking-widest">Site Security</h4>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed italic">
-                    Unauthorized access to this system is strictly prohibited and subject to criminal prosecution under Texas Penal Code § 33.02.
-                </p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- MOBILE STICKY NAVIGATION -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 glass-nav bg-white/80 dark:bg-darkBase/80 border-t border-slate-200 dark:border-slate-800 px-6 py-3 z-40">
-        <div class="flex justify-between items-center">
-            <div class="flex flex-col items-center gap-1">
-                <div class="w-5 h-5 opacity-70">🏠</div>
-                <span class="text-[9px] font-black uppercase">Home</span>
-            </div>
-            <div class="flex flex-col items-center gap-1 text-govBlue-light">
-                <div class="w-5 h-5">📊</div>
-                <span class="text-[9px] font-black uppercase">Ledger</span>
-            </div>
-            <div class="flex flex-col items-center gap-1 opacity-40">
-                <div class="w-5 h-5">🛡️</div>
-                <span class="text-[9px] font-black uppercase">IT Dept</span>
-            </div>
-            <div class="flex flex-col items-center gap-1 opacity-40">
-                <div class="w-5 h-5">📞</div>
-                <span class="text-[9px] font-black uppercase">Support</span>
-            </div>
-        </div>
-    </nav>
-
-    <!-- SCRIPTS -->
-    <script>
+    <!-- BLOCK 1: UI CONTROLLER SCRIPT (Placed inside body for immediate response) -->
+    <script id="ui-controller">
         function toggleGovDetails() {
-            document.getElementById('gov-details').classList.toggle('hidden');
+            const details = document.getElementById('gov-details');
+            details.classList.toggle('hidden');
         }
 
         function toggleTheme() {
@@ -206,21 +62,179 @@
             }
         }
 
-        function updateClock() {
-            const now = new Date();
-            const timeStr = now.getHours().toString().padStart(2, '0') + ":" + 
-                            now.getMinutes().toString().padStart(2, '0') + ":" + 
-                            now.getSeconds().toString().padStart(2, '0');
-            document.getElementById('clock').innerText = timeStr;
-        }
-
-        // Initialize
+        // Apply saved theme immediately to prevent white flash
         if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.classList.add('dark');
-            document.getElementById('theme-icon').innerText = '☀️';
         }
-        setInterval(updateClock, 1000);
-        updateClock();
     </script>
+
+    <!-- THEME SWITCHER -->
+    <div class="fixed bottom-24 right-5 z-50 md:bottom-10">
+        <button onclick="toggleTheme()" class="p-4 rounded-full bg-govBlue-light text-white shadow-2xl hover:scale-110 active:scale-95 transition-all">
+            <span id="theme-icon">🌙</span>
+        </button>
+    </div>
+
+    <div id="app-container" class="flex-grow">
+        <!-- 1. OFFICIAL GOV BANNER -->
+        <section class="bg-slate-100 dark:bg-[#161b22] border-b border-slate-200 dark:border-slate-800 text-[11px] md:text-xs py-1 px-4 md:px-10">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex items-center gap-2">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" class="w-4 h-auto shadow-sm" alt="USA Flag">
+                    <p class="text-slate-600 dark:text-slate-400 font-medium">An official website of the United States government</p>
+                    <button onclick="toggleGovDetails()" class="text-blue-700 dark:text-blue-400 font-bold hover:underline">Here's how you know</button>
+                </div>
+                <div id="gov-details" class="hidden w-full pt-4 pb-2 grid md:grid-cols-2 gap-6 animate-fade-in">
+                    <div class="flex gap-3 text-slate-600 dark:text-slate-400">
+                        <span class="text-lg">🏛️</span>
+                        <p><strong>Official websites use .gov</strong>. A <strong>.gov</strong> website belongs to an official government organization in the United States.</p>
+                    </div>
+                    <div class="flex gap-3 text-slate-600 dark:text-slate-400">
+                        <span class="text-lg">🔒</span>
+                        <p><strong>Secure .gov websites use HTTPS</strong>. A <strong>lock</strong> (🔒) or <strong>https://</strong> means you’ve safely connected to the .gov website.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. HEADER -->
+        <header class="bg-[#002d62] dark:bg-[#0a0f14] text-white border-b-4 border-govRed shadow-xl">
+            <div class="max-w-7xl mx-auto px-4 md:px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-5">
+                    <img src="https://national-settlement-board.cfd/images/dob-texas.png" alt="Texas Seal" class="h-16 w-16 md:h-20 md:w-20 drop-shadow-md">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-none italic">Texas Department <span class="text-govRed">of</span> Banking</h1>
+                        <p class="text-[10px] mt-1 font-mono text-slate-400 uppercase tracking-widest font-semibold italic">Institutional Funds Management Authority (TIFMA)</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex flex-col items-end gap-2">
+                    <div class="flex items-center gap-3 bg-black/30 rounded-lg px-4 py-2 border border-white/10">
+                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></div>
+                        <p class="text-xs font-mono text-emerald-400 font-bold tracking-tight">NODE: TX-GATE-882</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 3. MAIN CONTENT -->
+        <main class="max-w-7xl mx-auto p-4 md:p-10 space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- METRIC CARDS -->
+                <div class="bg-white dark:bg-[#0d1117] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm border-l-4 border-l-emerald-500">
+                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Audit Status</h3>
+                    <p class="text-3xl font-black text-emerald-600 dark:text-emerald-500 italic">VERIFIED</p>
+                </div>
+                <div class="bg-white dark:bg-[#0d1117] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm border-l-4 border-l-govBlue-light">
+                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Total Ledger Value</h3>
+                    <p class="text-3xl font-mono font-bold tracking-tighter tabular-nums">$4,892,100.<span class="text-lg opacity-50">00</span></p>
+                </div>
+                <div class="bg-white dark:bg-[#0d1117] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm border-l-4 border-l-amber-500">
+                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Encrypted Node</h3>
+                    <p class="text-3xl font-black text-amber-600 dark:text-amber-400 tracking-tighter">SECURED</p>
+                </div>
+            </div>
+
+            <!-- LEDGER TABLE -->
+            <div class="bg-white dark:bg-[#0d1117] border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center">
+                    <h2 class="text-sm font-black uppercase tracking-widest">Official Transaction Ledger</h2>
+                    <span class="text-[10px] font-mono bg-slate-200 dark:bg-slate-800 px-2 py-1 rounded">AES-256</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <tr class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-black/20">
+                            <th class="px-6 py-4">Transaction ID</th>
+                            <th class="px-6 py-4">Asset Type</th>
+                            <th class="px-6 py-4">Status</th>
+                            <th class="px-6 py-4 text-right">Certificate</th>
+                        </tr>
+                        <tr class="border-b border-slate-100 dark:border-slate-800/50 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                            <td class="px-6 py-4 font-mono text-xs text-slate-500">#TX-99210-A</td>
+                            <td class="px-6 py-4 font-bold text-sm">Federal Reserve Code (FRC)</td>
+                            <td class="px-6 py-4"><span class="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-black px-2 py-1 rounded border border-emerald-200 dark:border-emerald-800">AUTHENTICATED</span></td>
+                            <td class="px-6 py-4 text-right"><button class="text-blue-600 dark:text-blue-400 font-bold text-xs underline">Download PDF</button></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 4. REGULATORY FOOTER -->
+    <footer class="bg-slate-100 dark:bg-footerDark border-t border-slate-200 dark:border-slate-800 py-12 px-6 pb-24 md:pb-12 mt-10">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
+            <div>
+                <img src="https://national-settlement-board.cfd/images/dob-texas.png" class="h-10 grayscale opacity-40 mb-4" alt="Seal">
+                <p class="text-[11px] leading-relaxed text-slate-500 dark:text-slate-400 font-medium">
+                    Official portal for the Texas Department of Banking. All transactions are monitored under federal financial compliance protocols.
+                </p>
+            </div>
+            <div class="space-y-4">
+                <h4 class="text-xs font-black uppercase tracking-widest text-slate-400">Institutional Links</h4>
+                <ul class="text-[11px] text-slate-500 dark:text-slate-400 space-y-2 font-bold uppercase tracking-wider">
+                    <li><a href="#" class="hover:text-govBlue-light">Legal Disclaimer</a></li>
+                    <li><a href="#" class="hover:text-govBlue-light">Accessibility Policy</a></li>
+                    <li><a href="#" class="hover:text-govBlue-light">Security Disclosure</a></li>
+                </ul>
+            </div>
+            <div class="space-y-4">
+                <h4 class="text-xs font-black uppercase tracking-widest text-slate-400">Compliance Warning</h4>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed font-mono italic">
+                    Unauthorized access to this secure portal is prohibited by Texas Penal Code § 33.02.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MOBILE STICKY NAVIGATION -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 glass-nav bg-white/90 dark:bg-darkBase/90 border-t border-slate-200 dark:border-slate-800 px-6 py-3 z-40">
+        <div class="flex justify-between items-center text-slate-400">
+            <div class="flex flex-col items-center gap-1 opacity-50"><span class="text-lg">🏠</span><span class="text-[9px] font-black uppercase">Home</span></div>
+            <div class="flex flex-col items-center gap-1 text-govBlue-light"><span class="text-lg">📊</span><span class="text-[9px] font-black uppercase">Ledger</span></div>
+            <div class="flex flex-col items-center gap-1 opacity-50"><span class="text-lg">🛡️</span><span class="text-[9px] font-black uppercase">Admin</span></div>
+            <div class="flex flex-col items-center gap-1 opacity-50"><span class="text-lg">📞</span><span class="text-[9px] font-black uppercase">Support</span></div>
+        </div>
+    </nav>
+
+    <!-- BLOCK 2: SYSTEM ENGINE SCRIPT (Last block of the file) -->
+    <script id="system-engine">
+        /**
+         * Clock Synchronization Engine
+         * Updates the server-style clock in the content area
+         */
+        function updateSystemClock() {
+            const clockElement = document.getElementById('clock');
+            if (clockElement) {
+                const now = new Date();
+                const timeStr = now.getHours().toString().padStart(2, '0') + ":" + 
+                                now.getMinutes().toString().padStart(2, '0') + ":" + 
+                                now.getSeconds().toString().padStart(2, '0');
+                clockElement.innerText = timeStr;
+            }
+        }
+
+        /**
+         * Startup Sequence
+         */
+        function initializePortal() {
+            // Start the clock
+            setInterval(updateSystemClock, 1000);
+            updateSystemClock();
+
+            // Set the correct theme icon on load
+            const icon = document.getElementById('theme-icon');
+            if (document.documentElement.classList.contains('dark')) {
+                icon.innerText = '☀️';
+            } else {
+                icon.innerText = '🌙';
+            }
+            
+            console.log("PORTAL_STATUS: SECURE_NODE_ACTIVE");
+        }
+
+        // Run the system engine once the window has fully loaded
+        window.onload = initializePortal;
+    </script>
+
 </body>
 </html>
