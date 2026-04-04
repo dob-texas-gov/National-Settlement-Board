@@ -1,0 +1,47 @@
+/* USWDS & Texas Dept of Banking Core Styles */
+:root {
+  --gov-blue: #0f172a;
+  --gov-red: #b91c1c;
+  --texas-gold: #fcba19;
+  --bg-slate: #f1f5f9;
+  --font-main: 'Public Sans', sans-serif;
+  --font-mono: 'Roboto Mono', monospace;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-slate);
+  color: #0f172a;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Typography Standards */
+h1 { font-size: 36px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em; }
+h2 { font-size: 30px; font-weight: 700; }
+p { font-size: 16px; line-height: 24px; }
+
+/* Government Banner & Header */
+.gov-banner { background: #f1f5f9; padding: 8px 10%; border-bottom: 1px solid #334155; font-size: 13px; }
+.nav-header { background-color: var(--gov-blue); color: white; border-bottom: 5px solid var(--gov-red); padding: 1.5rem; }
+
+/* Components */
+.directive-card {
+  background: white;
+  border-left: 6px solid #2563eb;
+  padding: 1.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.legal-footer {
+  background-color: #0a1f2e;
+  color: #d1d9e6;
+  font-size: 0.8rem;
+  padding: 3rem 0;
+  border-top: 4px solid var(--texas-gold);
+  margin-top: auto;
+}
+
+.no-print { @media print { display: none; } }
