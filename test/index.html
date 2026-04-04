@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Government Project Portal</title>
+    <!-- Link to your Master Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- The Header will be injected here automatically by layout.js -->
+
+    <main class="main-content" id="main-content">
+        <div class="container">
+            
+            <!-- Hero Section -->
+            <section class="panel" style="background-color: var(--color-primary); color: white; text-align: center; padding: var(--space-6) var(--space-2);">
+                <h1>Modern Web Standards</h1>
+                <p>Built using a mobile-first, 12-column grid and USWDS accessibility guidelines.</p>
+                <div style="margin-top: var(--space-3);">
+                    <a href="#features" class="btn btn-secondary">Explore Features</a>
+                </div>
+            </section>
+
+            <!-- 12-Column Grid Example -->
+            <section id="features" style="margin-top: var(--space-6);">
+                <h2>Design System Specifications</h2>
+                <div class="grid-row">
+                    <!-- Column 1 -->
+                    <div class="grid-col" style="flex: 0 0 100%; max-width: 100%;">
+                        <div class="panel">
+                            <h3>Typography & Colors</h3>
+                            <p>Using <strong>Source Sans Pro</strong> with a strict hierarchy. Our primary color is <span style="color: #005ea2; font-weight: 700;">#005ea2</span>, ensuring WCAG 2.1 compliance for all users.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Column 2 (Splits on Desktop) -->
+                    <div class="grid-col" style="flex: 1;">
+                        <div class="panel">
+                            <h3>Responsive Layout</h3>
+                            <p>The grid adapts from mobile (< 640px) up to extra-large wide screens (> 1440px) automatically.</p>
+                        </div>
+                    </div>
+
+                    <!-- Column 3 (Splits on Desktop) -->
+                    <div class="grid-col" style="flex: 1;">
+                        <div class="panel">
+                            <h3>Theme Switching</h3>
+                            <p>Try the toggle in the header. The system uses CSS variables to swap between Light and Dark themes instantly.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Form & Controls Example -->
+            <section style="margin-top: var(--space-6);">
+                <div class="panel">
+                    <h2>Stay Updated</h2>
+                    <form id="sample-form">
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email Address</label>
+                            <input type="email" id="email" class="form-control" placeholder="name@agency.gov" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="message">Message (Optional)</label>
+                            <textarea id="message" class="form-control" rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Inquiry</button>
+                    </form>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- The Footer will be injected here automatically by layout.js -->
+
+    <!-- Link to your Layout Logic -->
+    <script src="layout.js"></script>
+</body>
+</html>
+
