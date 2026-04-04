@@ -1,0 +1,126 @@
+:root {
+    --gov-blue: #005ea2;
+    --gov-dark: #212121;
+    --gov-link: #0071bc;
+    --gov-error: #d4351c;
+    --gov-bg: #f1f1f1;
+    --white: #ffffff;
+    --spacing-unit: 8px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5; /* 24px */
+    color: var(--gov-dark);
+    background-color: var(--white);
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1 { font-size: 36px; line-height: 44px; font-weight: 700; margin-bottom: 24px; }
+h2 { font-size: 30px; line-height: 38px; font-weight: 700; margin-bottom: 16px; }
+h3 { font-size: 24px; line-height: 32px; font-weight: 700; margin-bottom: 16px; }
+h4 { font-size: 20px; line-height: 28px; font-weight: 700; }
+h5 { font-size: 18px; line-height: 24px; font-weight: 700; }
+h6 { font-size: 16px; line-height: 24px; font-weight: 700; }
+p { margin-bottom: 16px; }
+small, .caption { font-size: 14px; line-height: 20px; font-weight: 400; }
+
+.btn-primary {
+    background-color: var(--gov-blue);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    padding: 12px 24px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #004d85;
+    outline: 3px solid var(--gov-link);
+    outline-offset: 2px;
+}
+
+.btn-secondary {
+    background-color: var(--white);
+    color: var(--gov-blue);
+    border: 2px solid var(--gov-blue);
+    border-radius: 4px;
+    padding: 10px 22px; /* Adjusted for border thickness */
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* 4. FORMS & INPUTS */
+input, select, textarea {
+    border: 1px solid #94a3b8;
+    border-radius: 4px;
+    padding: 12px;
+    width: 100%;
+    font-size: 16px;
+    background-color: var(--white);
+    margin-top: 8px;
+}
+
+label {
+    font-weight: 700;
+    display: block;
+    margin-top: 16px;
+}
+
+.error-text {
+    color: var(--gov-error);
+    font-size: 14px;
+    margin-top: 4px;
+    font-weight: 700;
+}
+
+/* 5. NAVIGATION & LAYOUT PATTERNS */
+.gov-banner {
+    background-color: var(--gov-bg);
+    padding: 8px 10%;
+    font-size: 13px;
+    border-bottom: 1px solid #ccc;
+}
+
+header {
+    background-color: #0f172a; /* Keeping your professional dark blue */
+    color: var(--white);
+    padding: 24px 10%;
+    border-bottom: 5px solid var(--gov-error);
+}
+
+main {
+    flex: 1;
+    padding: 40px 10%;
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+footer {
+    background-color: #0a1f2e;
+    color: var(--white);
+    padding: 48px 10% 24px 10%;
+    border-top: 4px solid #fcba19;
+}
+
+@media (max-width: 640px) {
+    main { padding: 24px 16px; }
+    header, .gov-banner, footer { padding-left: 16px; padding-right: 16px; }
+}
