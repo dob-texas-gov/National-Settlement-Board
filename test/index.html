@@ -1,83 +1,90 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | Government Project Portal</title>
-    <!-- Link to your Master Stylesheet -->
-    <link rel="stylesheet" href="style.css">
+    <title>Institutional Portal | Texas Department of Banking</title>
+    
+    <!-- Authentic Institutional Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Tailwind Configuration for Official Gov Colors
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        govBlue: { 
+                            light: '#005ea2', // Official US Gov Blue
+                            dark: '#1a4480' 
+                        },
+                        govRed: '#b91c1c', // Texas State Red
+                        darkBase: '#0b1117' // Deep Institutional Dark
+                    },
+                    fontFamily: {
+                        sans: ['"Public Sans"', 'sans-serif'],
+                        mono: ['"Roboto Mono"', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Smooth transition for theme switching */
+        body { transition: background-color 0.3s ease, color 0.3s ease; }
+        
+        /* Specialized "Official" Glow for dark mode text */
+        .dark .text-glow { text-shadow: 0 0 8px rgba(255,255,255,0.2); }
+    </style>
 </head>
-<body>
 
-    <!-- The Header will be injected here automatically by layout.js -->
+<body class="bg-slate-50 dark:bg-darkBase text-slate-900 dark:text-slate-100 min-h-screen">
 
-    <main class="main-content" id="main-content">
-        <div class="container">
-            
-            <!-- Hero Section -->
-            <section class="panel" style="background-color: var(--color-primary); color: white; text-align: center; padding: var(--space-6) var(--space-2);">
-                <h1>Modern Web Standards</h1>
-                <p>Built using a mobile-first, 12-column grid and USWDS accessibility guidelines.</p>
-                <div style="margin-top: var(--space-3);">
-                    <a href="#features" class="btn btn-secondary">Explore Features</a>
-                </div>
-            </section>
+    <!-- THEME SWITCHER FLOATING BUTTON -->
+    <div class="fixed bottom-5 right-5 z-50">
+        <button onclick="toggleTheme()" class="p-3 rounded-full bg-govBlue-light text-white shadow-xl hover:scale-110 transition-transform">
+            <span id="theme-icon">🌙</span>
+        </button>
+    </div>
 
-            <!-- 12-Column Grid Example -->
-            <section id="features" style="margin-top: var(--space-6);">
-                <h2>Design System Specifications</h2>
-                <div class="grid-row">
-                    <!-- Column 1 -->
-                    <div class="grid-col" style="flex: 0 0 100%; max-width: 100%;">
-                        <div class="panel">
-                            <h3>Typography & Colors</h3>
-                            <p>Using <strong>Source Sans Pro</strong> with a strict hierarchy. Our primary color is <span style="color: #005ea2; font-weight: 700;">#005ea2</span>, ensuring WCAG 2.1 compliance for all users.</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Column 2 (Splits on Desktop) -->
-                    <div class="grid-col" style="flex: 1;">
-                        <div class="panel">
-                            <h3>Responsive Layout</h3>
-                            <p>The grid adapts from mobile (< 640px) up to extra-large wide screens (> 1440px) automatically.</p>
-                        </div>
-                    </div>
-
-                    <!-- Column 3 (Splits on Desktop) -->
-                    <div class="grid-col" style="flex: 1;">
-                        <div class="panel">
-                            <h3>Theme Switching</h3>
-                            <p>Try the toggle in the header. The system uses CSS variables to swap between Light and Dark themes instantly.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Form & Controls Example -->
-            <section style="margin-top: var(--space-6);">
-                <div class="panel">
-                    <h2>Stay Updated</h2>
-                    <form id="sample-form">
-                        <div class="form-group">
-                            <label class="form-label" for="email">Email Address</label>
-                            <input type="email" id="email" class="form-control" placeholder="name@agency.gov" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="message">Message (Optional)</label>
-                            <textarea id="message" class="form-control" rows="4"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit Inquiry</button>
-                    </form>
-                </div>
-            </section>
-
+    <!-- MAIN WRAPPER -->
+    <div id="app-container">
+        <!-- Next steps will insert the Header, Content, and Footer here -->
+        <div class="p-20 text-center">
+            <h1 class="text-4xl font-black uppercase tracking-tighter mb-4">Institutional Framework Loaded</h1>
+            <p class="font-mono text-sm opacity-60">Status: CSS_ENGINE_ACTIVE | Mode: <span id="mode-text">Light</span></p>
         </div>
-    </main>
+    </div>
 
-    <!-- The Footer will be injected here automatically by layout.js -->
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const modeText = document.getElementById('mode-text');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                icon.innerText = '🌙';
+                modeText.innerText = 'Light';
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                icon.innerText = '☀️';
+                modeText.innerText = 'Dark';
+            }
+        }
 
-    <!-- Link to your Layout Logic -->
-    <script src="layout.js"></script>
+        // Apply saved theme on page load
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.getElementById('theme-icon').innerText = '☀️';
+            document.getElementById('mode-text').innerText = 'Dark';
+        }
+    </script>
 </body>
 </html>
 
