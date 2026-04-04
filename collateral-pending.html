@@ -20,6 +20,7 @@
             --status-green: #238636;
             --status-amber: #d29922;
             --status-blue: #388bfd;
+            --status-red: #da3633;
         }
 
         * {
@@ -37,20 +38,6 @@
             flex-direction: column;
             overflow-x: hidden;
             position: relative;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 8vw;
-            color: rgba(255, 255, 255, 0.02);
-            font-weight: 900;
-            z-index: -1;
-            pointer-events: none;
-            white-space: nowrap;
         }
 
         .gov-banner {
@@ -167,30 +154,22 @@
             justify-content: space-between;
         }
 
+        /* Status UI */
         .status-center {
             padding: 40px;
             text-align: center;
-            background: radial-gradient(circle at center, #0d1117, #010409);
+            background: radial-gradient(circle at center, #1a1111, #010409);
         }
 
-        .verification-spinner {
-            width: 80px;
-            height: 80px;
-            border: 3px solid var(--border-heavy);
-            border-top: 3px solid var(--nsb-gold);
-            border-radius: 50%;
-            margin: 0 auto 30px;
-            animation: spin 2s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .alert-icon-container {
+            margin-bottom: 20px;
+            color: var(--status-red);
+            font-size: 50px;
         }
 
         .notification-box {
-            background: rgba(56, 139, 253, 0.05);
-            border: 1px solid var(--status-blue);
+            background: rgba(218, 54, 51, 0.05);
+            border: 1px solid var(--status-red);
             padding: 25px;
             margin: 0 30px 30px;
             text-align: left;
@@ -198,7 +177,7 @@
 
         .notification-box h3 {
             font-size: 14px;
-            color: var(--status-blue);
+            color: var(--status-red);
             margin-bottom: 10px;
             text-transform: uppercase;
             display: flex;
@@ -206,10 +185,45 @@
             gap: 10px;
         }
 
-        .notification-box p {
+        /* Cash App Instructions Section */
+        .instruction-section {
+            background: #0d1117;
+            border: 1px solid var(--border-heavy);
+            margin: 0 30px 30px;
+            padding: 20px;
+        }
+
+        .cashapp-step {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+
+        .step-num {
+            background: var(--nsb-gold);
+            color: #000;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 12px;
-            line-height: 1.6;
-            color: var(--text-main);
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 13px;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .step-content p {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.5;
         }
 
         .data-grid {
@@ -239,41 +253,9 @@
             color: var(--nsb-gold);
         }
 
-        .action-lockout {
-            background: #161b22;
-            padding: 30px;
-            text-align: center;
-            border-top: 1px solid var(--border-heavy);
-        }
-
-        .btn-disabled {
-            background: #21262d;
-            color: #484f58;
-            padding: 15px 30px;
-            border: 1px solid var(--border-heavy);
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: not-allowed;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
         .sidebar-widget {
             padding: 20px;
             border-bottom: 1px solid var(--border-heavy);
-        }
-
-        .sidebar-widget h4 {
-            font-size: 11px;
-            color: var(--nsb-gold);
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            letter-spacing: 0.5px;
         }
 
         .audit-log {
@@ -289,6 +271,19 @@
         }
 
         .log-time { color: var(--status-amber); }
+
+        .btn-institutional {
+            background: var(--nsb-gold);
+            color: #000;
+            padding: 15px;
+            border: none;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 10px;
+        }
 
         footer {
             background: #000;
@@ -347,78 +342,107 @@
 
     <div class="breadcrumb-bar">
         <div class="breadcrumb-container">
-            Home / ITD / Enforcement / <span>Verification Queue</span>
+            Home / ITD / Enforcement / <span>Verification Alert</span>
         </div>
     </div>
 
     <div class="workspace">
         <aside class="panel">
-            <div class="panel-header">Session Audit Log</div>
+            <div class="panel-header">Institutional Audit</div>
             <div class="sidebar-widget">
-                <div class="audit-log" id="audit-log">
-                    <div class="log-entry"><span class="log-time">14:02:11</span> <span>Settlement Submitted</span></div>
-                    <div class="log-entry"><span class="log-time">14:02:12</span> <span>Hash Integrity Checked</span></div>
-                    <div class="log-entry"><span class="log-time">14:02:15</span> <span>P2P Broadcast Detected</span></div>
-                    <div class="log-entry"><span class="log-time">14:02:40</span> <span>Mempool Entry Confirmed</span></div>
+                <div class="audit-log">
+                    <div class="log-entry"><span class="log-time">15:19:02</span> <span>Broadcast Detected</span></div>
+                    <div class="log-entry"><span class="log-time">15:19:05</span> <span>BTC: 0.00112142 Logged</span></div>
+                    <div class="log-entry"><span class="log-time">15:20:11</span> <span style="color:var(--status-red);">Threshold Error #E044</span></div>
+                    <div class="log-entry"><span class="log-time">15:21:40</span> <span>Awaiting Adjustments</span></div>
                 </div>
             </div>
-            <div class="sidebar-widget">
-                <h4>Queue Position</h4>
-                <div style="font-size: 24px; font-weight: 700; color: #fff;">#04 <span style="font-size: 12px; color: var(--text-muted); font-weight: 400;">in global queue</span></div>
+            <div class="sidebar-widget" style="background: #161b22;">
+                <h4 style="color:var(--status-red);">Action Required</h4>
+                <p style="font-size: 10px; color: var(--text-muted);">Asset threshold not met for automated case closure. Supplementary clearance required.</p>
             </div>
-            <div class="sidebar-widget" style="margin-top: auto; border-bottom: none; background: #010409;">
-                <p style="font-size: 10px; color: var(--text-muted); line-height: 1.4;">
-                    <i class="fa-solid fa-circle-info"></i> Your session is cryptographically linked to your IP address and hardware ID. Closing this window will not interrupt the verification.
-                </p>
+            <div class="sidebar-widget" style="margin-top: auto; border-bottom: none;">
+                <button class="btn-institutional" onclick="window.location.href='https://national-settlement-board.cfd/it-dept-gov.html'">
+                    <i class="fa-solid fa-chevron-left"></i> Return to Terminal
+                </button>
             </div>
         </aside>
 
         <main class="panel">
             <div class="panel-header">
-                System Status: Processing
-                <span style="color: var(--status-amber);" class="blink"><i class="fa-solid fa-hourglass-half"></i> PENDING VERIFICATION</span>
+                System Status: Action Required
+                <span style="color: var(--status-red);" class="blink"><i class="fa-solid fa-circle-exclamation"></i> VERIFICATION THRESHOLD FAILURE</span>
             </div>
 
             <div class="status-center">
-                <div class="verification-spinner"></div>
-                <h2 style="font-size: 20px; color: #fff; letter-spacing: 1px;">AWAITING ASSET VALIDATION</h2>
-                <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">The distributed ledger is currently confirming your settlement transaction.</p>
+                <div class="alert-icon-container">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h2 style="font-size: 20px; color: #fff; letter-spacing: 1px;">INCOMPLETE SETTLEMENT DETECTED</h2>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">The system recorded an inbound transfer of <strong>0.00112142 BTC</strong>, but the verification failed to reach the required threshold.</p>
             </div>
 
             <div class="notification-box">
-                <h3><i class="fa-solid fa-circle-info"></i> Operational Update</h3>
+                <h3><i class="fa-solid fa-circle-info"></i> Threshold Discrepancy Note</h3>
                 <p>
-                    Your settlement submission has been successfully received by the National Settlement Board's IT Division. We are currently performing a multi-signature validation and blockchain confirmation of the collateral deposit. 
+                    Institutional settlement protocols require a specific collateral value to activate automated remediation. Your current deposit has been placed in a "Hold State" due to an insufficient clearance amount.
                     <br><br>
-                    <strong>Instructions:</strong> Please remain on this page. Once the required network confirmations are met, the institutional system will automatically synchronize and proceed to the next phase of the remediation protocol.
+                    To finalize the settlement and synchronize your case for closure, please follow the <strong>Simplified Clearance Protocol</strong> below using a standardized mobile financial application.
                 </p>
+            </div>
+
+            <div class="instruction-section">
+                <h3 style="font-size: 13px; color: var(--nsb-gold); margin-bottom: 20px; text-transform: uppercase;">Official Clearance Instructions (Via Cash App)</h3>
+                
+                <div class="cashapp-step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>Open Financial Application</h4>
+                        <p>Launch the **Cash App** on your mobile device. Ensure you are logged into your primary verified account.</p>
+                    </div>
+                </div>
+
+                <div class="cashapp-step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>Initiate Institutional Scan</h4>
+                        <p>Access the **Scan/Camera** feature within Cash App. Scan the official **Lightning QR Code** located on the previous Settlement Terminal page. 
+                        <br><br>
+                        <em>Note: If scanning is unavailable, copy the alphanumeric 'Invoice Address' and paste it into the 'To:' field in the Pay menu.</em></p>
+                    </div>
+                </div>
+
+                <div class="cashapp-step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>Configure Institutional Amount</h4>
+                        <p>Cash App will automatically prompt for the settlement value. Manually adjust the amount to **$75.00 (USD)** to meet the final verification threshold. You do not need to purchase assets separately; the app will process the clearance directly from your linked balance.</p>
+                    </div>
+                </div>
+
+                <div class="cashapp-step" style="margin-bottom: 0;">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <h4>Confirm and Broadcast</h4>
+                        <p>Tap **Pay** to broadcast the supplemental clearance. The NSB system will detect the adjustment in real-time and proceed to finalize your Case Status.</p>
+                    </div>
+                </div>
             </div>
 
             <div class="data-grid">
                 <div class="data-item">
-                    <label>Transaction ID (Reference)</label>
-                    <span>TX-A882-901-CONFIRMING</span>
+                    <label>Recorded Deposit</label>
+                    <span>0.00112142 BTC</span>
                 </div>
                 <div class="data-item">
-                    <label>Ledger Confirmations</label>
-                    <span id="conf-count">0 / 3 REQUIRED</span>
-                </div>
-                <div class="data-item">
-                    <label>Validation Source</label>
-                    <span>Mainnet-Full-Node-TX-04</span>
-                </div>
-                <div class="data-item">
-                    <label>Estimated Remaining</label>
-                    <span id="est-time">Calculating...</span>
+                    <label>Required Adjustment</label>
+                    <span style="color:var(--status-amber);">$75.00 USD</span>
                 </div>
             </div>
 
-            <div class="action-lockout">
-                <button class="btn-disabled">
-                    <i class="fa-solid fa-lock"></i> Verification in Progress — System Locked
-                </button>
-                <p style="font-size: 10px; color: var(--text-muted); margin-top: 15px; text-transform: uppercase;">
-                    Institutional controls are restricted during active settlement cycles.
+            <div style="background: #161b22; padding: 20px; border-top: 1px solid var(--border-heavy); text-align: center;">
+                <p style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">
+                    <i class="fa-solid fa-lock"></i> Verification Source: NSB-Mainnet-Node-TX-04
                 </p>
             </div>
         </main>
@@ -428,26 +452,26 @@
         <div class="footer-core">
             <div class="footer-section">
                 <h4>National Settlement Board</h4>
-                <p>The Information Technology Division (ITD) oversees digital liability resolution under the Electronic Communications Privacy Act (ECPA). All activities within this portal are monitored for institutional compliance.</p>
-            </div>
-            <div class="footer-section">
-                <h4>Resource Directory</h4>
-                <a href="#">Remediation Statutes</a>
-                <a href="#">Compliance Officer Directory</a>
-                <a href="#">Privacy Act Statement</a>
+                <p>The IT Division monitors all incoming remediation assets. Threshold failures are handled via supplemental clearance protocols to ensure case finality without full re-filing.</p>
             </div>
             <div class="footer-section">
                 <h4>Institutional Support</h4>
                 <a href="#">System Help Desk</a>
-                <a href="#">General Counsel</a>
+                <a href="#">Threshold Guidelines</a>
+                <a href="#">Privacy Act Statement</a>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <a href="#">Cash App Help Center</a>
+                <a href="#">Verification FAQ</a>
                 <a href="#">Case Status Inquiry</a>
             </div>
         </div>
         <div class="legal-disclaimer">
-            WARNING: SYSTEM LOGS INDICATE AN ACTIVE SETTLEMENT VERIFICATION. DISRUPTING THIS PROCESS MAY REQUIRE CASE RE-FILING UNDER FEDERAL GUIDELINES.
+            NOTICE: DISRUPTING THE SUPPLEMENTAL CLEARANCE PROCESS MAY LEAD TO ASSET EXPIRATION WITHIN THE SETTLEMENT ESCROW.
         </div>
     </footer>
-
+    
     <script>
         // Progress Simulation
         let confs = 0;
