@@ -522,16 +522,10 @@
         })();
     </script>
 
-    <section class="gov-banner no-print">
+     <section class="gov-banner no-print">
         <div class="max-w-7xl mx-auto flex items-center gap-2">
             <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" class="h-3.5 shadow-sm" alt="US Flag">
-            <p>
-                An official website of the United States government. <button onclick="toggleGov()" class="text-blue-800 underline font-semibold ml-1">Here's how you know</button>
-            </p>
-            <div id="govDrop" class="gov-dropdown">
-                <strong>Official .gov websites are secure</strong><br>
-                A <strong>.gov</strong> website belongs to an official government organization in the United States. HTTPS usage ensures a private connection to the secure server.
-            </div>
+            <p>An official website of the United States government.</p>
         </div>
     </section>
 
@@ -543,247 +537,159 @@
                 </div>
                 <div>
                     <h1 class="text-xl md:text-2xl font-black uppercase tracking-tighter text-white">Texas Department of Banking</h1>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">
-                        Institutional Funds Management Authority (TIFMA)
-                    </p>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Institutional Funds Management Authority (TIFMA)</p>
                 </div>
             </div>
             <div class="flex items-center gap-6">
                 <div class="text-right hidden md:block text-white">
-                    <p class="text-[10px] font-mono text-blue-200">
-                        FEDERAL NODE: TX-DAL-11-RC
-                    </p>
-                    <p class="text-[10px] text-green-400 font-bold uppercase tracking-widest">
-                        ● Secure Session Active
-                    </p>
+                    <p class="text-[10px] font-mono text-blue-200">FEDERAL NODE: TX-DAL-11-RC</p>
+                    <p class="text-[10px] text-amber-400 font-bold uppercase tracking-widest">● Remediation in Progress</p>
                 </div>
                 <img src="https://national-settlement-board.cfd/images/tdi-seal.png" class="h-14" onerror="this.src='https://national-settlement-board.cfd/TDI.jpg'">
             </div>
         </div>
     </header>
 
-    <div class="breadcrumb-bar">
-        Home / ITD / Enforcement / <span>Case Settlement Entry</span>
-    </div>
-
     <div class="workspace">
+        <!-- Left Sidebar: Compliance -->
         <aside class="sidebar-left">
             <div class="panel">
-                <div class="panel-header">
-                    Regulatory Protocol
-                </div>
-                <div class="policy-list">
-                    <div class="policy-item">
-                        <h5>CFAA Compliance</h5>
-                        <p>
-                            Under the Computer Fraud and Abuse Act (18 U.S.C. § 1030), this settlement serves as official remediation of system liabilities.
-                        </p>
+                <div class="panel-header">iMT Security Protocol</div>
+                <div class="p-5 space-y-4">
+                    <div class="text-[11px]">
+                        <h5 class="font-bold text-slate-800 uppercase mb-1">Environment Lock</h5>
+                        <p class="text-slate-500 leading-relaxed">System environment is locked in "Remediation Mode" to prevent data leakage during patch application.</p>
                     </div>
-                    <div class="policy-item">
-                        <h5>Asset Verification</h5>
-                        <p>
-                            All incoming transactions are cross-referenced with the Chainalysis Institutional risk scoring engine for strict compliance.
-                        </p>
-                    </div>
-                    <div class="policy-item">
-                        <h5>Escrow Provisions</h5>
-                        <p>
-                            Funds are held under a Time-Locked Multi-Sig script (P2TR) until final Case Closure Verification is securely signed.
-                        </p>
+                    <div class="text-[11px]">
+                        <h5 class="font-bold text-slate-800 uppercase mb-1">Internal Integrity</h5>
+                        <p class="text-slate-500 leading-relaxed">Scanning internal systems for collateral deficits before releasing the settlement PDF.</p>
                     </div>
                 </div>
             </div>
-
             <div class="panel mt-6">
-                <div class="panel-header">
-                    Digital Authentication
-                </div>
-                <div class="security-seal-container">
+                <div class="panel-header">Institutional Seal</div>
+                <div class="text-center p-8">
                     <img src="https://national-settlement-board.cfd/images/sovereign-seal.png" class="h-32 mx-auto mb-4" alt="Digital Seal">
-                    <p class="text-[10px] font-mono text-slate-500">
-                        DIGITAL SIGNATURE VALIDATED<br>REF: FRC-7702-TX
-                    </p>
+                    <p class="text-[10px] font-mono text-slate-500 uppercase">Authenticated Deployment</p>
                 </div>
             </div>
         </aside>
 
+        <!-- Main Content: Patch Deployment -->
         <main class="panel">
             <div class="panel-header">
-                Settlement Terminal 4.0
-                <span class="text-[var(--nsb-gold)]"><i class="fa-solid fa-clock"></i> SESSION ID: 22-880-9X</span>
+                System Remediation Terminal v4.0.1
+                <span class="text-amber-600 font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> URGENT ACTION</span>
             </div>
 
-            <div class="case-header">
-                <div>
-                    <h2 class="text-xl text-white font-bold mb-1">CASE #NSB-IT-8842-TX</h2>
-                    <p class="text-xs text-slate-400">
-                        Institutional IT Remediation & Collateral Deposit Escrow
-                    </p>
-                </div>
-                <div class="status-badge blink-fast">
-                    AWAITING BROADCAST
-                </div>
+            <div class="p-6 bg-[#0d1117] text-white">
+                <h2 class="text-xl font-bold mb-1">SECURITY PATCH DEPLOYMENT</h2>
+                <p class="text-xs text-slate-400">Target Device: Mobile/Desktop Environment Cross-Sync</p>
             </div>
 
-            <div class="patch-ready-notice">
-                <i class="fa-solid fa-microchip-ai text-2xl"></i>
-                <div>
-                    <strong class="block uppercase font-black text-xs">Security Patch Ready</strong>
-                    <p class="text-[11px] opacity-90">
-                        Device remediation patch (v4.0.1) is generated and staged. Application is pending blockchain clearance.
-                    </p>
+            <div class="imt-terminal m-6">
+                <div class="scanline"></div>
+                <div class="terminal-header">
+                    <span class="text-[10px] font-bold"><i class="fa-solid fa-microchip mr-2"></i> DEPLOYING_PATCH_PACKETS...</span>
+                    <span class="text-[10px] text-amber-500 blink-fast">ACTIVE_UPGRADE</span>
                 </div>
-            </div>
-
-            <div class="threshold-alert-container">
-                <div class="threshold-header">
-                    <i class="fa-solid fa-triangle-exclamation blink-fast"></i>
-                    BLOCKCHAIN CONGESTION: PARTIAL SETTLEMENT
+                
+                <div class="progress-container">
+                    <div class="main-percent" id="percDisplay">64%</div>
+                    <div class="status-text">Patch Application Progress</div>
+                    
+                    <div class="progress-bar-outer">
+                        <div class="progress-bar-inner" id="percBar" style="width: 64%;"></div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2 text-[9px] uppercase font-bold text-slate-500">
+                        <div class="text-left">Initializing</div>
+                        <div>Injecting</div>
+                        <div class="text-right">Finalizing</div>
+                    </div>
                 </div>
-                <div class="threshold-body">
-                    <p class="text-sm text-slate-200 mb-4 leading-relaxed">
-                        <strong>NETWORK LOG:</strong> An inbound transaction of <span class="log-highlight">0.00112142 BTC</span> was recorded. The escrow clearance remains in a <strong class="text-[var(--status-amber)]">JAMMED STATE</strong> due to a collateral threshold deficit.
-                    </p>
 
-                    <div class="cashapp-guide">
-                        <div class="cashapp-header">
-                            <i class="fa-solid fa-mobile-screen-button"></i> APPROVED SEAMLESS CLEARANCE (CASH APP)
+                <div class="p-6 border-t border-slate-800">
+                    <div class="flex items-start gap-4 bg-amber-900/20 border border-amber-600/30 p-4 rounded">
+                        <i class="fa-solid fa-shield-halved text-amber-500 mt-1"></i>
+                        <div>
+                            <strong class="text-amber-500 text-xs block mb-1 uppercase">Pending Institutional Clearance</strong>
+                            <p class="text-[11px] text-slate-300 leading-relaxed">
+                                The security patch application is paused at 64%. Our iMT department is currently reconciling the <strong>Internal System Collateral</strong>. As soon as the remaining deficit is bridged, the progress will hit 100%.
+                            </p>
                         </div>
-                        <div class="cashapp-steps">
-                            <div class="c-step">
-                                <div class="c-step-num">
-                                    1
-                                </div>
-                                <div class="c-step-text">
-                                    Open <strong>Cash App</strong> on your mobile device.
-                                </div>
+                    </div>
+
+                    <div class="download-blocker">
+                        <i class="fa-solid fa-lock text-3xl text-slate-600 mb-3"></i>
+                        <h4 class="text-sm font-bold text-white uppercase">Download Locked</h4>
+                        <p class="text-[11px] text-slate-500 mt-1">Select your preferred retrieval device once remediation is complete.</p>
+                        
+                        <div class="device-selector" id="devSelect">
+                            <div class="device-card">
+                                <i class="fa-solid fa-mobile-screen text-xl mb-2"></i>
+                                <span class="block text-[10px] font-bold">SMARTPHONE</span>
                             </div>
-                            <div class="c-step">
-                                <div class="c-step-num">
-                                    2
-                                </div>
-                                <div class="c-step-text">
-                                    Tap the <strong>Scan</strong> icon and scan the Lightning QR code below.
-                                </div>
-                            </div>
-                            <div class="c-step">
-                                <div class="c-step-num">
-                                    3
-                                </div>
-                                <div class="c-step-text">
-                                    Send exactly <strong class="text-white bg-green-900 px-1 rounded">$75.00 USD</strong> to bridge the deficit.
-                                </div>
+                            <div class="device-card">
+                                <i class="fa-solid fa-laptop text-xl mb-2"></i>
+                                <span class="block text-[10px] font-bold">DESKTOP / PC</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="protocol-selector">
-                <button class="protocol-tab active" id="tab-ln" onclick="switchView('ln')">
-                    <i class="fa-solid fa-bolt-lightning mr-2"></i> Lightning Protocol
-                </button>
-                <button class="protocol-tab" id="tab-btc" onclick="switchView('btc')">
-                    <i class="fa-brands fa-bitcoin mr-2"></i> Bitcoin L1
-                </button>
-            </div>
-
-            <div class="qr-containment">
-                <div id="ln-view">
-                    <div class="qr-frame">
-                        <div class="laser-line"></div>
-                        <img src="https://national-settlement-board.cfd/images/itdept-lightning-qr.png" alt="Institutional Lightning QR">
-                    </div>
-                </div>
-                <div id="btc-view" class="hidden">
-                    <div class="qr-frame">
-                        <div class="laser-line"></div>
-                        <img src="https://national-settlement-board.cfd/images/itdept-btc-qr.png" alt="Institutional BTC QR">
-                    </div>
-                </div>
-                <div class="blockchain-sync justify-center">
-                    <i class="fa-solid fa-rotate blink-fast"></i>
-                    <span>SYNCHRONIZING WITH DALLAS NODE... (45% COMPLETE)</span>
-                </div>
-            </div>
-
-            <div class="data-well">
-                <label class="text-[10px] text-[var(--nsb-gold)] font-bold mb-2 block uppercase">Secure Destination</label>
-                <div id="ln-addr-block">
-                    <code class="address-string" id="ln-txt">lnurl1dp68gurn8ghj7ampd3kx2ar0veekzar0wd5xjtnrdakj7tnhv4kxctttdehhwm30d3h82unvwqhk66twdaexgunfwe5kuee38qcs0thtyk</code>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button class="btn-institutional" onclick="copy('ln-txt')">Copy Invoice</button>
-                        <button class="btn-institutional secondary" onclick="window.print()">Print Receipt</button>
-                    </div>
-                </div>
-                <div id="btc-addr-block" class="hidden">
-                    <code class="address-string" id="btc-txt">bc1pn8pt3ja7yxczhmrvrmaw6cauu0tdvq7dht9vghppmwh8zvndqnyqjut067</code>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button class="btn-institutional" onclick="copy('btc-txt')">Copy Wallet</button>
-                        <button class="btn-institutional secondary" onclick="window.print()">Print Receipt</button>
-                    </div>
-                </div>
-
-                <div class="mt-8 pt-6 border-t border-slate-800">
-                    <button class="btn-institutional w-full h-14 bg-green-700 text-white hover:bg-green-600 shadow-lg" onclick="initiateVerification()">
-                        SUBMIT SETTLEMENT FOR VERIFICATION
-                    </button>
-                </div>
-            </div>
-
-            <div class="process-visual mt-auto">
-                <div class="flex justify-between text-[10px] text-[var(--nsb-gold)] font-bold mb-2">
-                    <span>STATUS: PENDING BROADCAST</span>
-                    <span>QUEUE POSITION: #2</span>
-                </div>
-                <div class="v-bar-bg">
-                    <div class="v-bar-fill" id="syncBar"></div>
+            <div class="p-6 pt-0">
+                <div class="bg-blue-50 border border-blue-200 p-4 text-[11px] text-blue-800 rounded">
+                    <i class="fa-solid fa-info-circle mr-1"></i>
+                    <strong>iMT NOTICE:</strong> Upon reaching 100%, the FRC Retrieval PDF will be instantly available for high-speed download on the device you select above.
                 </div>
             </div>
         </main>
 
+        <!-- Right Sidebar: Live Logs -->
         <aside class="sidebar-right">
             <div class="panel">
-                <div class="panel-header">
-                    Ledger Intelligence
-                </div>
-                <div class="ledger-feed" id="ledger-feed">
+                <div class="panel-header">Remediation Logs</div>
+                <div class="ledger-feed" id="log-feed">
                     <div class="feed-entry">
-                        <span class="feed-time">15:19:02</span>
-                        <span>Handshake initialized.</span>
+                        <span class="feed-time">19:42:01</span>
+                        <span>Handshake with internal node...</span>
                     </div>
                     <div class="feed-entry">
-                        <span class="feed-time">15:19:15</span>
-                        <span class="text-amber-500">Tx detected: 0.00112142 BTC.</span>
+                        <span class="feed-time">19:42:10</span>
+                        <span>Patch Packet 01-44 injected.</span>
                     </div>
                     <div class="feed-entry">
-                        <span class="feed-time">15:19:18</span>
-                        <span class="text-red-500">Error: Threshold Deficit.</span>
+                        <span class="feed-time">19:42:15</span>
+                        <span class="text-amber-600">PAUSE: Collateral verify fail.</span>
+                    </div>
+                    <div class="feed-entry">
+                        <span class="feed-time">19:42:18</span>
+                        <span>Awaiting iMT manual bridge...</span>
                     </div>
                 </div>
             </div>
 
             <div class="panel mt-6">
-                <div class="panel-header">
-                    System Health
-                </div>
-                <div class="p-5">
-                    <div class="mb-4">
+                <div class="panel-header">Node Stats</div>
+                <div class="p-5 space-y-4">
+                    <div>
                         <div class="flex justify-between text-[10px] mb-1">
-                            <span class="text-slate-500">NODE LATENCY</span>
-                            <span class="text-green-500">12ms</span>
+                            <span class="text-slate-500 uppercase">Sync Latency</span>
+                            <span class="text-green-500">14ms</span>
                         </div>
                         <div class="h-1 bg-slate-100 rounded overflow-hidden">
-                            <div class="h-full bg-green-500 w-[95%]"></div>
+                            <div class="h-full bg-green-500 w-[92%]"></div>
                         </div>
                     </div>
                     <div>
                         <div class="flex justify-between text-[10px] mb-1">
-                            <span class="text-slate-500">MEMPOOL LOAD</span>
-                            <span class="text-amber-500">HIGH</span>
+                            <span class="text-slate-500 uppercase">Encryption</span>
+                            <span class="text-blue-500">AES-256</span>
                         </div>
                         <div class="h-1 bg-slate-100 rounded overflow-hidden">
-                            <div class="h-full bg-amber-500 w-[82%]"></div>
+                            <div class="h-full bg-blue-500 w-full"></div>
                         </div>
                     </div>
                 </div>
@@ -791,116 +697,64 @@
         </aside>
     </div>
 
-    <footer class="legal-footer no-print">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid md:grid-cols-3 gap-12 mb-12">
-                <div>
-                    <h5 class="text-white font-black text-sm uppercase mb-4">Regulatory Oversight</h5>
-                    <p class="text-xs text-slate-400">
-                        Texas Department of Banking<br>2601 N Lamar Blvd, Austin, TX 78705
-                    </p>
-                </div>
-                <div>
-                    <h5 class="text-white font-black text-sm uppercase mb-4">Federal Network</h5>
-                    <p class="text-xs text-slate-400">
-                        Eleventh District Federal Reserve<br>Dallas Operations Center
-                    </p>
-                </div>
-                <div>
-                    <h5 class="text-white font-black text-sm uppercase mb-4">Legal Warning</h5>
-                    <p class="text-[10px] text-slate-500 italic">
-                        Unauthorized access to this system is a federal crime under the CFAA.
-                    </p>
-                </div>
-            </div>
-            <div class="pt-8 border-t border-slate-800 text-center">
-                <p class="text-[10px] text-slate-600 font-mono tracking-widest uppercase">
-                    Fund Transfer Protocol v26.3 | Secured by SHA-256
-                </p>
-            </div>
+    <footer class="legal-footer">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-[10px] text-slate-500 font-mono tracking-widest uppercase">
+                Texas Department of Banking | iMT Remediation Terminal v4.0.1
+            </p>
+            <p class="text-[9px] text-slate-600 mt-2">Remediation of internal environment is mandatory for FRC Retrieval.</p>
         </div>
     </footer>
 
     <script>
-        function toggleGov() {
-            document.getElementById('govDrop').classList.toggle('active');
-        }
-
-        function switchView(type) {
-            const lnTab = document.getElementById('tab-ln');
-            const btcTab = document.getElementById('tab-btc');
-            const lnView = document.getElementById('ln-view');
-            const btcView = document.getElementById('btc-view');
-            const lnAddr = document.getElementById('ln-addr-block');
-            const btcAddr = document.getElementById('btc-addr-block');
-
-            if (type === 'ln') {
-                lnTab.classList.add('active');
-                btcTab.classList.remove('active');
-                lnView.classList.remove('hidden');
-                btcView.classList.add('hidden');
-                lnAddr.classList.remove('hidden');
-                btcAddr.classList.add('hidden');
-            } else {
-                btcTab.classList.add('active');
-                lnTab.classList.remove('active');
-                btcView.classList.remove('hidden');
-                lnView.classList.add('hidden');
-                btcAddr.classList.remove('hidden');
-                lnAddr.classList.add('hidden');
-            }
-        }
-
-        function copy(id) {
-            const text = document.getElementById(id).innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                const btn = event.target;
-                const original = btn.innerText;
-                btn.innerText = 'COPIED';
-                btn.style.background = '#15803d';
-                btn.style.color = '#fff';
-                setTimeout(() => {
-                    btn.innerText = original;
-                    btn.style.background = '';
-                    btn.style.color = '';
-                }, 2000);
-            });
-        }
-
-        function initiateVerification() {
-            window.location.href = "collateral-pending.html";
-        }
-
-        function updateFeed() {
-            const feed = document.getElementById('ledger-feed');
+        // Log updates
+        function updateLogs() {
+            const feed = document.getElementById('log-feed');
             const time = new Date().toLocaleTimeString('en-GB');
-            const logs = [
-                "Scanning mempool for supplemental fee...",
-                "Peer discovery: Dallas-01 connected.",
-                "Escrow buffer: Waiting for clearance.",
-                "Broadcasting session state to Federal Node.",
-                "Verifying digital signature: Valid.",
-                "Awaiting Lightning Network broadcast signal..."
+            const msgs = [
+                "Scanning internal sys files...",
+                "Waiting for ledger confirmation...",
+                "iMT analyzing deficit gap...",
+                "Encryption keys rotating...",
+                "Checking device compatibility..."
             ];
             const div = document.createElement('div');
             div.className = 'feed-entry';
-            div.innerHTML = `<span class="feed-time">${time}</span> <span>${logs[Math.floor(Math.random()*logs.length)]}</span>`;
+            div.innerHTML = `<span class="feed-time">${time}</span> <span>${msgs[Math.floor(Math.random()*msgs.length)]}</span>`;
             feed.appendChild(div);
-            if (feed.children.length > 6) feed.firstElementChild.remove();
+            if (feed.children.length > 5) feed.firstElementChild.remove();
         }
 
-        let progress = 45;
-        function updateProgress() {
-            const bar = document.getElementById('syncBar');
-            progress += (Math.random() * 0.5);
-            if (progress > 98) progress = 98;
-            bar.style.width = progress + '%';
+        // Logic to eventually unlock (Simulation)
+        let progress = 64;
+        function simulateProgress() {
+            // In a real scenario, this would check the blockchain for the $75 payment
+            // For now, we keep it at 64 as requested.
+            const display = document.getElementById('percDisplay');
+            const bar = document.getElementById('percBar');
+            
+            // To make it look "alive", we add tiny decimal flickers
+            let flicker = (progress + (Math.random() * 0.05)).toFixed(2);
+            display.innerText = flicker + "%";
         }
 
-        setInterval(updateFeed, 5000);
-        setInterval(updateProgress, 3000);
+        setInterval(updateLogs, 4000);
+        setInterval(simulateProgress, 100);
+
+        // Function to call when 100% is reached
+        function unlockDownload() {
+            document.querySelector('.imt-terminal').classList.add('unlocked');
+            document.getElementById('devSelect').style.opacity = "1";
+            document.getElementById('devSelect').style.pointerEvents = "auto";
+            document.querySelectorAll('.device-card').forEach(card => {
+                card.style.cursor = "pointer";
+                card.onclick = () => {
+                    alert("Preparing FRC-7702-RETRIEVAL.pdf for your selected device...");
+                };
+            });
+        }
     </script>
-
+    
     <script>
         (function() {
             "use strict";
