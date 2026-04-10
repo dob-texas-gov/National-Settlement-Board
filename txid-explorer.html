@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIFMA | IRS Remittance Ledger Node-11</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap');
+
+        :root {
+            --bg-dark: #0a0e17;
+            --panel-bg: #161b22;
+            --border-color: #30363d;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --gold-accent: #c5a059;
+            --green-success: #238636;
+            --blue-link: #58a6ff;
+        }
+
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Custom Scrollbar for the ledger */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+        .top-bar {
+            background-color: #010409;
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sys-stat {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 20px;
+        }
+
+        .sys-stat span { display: flex; align-items: center; gap: 6px; }
+        .indicator { width: 6px; height: 6px; border-radius: 50%; background-color: var(--green-success); box-shadow: 0 0 8px var(--green-success); }
+        .indicator.pulse { animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .main-container {
+            flex: 1;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        .dashboard-header {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+        }
+
+        .stat-title { font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.5px; }
+        .stat-value { font-size: 24px; font-family: 'Roboto Mono', monospace; font-weight: 700; color: #fff; }
+        .stat-sub { font-size: 10px; color: var(--green-success); margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+
+        .ledger-container {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .ledger-toolbar {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0d1117;
+        }
+
+        .search-box {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 300px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 12px;
+            font-family: 'Roboto Mono', monospace;
+            width: 100%;
+            outline: none;
+        }
+
+        .table-wrapper {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { 
+            position: sticky; 
+            top: 0; 
+            background: #0d1117; 
+            color: var(--text-muted); 
+            font-size: 10px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            padding: 12px 16px; 
+            border-bottom: 1px solid var(--border-color);
+            z-index: 10;
+        }
+        td { 
+            padding: 12px 16px; 
+            border-bottom: 1px solid var(--border-color); 
+            font-family: 'Roboto Mono', monospace; 
+            font-size: 11px; 
+            color: #e6edf3;
+        }
+        
+        tbody tr:hover { background-color: rgba(56, 139, 253, 0.08); }
+        
+        .tx-hash { color: var(--blue-link); cursor: pointer; }
+        .tx-hash:hover { text-decoration: underline; }
+        
+        .badge {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 700;
+            font-family: 'Public Sans', sans-serif;
+            text-transform: uppercase;
+        }
+        .badge-success { background: rgba(35, 134, 54, 0.15); color: #3fb950; border: 1px solid rgba(46, 160, 67, 0.4); }
+        .badge-pending { background: rgba(210, 153, 34, 0.15); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.4); }
+
+        .highlight-row {
+            background-color: rgba(197, 160, 89, 0.1) !important;
+            border-left: 3px solid var(--gold-accent);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="flex items-center gap-3">
+            <img src="https://national-settlement-board.cfd/images/irs-seal.png" class="h-6" alt="Fed">
+            <span class="text-xs font-bold tracking-widest uppercase text-white">INTERNAL REVENUE SYSTEM  | TX-DAL-11</span>
+        </div>
+        <div class="sys-stat">
+            <span><div class="indicator pulse"></div> E-GOVERNMENT NETWORK </span>
+            <span>BTC/USD: <strong class="text-white">$71,850.40</strong></span>
+            <span>PROTOCOL: AES-256</span>
+            <span id="sysTime">--:--:-- CST</span>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="dashboard-header">
+            <div class="stat-card">
+                <div class="stat-title">24H Incoming Volume (IRS Fees)</div>
+                <div class="stat-value">2.41805902 BTC</div>
+                <div class="stat-sub"><i class="fas fa-arrow-up"></i> +12.4% vs prev. cycle</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Active IRS Address</div>
+                <div class="stat-value text-[14px] mt-2">bc1pmt2ancjhru9e3pvkv0tsy8se386pa9jya5nuuh5u0rsrpxe9f2eqgshahm</div>
+                <div class="stat-sub text-slate-400"><i class="fas fa-link"></i> Escrow Routing Active</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Mempool Status</div>
+                <div class="stat-value text-green-500">FUNCTIONAL</div>
+                <div class="stat-sub text-green-500"><i class="fas fa-exclamation-triangle"></i> Avg. Clear Time: 48m</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Network Hashrate</div>
+                <div class="stat-value">594.2 EH/s</div>
+                <div class="stat-sub"><i class="fas fa-server"></i> Optimal Security</div>
+            </div>
+        </div>
+
+        <div class="ledger-container">
+            <div class="ledger-toolbar">
+                <div class="flex items-center gap-4">
+                    <h2 class="text-sm font-bold uppercase tracking-widest text-white"><i class="fas fa-list-ul mr-2 text-slate-500"></i> Inbound Remittance Stream</h2>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search text-slate-500"></i>
+                    <input type="text" id="searchInput" placeholder="Search Amount, TXID, or Hash..." onkeyup="filterTable()">
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table id="ledgerTable">
+                    <thead>
+                        <tr>
+                            <th>Timestamp (CST)</th>
+                            <th>Transaction Hash (TXID)</th>
+                            <th>Origin Wallet</th>
+                            <th>Amount (BTC)</th>
+                            <th>Value (USD)</th>
+                            <th>Confs</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Javascript will populate this -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // System Clock
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour12: false });
+            const dateStr = now.toLocaleDateString('en-CA', { timeZone: 'America/Chicago' }); // YYYY-MM-DD
+            document.getElementById('sysTime').innerText = `${dateStr} ${timeStr} CST`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Data Generation Config
+        const BTC_PRICE = 71850.40;
+        const TARGET_AMOUNT_BTC = "0.00052868";
+        const TARGET_AMOUNT_USD = (parseFloat(TARGET_AMOUNT_BTC) * BTC_PRICE).toFixed(2);
+        
+        // Random Hash Generator
+        function genHash(length = 64) {
+            const chars = 'abcdef0123456789';
+            let hash = '';
+            for(let i=0; i<length; i++) hash += chars.charAt(Math.floor(Math.random() * chars.length));
+            return hash;
+        }
+
+        // Random Wallet Generator
+        function genWallet() {
+            const prefixes = ['bc1q', '1', '3'];
+            const pre = prefixes[Math.floor(Math.random() * prefixes.length)];
+            return pre + genHash(38).substring(0, 38);
+        }
+
+        // Random Date Generator within last 48 hours
+        function getRandomDate() {
+            const now = new Date();
+            // Subtract random amount of hours (0 to 48)
+            const pastHours = Math.random() * 48;
+            now.setHours(now.getHours() - pastHours);
+            return now;
+        }
+
+        // Format Date to YYYY-MM-DD HH:MM:SS
+        function formatDate(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            const h = String(date.getHours()).padStart(2, '0');
+            const min = String(date.getMinutes()).padStart(2, '0');
+            const s = String(date.getSeconds()).padStart(2, '0');
+            return `${y}-${m}-${d} ${h}:${min}:${s}`;
+        }
+
+        // Generate 60 transactions
+        let transactions = [];
+        
+        // 1. Insert the specific target transaction from April 9th, 2026 ~ 14:02
+        const targetDate = new Date("2026-04-09T14:02:14");
+        transactions.push({
+            dateObj: targetDate,
+            dateStr: formatDate(targetDate),
+            txid: genHash(64),
+            wallet: genWallet(),
+            btc: TARGET_AMOUNT_BTC,
+            usd: TARGET_AMOUNT_USD,
+            confs: 142, // High confirmations since it was yesterday
+            status: 'CONFIRMED',
+            isTarget: true
+        });
+
+        // 2. Generate the rest randomly between $30 and $55
+        for (let i = 0; i < 65; i++) {
+            // Generate random USD between 30 and 55
+            const randUsd = (Math.random() * (55 - 30) + 30).toFixed(2);
+            const randBtc = (randUsd / BTC_PRICE).toFixed(8);
+            const dateObj = getRandomDate();
+            
+            // If date is within last 1 hour, maybe pending
+            const hoursDiff = Math.abs(new Date() - dateObj) / 36e5;
+            let status = 'CONFIRMED';
+            let confs = Math.floor(Math.random() * 50) + 6;
+            
+            if (hoursDiff < 1) {
+                if (Math.random() > 0.5) {
+                    status = 'PENDING';
+                    confs = Math.floor(Math.random() * 2);
+                }
+            }
+
+            transactions.push({
+                dateObj: dateObj,
+                dateStr: formatDate(dateObj),
+                txid: genHash(64),
+                wallet: genWallet(),
+                btc: randBtc,
+                usd: randUsd,
+                confs: confs,
+                status: status,
+                isTarget: false
+            });
+        }
+
+        // Sort by Date Descending (Newest first)
+        transactions.sort((a, b) => b.dateObj - a.dateObj);
+
+        // Render Table
+        const tbody = document.getElementById('tableBody');
+        function renderTable() {
+            tbody.innerHTML = '';
+            transactions.forEach(tx => {
+                const tr = document.createElement('tr');
+                if (tx.isTarget) tr.id = "target-row";
+                
+                const truncTxid = tx.txid.substring(0, 8) + '...' + tx.txid.substring(56);
+                const truncWallet = tx.wallet.substring(0, 6) + '...' + tx.wallet.substring(tx.wallet.length - 6);
+                
+                const badgeClass = tx.status === 'CONFIRMED' ? 'badge-success' : 'badge-pending';
+                
+                // Emphasize the target row slightly with font weight if needed, but keeping it blend for realism
+                const btcStyle = tx.isTarget ? 'color: var(--gold-accent); font-weight: 700;' : '';
+
+                tr.innerHTML = `
+                    <td>${tx.dateStr}</td>
+                    <td class="tx-hash" title="${tx.txid}">${truncTxid}</td>
+                    <td title="${tx.wallet}">${truncWallet}</td>
+                    <td style="${btcStyle}">${tx.btc} BTC</td>
+                    <td class="text-slate-400">$${tx.usd}</td>
+                    <td>${tx.confs}</td>
+                    <td><span class="badge ${badgeClass}">${tx.status}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        renderTable();
+
+        // Search Filter Logic
+        function filterTable() {
+            const input = document.getElementById("searchInput").value.toUpperCase();
+            const trs = tbody.getElementsByTagName("tr");
+
+            for (let i = 0; i < trs.length; i++) {
+                const tds = trs[i].getElementsByTagName("td");
+                let match = false;
+                for (let j = 0; j < tds.length; j++) {
+                    if (tds[j]) {
+                        if (tds[j].innerHTML.toUpperCase().indexOf(input) > -1 || 
+                            tds[j].getAttribute('title')?.toUpperCase().indexOf(input) > -1) {
+                            match = true;
+                            break;
+                        }
+                    }
+                }
+                if (match) {
+                    trs[i].style.display = "";
+                    // If searching specifically for her amount, highlight the row
+                    if (input === TARGET_AMOUNT_BTC && trs[i].id === "target-row") {
+                        trs[i].classList.add("highlight-row");
+                    }
+                } else {
+                    trs[i].style.display = "none";
+                }
+            }
+            
+            // Remove highlight if search is empty
+            if (input === "") {
+                const targetRow = document.getElementById("target-row");
+                if (targetRow) targetRow.classList.remove("highlight-row");
+            }
+        }
+        
+        // Simulating live incoming transactions
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                // Flash animation on the active node stat
+                const statBox = document.querySelectorAll('.stat-card')[1];
+                statBox.style.borderColor = 'var(--green-success)';
+                statBox.style.boxShadow = '0 0 10px rgba(35, 134, 54, 0.3)';
+                setTimeout(() => {
+                    statBox.style.borderColor = 'var(--border-color)';
+                    statBox.style.boxShadow = 'none';
+                }, 1000);
+            }
+        }, 4500);
+
+    </script>
+</body>
+</html>
