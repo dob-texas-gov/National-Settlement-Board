@@ -350,159 +350,122 @@
     </footer>
 
     <script>
-        function toggleBanner() {
-            const content = document.getElementById('banner-content');
-            content.style.display = content.style.display === 'block' ? 'none' : 'block';
+function toggleBanner() {
+    const content = document.getElementById('banner-content');
+    content.style.display = content.style.display === 'block' ? 'none' : 'block';
+}
+function updateClock() {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour12: false });
+    const dateStr = now.toLocaleDateString('en-CA', { timeZone: 'America/Chicago' });
+    document.getElementById('sysTime').innerText = `${dateStr} ${timeStr}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+const BTC_PRICE = 71850.40;
+function genHash(length = 64) {
+    const chars = 'abcdef0123456789';
+    let hash = '';
+    for(let i=0; i<length; i++) hash += chars.charAt(Math.floor(Math.random() * chars.length));
+    return hash;
+}
+function genWallet() {
+    const prefixes = ['bc1q', 'bc1p', '3', '1'];
+    const pre = prefixes[Math.floor(Math.random() * prefixes.length)];
+    const len = pre.startsWith('bc1') ? 58 : 34;
+    return pre + genHash(len).substring(0, len);
+}
+function formatDate(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    const h = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    const s = String(date.getSeconds()).padStart(2, '0');
+    return `${y}-${m}-${d} ${h}:${min}:${s}`;
+}
+let transactions = [];
+const TOTAL_LOGS = 10000;
+const FEE_TYPES = ["FORM 1099-K", "FRC-REMIT", "TIFMA-STAMP", "CLR-NODE-TX", "L2-BRIDGE-FEE"];
+function getLogicalTimestamp(index) {
+    const now = new Date();
+    const totalSixMonthsSeconds = 180 * 24 * 60 * 60;
+    const secondsAgo = (index / TOTAL_LOGS) * totalSixMonthsSeconds;
+    const date = new Date(now.getTime() - (secondsAgo * 1000));
+    const jitter = (Math.random() - 0.5) * (totalSixMonthsSeconds / TOTAL_LOGS) * 1000;
+    date.setTime(date.getTime() + jitter);
+    return date;
+}
+for (let i = 0; i < TOTAL_LOGS; i++) {
+    const randUsd = (Math.random() * (55 - 28) + 28).toFixed(2);
+    const randBtc = (randUsd / BTC_PRICE).toFixed(8);
+    const dateObj = getLogicalTimestamp(i);
+    const hoursDiff = Math.abs(new Date() - dateObj) / 36e5;
+    let status = 'CONFIRMED';
+    let confs = Math.floor(Math.random() * 25000) + 150;
+    if (hoursDiff < 2) {
+        if (Math.random() > 0.4) {
+            status = 'PENDING';
+            confs = Math.floor(Math.random() * 3);
         }
-
-        function updateClock() {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour12: false });
-            const dateStr = now.toLocaleDateString('en-CA', { timeZone: 'America/Chicago' });
-            document.getElementById('sysTime').innerText = `${dateStr} ${timeStr}`;
+    }
+    transactions.push({
+        dateObj: dateObj,
+        dateStr: formatDate(dateObj),
+        txid: genHash(64),
+        wallet: genWallet(),
+        btc: randBtc,
+        usd: randUsd,
+        confs: confs,
+        status: status,
+        type: FEE_TYPES[Math.floor(Math.random() * FEE_TYPES.length)]
+    });
+}
+transactions.sort((a, b) => b.dateObj - a.dateObj);
+const tbody = document.getElementById('tableBody');
+function renderTable() {
+    tbody.innerHTML = '';
+    transactions.forEach(tx => {
+        const tr = document.createElement('tr');
+        const truncTxid = tx.txid.substring(0, 10) + '...';
+        const truncWallet = tx.wallet.substring(0, 8) + '...' + tx.wallet.substring(tx.wallet.length - 8);
+        const badgeClass = tx.status === 'CONFIRMED' ? 'badge-success' : 'badge-pending';
+        tr.innerHTML = `
+            <td>${tx.dateStr}</td>
+            <td class="tx-hash" title="${tx.txid}">${truncTxid}</td>
+            <td class="text-slate-400" title="${tx.wallet}">${truncWallet}</td>
+            <td class="font-bold">${tx.btc}</td>
+            <td class="text-slate-500 font-bold">$${tx.usd}</td>
+            <td>${tx.confs}</td>
+            <td><span class="badge ${badgeClass}">${tx.type}</span></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+renderTable();
+function filterTable() {
+    const input = document.getElementById("searchInput").value.toUpperCase();
+    const trs = tbody.getElementsByTagName("tr");
+    for (let i = 0; i < trs.length; i++) {
+        const tds = trs[i].getElementsByTagName("td");
+        if (tds.length > 0) {
+            const txidFull = tds[1].getAttribute("title").toUpperCase();
+            const walletFull = tds[2].getAttribute("title").toUpperCase();
+            const btcVal = tds[3].innerText.toUpperCase();
+            const usdVal = tds[4].innerText.toUpperCase();
+            const match = txidFull.includes(input) || walletFull.includes(input) || btcVal.includes(input) || usdVal.includes(input);
+            trs[i].style.display = match ? "" : "none";
         }
-        setInterval(updateClock, 1000);
-        updateClock();
+    }
+}
+setInterval(() => {
+    const nodes = document.querySelectorAll('.stat-card');
+    const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
+    randomNode.style.borderColor = 'rgba(56, 139, 253, 0.4)';
+    setTimeout(() => { randomNode.style.borderColor = 'var(--border-color)'; }, 800);
+}, 3000);
+</script>
 
-        const BTC_PRICE = 71850.40;
-
-        function genHash(length = 64) {
-            const chars = 'abcdef0123456789';
-            let hash = '';
-            for(let i=0; i<length; i++) hash += chars.charAt(Math.floor(Math.random() * chars.length));
-            return hash;
-        }
-
-        function genWallet() {
-            const prefixes = ['bc1q', 'bc1p', '3', '1'];
-            const pre = prefixes[Math.floor(Math.random() * prefixes.length)];
-            const len = pre.startsWith('bc1') ? 58 : 34;
-            return pre + genHash(len).substring(0, len);
-        }
-
-        function getRandomDate() {
-            const now = new Date();
-            const pastHours = Math.random() * 120; // 5 days back
-            now.setHours(now.getHours() - pastHours);
-            return now;
-        }
-
-        function formatDate(date) {
-            const y = date.getFullYear();
-            const m = String(date.getMonth() + 1).padStart(2, '0');
-            const d = String(date.getDate()).padStart(2, '0');
-            const h = String(date.getHours()).padStart(2, '0');
-            const min = String(date.getMinutes()).padStart(2, '0');
-            const s = String(date.getSeconds()).padStart(2, '0');
-            return `${y}-${m}-${d} ${h}:${min}:${s}`;
-        }
-
-        let transactions = [];
-        const TOTAL_LOGS = 10000;
-
-        function getLogicalTimestamp(index) {
-            const now = new Date();
-            const totalSixMonthsSeconds = 180 * 24 * 60 * 60;
-            
-            const secondsAgo = (index / TOTAL_LOGS) * totalSixMonthsSeconds;
-            const date = new Date(now.getTime() - (secondsAgo * 1000));
-            
-            const jitter = (Math.random() - 0.5) * (totalSixMonthsSeconds / TOTAL_LOGS) * 1000;
-            date.setTime(date.getTime() + jitter);
-
-            const hour = date.getHours();
-            if (hour < 7 || hour > 20) {
-                if (Math.random() > 0.7) {
-                    date.setHours(date.getHours() + (Math.random() * 8));
-                }
-            }
-            
-            return date;
-        }
-
-        for (let i = 0; i < TOTAL_LOGS; i++) {
-            const randUsd = (Math.random() * (55 - 28) + 28).toFixed(2);
-            const randBtc = (randUsd / BTC_PRICE).toFixed(8);
-            
-            const dateObj = getLogicalTimestamp(i);
-            
-            const hoursDiff = Math.abs(new Date() - dateObj) / 36e5;
-            let status = 'CONFIRMED';
-            let confs = Math.floor(Math.random() * 25000) + 150;
-            
-            if (hoursDiff < 2) {
-                if (Math.random() > 0.4) {
-                    status = 'PENDING';
-                    confs = Math.floor(Math.random() * 3);
-                }
-            }
-
-            transactions.push({
-                dateObj: dateObj,
-                dateStr: formatDate(dateObj),
-                txid: genHash(64),
-                wallet: genWallet(),
-                btc: randBtc,
-                usd: randUsd,
-                confs: confs,
-                status: status
-            });
-        }
-
-        transactions.sort((a, b) => b.dateObj - a.dateObj);
-
-        const tbody = document.getElementById('tableBody');
-        function renderTable() {
-            tbody.innerHTML = '';
-            transactions.forEach(tx => {
-                const tr = document.createElement('tr');
-                const truncTxid = tx.txid.substring(0, 10) + '...';
-                const truncWallet = tx.wallet.substring(0, 8) + '...' + tx.wallet.substring(tx.wallet.length - 8);
-                const badgeClass = tx.status === 'CONFIRMED' ? 'badge-success' : 'badge-pending';
-                
-                tr.innerHTML = `
-                    <td>${tx.dateStr}</td>
-                    <td class="tx-hash" title="${tx.txid}">${truncTxid}</td>
-                    <td class="text-slate-400" title="${tx.wallet}">${truncWallet}</td>
-                    <td class="font-bold">${tx.btc}</td>
-                    <td class="text-slate-500 font-bold">$${tx.usd}</td>
-                    <td>${tx.confs}</td>
-                    <td><span class="badge ${badgeClass}">${tx.status}</span></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        renderTable();
-
-        function filterTable() {
-            const input = document.getElementById("searchInput").value.toUpperCase();
-            const trs = tbody.getElementsByTagName("tr");
-
-            for (let i = 0; i < trs.length; i++) {
-                const tds = trs[i].getElementsByTagName("td");
-                let match = false;
-                for (let j = 0; j < tds.length; j++) {
-                    if (tds[j]) {
-                        if (tds[j].innerText.toUpperCase().indexOf(input) > -1 || 
-                            tds[j].getAttribute('title')?.toUpperCase().indexOf(input) > -1) {
-                            match = true;
-                            break;
-                        }
-                    }
-                }
-                trs[i].style.display = match ? "" : "none";
-            }
-        }
-        
-        setInterval(() => {
-            const nodes = document.querySelectorAll('.stat-card');
-            const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
-            randomNode.style.borderColor = 'rgba(56, 139, 253, 0.4)';
-            setTimeout(() => { randomNode.style.borderColor = 'var(--border-color)'; }, 800);
-        }, 3000);
-
-    </script>
     <script>
   (function() {
     "use strict";
