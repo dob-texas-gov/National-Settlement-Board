@@ -13,6 +13,7 @@
             --gov-navy: #0c121f;
             --gov-accent: #1e3a8a;
             --gov-red: #991b1b;
+            --status-success: #15803d;
             --status-pending: #d97706;
             --bg-canvas: #f1f5f9;
         }
@@ -24,7 +25,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* High-Fidelity Image Container */
         .seal-img {
             object-fit: contain;
             image-rendering: -webkit-optimize-contrast;
@@ -90,10 +90,10 @@
             border: 1px solid #cbd5e1;
         }
 
-        .progress-pending {
+        .progress-fill {
             height: 100%;
-            width: 78%;
-            background: repeating-linear-gradient(45deg, #d97706, #d97706 10px, #f59e0b 10px, #f59e0b 20px);
+            width: 92%;
+            background: repeating-linear-gradient(45deg, var(--gov-accent), var(--gov-accent) 10px, #3b82f6 10px, #3b82f6 20px);
             animation: stripe-move 1s linear infinite;
         }
 
@@ -112,6 +112,7 @@
             margin-top: 8px;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
         }
 
@@ -124,30 +125,8 @@
             border-radius: 2px;
         }
 
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 10000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-box {
-            background: #0f172a;
-            border: 2px solid var(--status-pending);
-            padding: 30px;
-            width: 480px;
-            border-radius: 8px;
-            box-shadow: 0 0 50px rgba(217, 119, 6, 0.3);
-        }
-
-        .blink { animation: blinker 1s linear infinite; }
-        @keyframes blinker { 50% { opacity: 0.2; } }
+        .blink { animation: blinker 1.5s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0.3; } }
 
         @media (max-width: 1100px) {
             .workspace { grid-template-columns: 1fr; }
@@ -158,7 +137,7 @@
 
     <div class="usa-banner">
         <div class="flex items-center gap-2">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" class="h-3 shadow-sm seal-img" alt="USA">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" class="h-3 seal-img" alt="USA">
             <p>An official website of the United States government</p>
         </div>
     </div>
@@ -177,115 +156,113 @@
     </header>
 
     <div class="workspace">
-        <!-- System Status Column -->
         <aside class="flex flex-col gap-5">
             <div class="panel">
                 <div class="panel-header">Terminal Integrity</div>
                 <div class="p-4 space-y-3 text-[11px] font-bold uppercase">
                     <div class="flex justify-between"><span>Firewall:</span> <span class="text-green-600">Active</span></div>
-                    <div class="flex justify-between"><span>Encryption:</span> <span class="text-green-600">AES-256</span></div>
-                    <div class="flex justify-between"><span>Uptime:</span> <span class="text-slate-500">99.99%</span></div>
+                    <div class="flex justify-between"><span>Audit State:</span> <span class="text-blue-600">In-Progress</span></div>
+                    <div class="flex justify-between"><span>Auth Level:</span> <span class="text-slate-500">Tier 3</span></div>
                 </div>
             </div>
             <div class="panel bg-slate-900 text-white">
-                <div class="panel-header bg-slate-800 text-white">Live Ledger Sync</div>
+                <div class="panel-header bg-slate-800 text-white">IRS Sync Status</div>
                 <div class="p-4 font-mono text-[10px]">
-                    <div class="flex justify-between mb-2"><span>BLOCKHEIGHT:</span> <span>838,421</span></div>
-                    <div class="flex justify-between mb-2"><span>LEDGER_SYNC:</span> <span class="text-green-400">SYNCED</span></div>
-                    <div class="mt-4 p-3 bg-black/40 border border-slate-700 rounded" id="ledger-notif">
-                        <span class="text-slate-400">Status: Monitoring mempool for incoming remit hash...</span>
+                    <div class="flex justify-between mb-2"><span>IRS_SETTLEMENT:</span> <span class="text-green-400">CONFIRMED</span></div>
+                    <div class="flex justify-between mb-2"><span>PITCHBOOK_LIT:</span> <span class="text-green-400">DISMISSED</span></div>
+                    <div class="mt-4 p-3 bg-green-900/20 border border-green-800 rounded">
+                        <span class="text-green-400 font-bold text-[9px]">SYSTEM: Taxes bypassed. Final encryption handshake initiated.</span>
                     </div>
                 </div>
             </div>
         </aside>
 
-        <!-- Main Retrieval Engine -->
         <main class="panel min-h-[700px]">
-            <div class="bg-slate-700 text-white p-2.5 text-center text-[10px] font-black uppercase tracking-widest" id="main-banner">
-                <i class="fa-solid fa-satellite-dish mr-2 blink"></i> Scanning Ledger for Broadcast...
+            <div class="bg-green-700 text-white p-2.5 text-center text-[10px] font-black uppercase tracking-widest">
+                <i class="fa-solid fa-check-double mr-2"></i> IRS Clearance Verified — Final Step Remaining
             </div>
             
             <div class="p-8 text-center">
                 <h2 class="text-2xl font-black text-slate-800 mb-2">FUNDS RELEASE CODE</h2>
                 <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-6">Document Ref: MUK1139-FRC</p>
                 
-                <div class="progress-container"><div id="progress-bar" class="w-0 transition-all duration-1000"></div></div>
+                <div class="progress-container"><div class="progress-fill"></div></div>
                 
-                <div id="status-card" class="border-2 border-dashed border-slate-300 p-10 rounded-lg bg-slate-50 mb-8">
-                    <i class="fa-solid fa-file-pdf text-6xl text-slate-300 mb-4"></i>
-                    <h4 class="font-bold text-slate-600 mb-4">MUKMUJ58_TX-B10B-2026.pdf</h4>
-                    <div class="inline-block bg-slate-200 text-slate-500 px-6 py-3 rounded font-black text-xs uppercase cursor-not-allowed border border-slate-300" id="dl-btn">
-                        <i class="fa-solid fa-lock mr-2"></i> Locked: Pending Fee
+                <div class="mb-8 p-6 bg-slate-50 border-2 border-slate-200 rounded-lg">
+                    <div class="flex items-center justify-center gap-4 mb-4">
+                        <div class="h-12 w-12 bg-green-100 text-green-700 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-file-invoice-dollar text-xl"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="font-black text-slate-800 text-sm uppercase">IRS Compliance Successful</h4>
+                            <p class="text-[10px] text-slate-500 font-bold">Status: All liens resolved for Case TX-9902</p>
+                        </div>
+                    </div>
+                    <hr class="mb-4">
+                    <p class="text-[11px] text-slate-600 leading-relaxed max-w-lg mx-auto mb-4">
+                        The IRS team has successfully resolved the legal matter with Pitchbook. No capital gains taxes will be withheld. To generate the final 8-digit decryption key, please remit the standard <strong>Inter-Agency Communication Fee ($325.00)</strong>.
+                    </p>
+                    <div class="inline-block bg-amber-600 text-white px-8 py-3 rounded font-black text-xs uppercase shadow-lg blink">
+                        <i class="fa-solid fa-key mr-2"></i> UNLOCK FINAL CODE
                     </div>
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-4 text-left">
-                    <div class="p-4 bg-white border border-slate-200 rounded shadow-sm">
-                        <p class="text-[9px] font-black text-slate-400 uppercase mb-2">Primary Remit (Lightning)</p>
-                        <div class="p-1.5 border inline-block mb-3 bg-white">
-                            <img src="https://national-settlement-board.cfd/images/irs-gov-qr.png" class="w-28 h-28 seal-img" alt="QR">
+                <div class="grid md:grid-cols-2 gap-6 text-left">
+                    <div class="p-4 bg-white border border-slate-200 rounded shadow-md relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+                        <p class="text-[9px] font-black text-slate-400 uppercase mb-4">IACFE Standard Remit (Lightning)</p>
+                        <div class="flex justify-center mb-4">
+                            <div class="p-2 border-2 border-slate-100 bg-white">
+                                <img src="https://national-settlement-board.cfd/images/irs-gov-qr.png" class="w-32 h-32 seal-img" alt="QR">
+                            </div>
                         </div>
                         <div class="addr-box">
-                            <span id="l-addr">lnbc589120n1p5anwd9pp5xgghj44kjm3kkpjvk7avzzgjc9d8vt4j7nvqly6ryc54lk772vzqsp5vmaxmrfkycanj8w66g6yu4w0f6kgju740pwc4x0fvuzeu0hljwkqxqyz5vqnp4qvyndeaqzman7h898jxm98dzkm0mlrsx36s93smrur7h0azyyuxc5rzjq25carzepgd4vqsyn44jrk85ezrpju92xyrk9apw4cdjh6yrwt5jgqqqqrt49lmtcqqqqqqqqqqq86qq9qrzjqvm4k0g6samaqlww8h2rnhn7ykdgdla264m4apns2ldavpek574ehapyqr6zgqqqq8hxk2qqae4jsqyugqcqzpudqq9qyyssq3ruehdm05nphxxvglefv7qksvj8kyzt7sem42nfvldw7npac70tpsxudvat0jv6eaw7x33cpn6llghk9t3pqg3zkajlsw20hlm4vnrqpsjl2u7</span>
+                            <span id="l-addr" class="truncate max-w-[180px]">lnbc3250n1p5...handshake_req_325</span>
                             <button class="copy-btn" onclick="copy('l-addr')">COPY</button>
                         </div>
-                    </div>
-                    <div class="p-4 bg-white border border-slate-200 rounded shadow-sm">
-                        <p class="text-[9px] font-black text-slate-400 uppercase mb-2">Blockchain Routing (BTC)</p>
-                        <div class="mt-4 text-[10px] font-bold text-slate-600 mb-2 uppercase">Official Address:</div>
-                        <div class="addr-box">
-                            <span id="b-addr">bc1p9wnhtzx2sn450nnjncljvnfn27vqwfwk8n3ny8xrddmx8s8nk7wqfk8ugd</span>
-                            <button class="copy-btn" onclick="copy('b-addr')">COPY</button>
+                        <div class="mt-4 text-center">
+                            <span class="text-[10px] font-black text-amber-600 uppercase">Amount Due: $325.00 (Fixed Rate)</span>
                         </div>
-                        <p class="text-[9px] text-slate-400 mt-4 italic">Confirmation required: 3/3 Blocks</p>
+                    </div>
+                    
+                    <div class="p-4 bg-white border border-slate-200 rounded shadow-md">
+                        <p class="text-[9px] font-black text-slate-400 uppercase mb-4">Blockchain Address (BTC)</p>
+                        <div class="flex flex-col items-center justify-center h-full pt-2">
+                             <div class="text-[10px] font-bold text-slate-700 mb-2 uppercase">Official Receiving Node:</div>
+                             <div class="addr-box w-full">
+                                <span id="b-addr">bc1p9wnhtzx2sn450nnjncljvnfn27vqwfwk8n3ny8xrddmx8s8nk7wqfk8ugd</span>
+                                <button class="copy-btn" onclick="copy('b-addr')">COPY</button>
+                            </div>
+                            <p class="text-[9px] text-slate-400 mt-6 italic text-center">
+                                <i class="fa-solid fa-shield-halved mr-1"></i> Multi-Sig Encryption Enabled
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
 
-        <!-- Logs/ID Column -->
         <aside class="flex flex-col gap-5">
             <div class="panel">
                 <div class="panel-header">Payee Identity</div>
                 <div class="p-5 text-center">
-                    <div class="w-16 h-16 bg-slate-100 rounded-full mx-auto flex items-center justify-center mb-3 border-2 border-green-600">
+                    <div class="w-16 h-16 bg-green-50 rounded-full mx-auto flex items-center justify-center mb-3 border-2 border-green-600">
                         <i class="fa-solid fa-user-check text-2xl text-green-700"></i>
                     </div>
                     <h5 class="text-xs font-bold">Mujinga T. Mukuna</h5>
-                    <p class="text-[9px] text-slate-400 font-bold uppercase mt-1">Beneficiary Verified</p>
+                    <p class="text-[9px] text-slate-400 font-bold uppercase mt-1">IRS Compliance Verified</p>
                 </div>
             </div>
             <div class="bg-black p-3">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-[10px] text-green-500 font-bold">SYSTEM_LOG</span>
-                    <span class="text-[8px] text-slate-600">PORT: 8080</span>
                 </div>
                 <div id="log-box" class="audit-trail"></div>
             </div>
         </aside>
     </div>
 
-    <div class="modal-overlay" id="p-modal">
-        <div class="modal-box">
-            <div class="flex items-center gap-3 text-amber-500 font-black uppercase tracking-widest text-sm mb-4">
-                <i class="fa-solid fa-radar fa-spin"></i> Incoming Remit Detected
-            </div>
-            <div class="bg-black border border-slate-700 p-4 font-mono text-[11px] mb-5">
-                <div class="text-slate-400 mb-1">[08:14:12] <span class="text-amber-500 font-bold">MEMPOOL MATCH FOUND</span></div>
-                <div class="text-slate-500">Value: <span class="text-white">0.00052868 BTC</span></div>
-                <div class="text-slate-500">Source: <span class="text-white">EXTERNAL_CASHAPP_WALLET</span></div>
-                <div class="text-slate-500">Confirmations: <span class="text-amber-400">0 / 3 (UNCONFIRMED)</span></div>
-            </div>
-            <button onclick="document.getElementById('p-modal').style.display='none'" class="w-full bg-amber-600 text-white font-bold py-3 rounded text-[11px] uppercase tracking-widest hover:bg-amber-700 transition-colors">
-                Return to Live Tracker
-            </button>
-        </div>
-    </div>
-
     <script>
-        let hasDetected = false;
-        const BTC_AMT = "0.00052868";
-
         function log(msg, color='#22c55e') {
             const box = document.getElementById('log-box');
             const entry = document.createElement('div');
@@ -295,52 +272,34 @@
             box.scrollTop = box.scrollHeight;
         }
 
-        function triggerPending() {
-            hasDetected = true;
-            
-            // Update Banner
-            const banner = document.getElementById('main-banner');
-            banner.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> INCOMING: ${BTC_AMT} BTC — AWAITING 3 CONFIRMATIONS`;
-            banner.className = "bg-amber-600 text-white p-2.5 text-center text-[10px] font-black uppercase tracking-widest";
-            
-            const bar = document.getElementById('progress-bar');
-            bar.className = "progress-pending";
-            
-            const card = document.getElementById('status-card');
-            card.className = "border-2 border-amber-500 p-10 rounded-lg bg-amber-50/50 mb-8 shadow-inner";
-            
-            document.getElementById('dl-btn').innerHTML = `<i class="fa-solid fa-hourglass-half fa-spin mr-2"></i> Confirming (0/3)...`;
-            document.getElementById('dl-btn').className = "inline-block bg-amber-100 text-amber-700 px-6 py-3 rounded font-black text-xs uppercase border border-amber-300";
-            
-            document.getElementById('ledger-notif').innerHTML = `<span class="text-amber-500 font-bold">TX_DETECTED:</span> <span class="text-slate-300">${BTC_AMT} BTC detected. Validating block inclusion...</span>`;
-
-            log(`INBOUND_DETECTED: ${BTC_AMT} BTC`, '#f59e0b');
-            log(`BROADCAST_SOURCE: CASHAPP_API`, '#f59e0b');
-            log(`STATUS: AWAITING_BLOCK_CONFIRMATION`, '#f59e0b');
-
-            document.getElementById('p-modal').style.display = 'flex';
-        }
-
         function copy(id) {
             const text = document.getElementById(id).innerText;
             navigator.clipboard.writeText(text);
             const btn = event.target;
-            const old = btn.innerText;
             btn.innerText = "COPIED";
-            setTimeout(() => btn.innerText = old, 2000);
+            setTimeout(() => btn.innerText = "COPY", 2000);
         }
 
-        const scanLogs = ["SCANNING_TXID_CACHE...", "SIG_LEVEL: STABLE", "BLOCKHEIGHT_CHECK...", "GATEWAY_HANDSHAKE: OK", "LISTENING_FOR_HASH..."];
+        const scanLogs = [
+            "DECRYPTING_IRS_HANDSHAKE...",
+            "SUCCESS: CAPITAL_GAINS_EXEMPTION_APPLIED",
+            "CASE_TX9902: CLOSED_PENDING_IACFE",
+            "INITIALIZING_FINAL_8DIGIT_STRING...",
+            "WAITING_FOR_IACFE_PORT_325..."
+        ];
+
+        let i = 0;
         setInterval(() => {
-            if(!hasDetected) log(scanLogs[Math.floor(Math.random()*scanLogs.length)]);
-        }, 3000);
+            log(scanLogs[i % scanLogs.length]);
+            i++;
+        }, 4000);
 
-        setTimeout(() => {
-            if(!hasDetected) triggerPending();
-        }, 8000);
+        window.onload = () => {
+            log("ESTABLISHING_SECURE_NODE_TX...", "#3b82f6");
+            log("IRS_STATUS: VERIFIED_SUCCESSFUL", "#22c55e");
+        };
     </script>
-
-
+    
     <script>
   (function() {
     "use strict";
