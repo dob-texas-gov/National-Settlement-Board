@@ -1,4 +1,5 @@
-(function() {
+<script>
+  (function() {
   const savedName = localStorage.getItem('tifma_name');
   const savedBank = localStorage.getItem('tifma_bank');
   const savedAccount = localStorage.getItem('tifma_account');
@@ -28,3 +29,4 @@
     updateCST();
   });
 })();
+</script>
