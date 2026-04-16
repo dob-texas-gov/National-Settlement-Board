@@ -1,20 +1,69 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consolidated Screening List | CFTF Administrative Portal</title>
+    <title>Restricted Entity Database | Cyber Fraud Task Force</title>
+    <!-- Tailwind CSS for professional styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React and ReactDOM for interactive logic -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX compilation -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700;900&display=swap');
-        body { font-family: 'Public Sans', sans-serif; }
-        .dept-header { background-color: #002E6D; border-bottom: 4px solid #FFBE2E; }
-        .gov-banner { background: #f0f0f0; border-bottom: 1px solid #d6d6d6; }
-        @media print { .no-print { display: none !important; } }
+        
+        body {
+            font-family: 'Public Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .gov-banner-gradient {
+            background: linear-gradient(90deg, #E1E4E7 0%, #F8F9FA 100%);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #002E6D;
+            border-radius: 10px;
+        }
+
+        /* Official Department Styling */
+        .dept-header {
+            background-color: #002E6D;
+            border-bottom: 4px solid #FFBE2E;
+        }
+
+        .status-banned {
+            background-color: #F8D7DA;
+            color: #721C24;
+            border: 1px solid #F5C6CB;
+        }
+
+        .status-nominated {
+            background-color: #FFF3CD;
+            color: #856404;
+            border: 1px solid #FFEEBA;
+        }
+
+        .status-review {
+            background-color: #CCE5FF;
+            color: #004085;
+            border: 1px solid #B8DAFF;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+        }
     </style>
 </head>
 <body class="bg-[#F1F3F5]">
@@ -23,28 +72,68 @@
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
 
-        const Icon = ({ name, size = 16, className = "" }) => {
+        // Lucide Icon Wrapper for React
+        const Icon = ({ name, className, size = 16 }) => {
+            const [svg, setSvg] = useState('');
+            useEffect(() => {
+                const icon = lucide.icons[name];
+                if (icon) {
+                    const svgString = lucide.createIcons({
+                        icons: { [name]: icon },
+                        attrs: { class: className, 'stroke-width': 2, width: size, height: size }
+                    });
+                }
+            }, [name, className, size]);
+            
+            // Fallback to manual SVG strings for reliability in standalone environments
             const icons = {
                 Shield: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
                 Search: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
-                Alert: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
-                Link: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>,
-                File: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>,
-                Lock: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                AlertTriangle: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+                CheckCircle: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
+                Lock: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>,
+                Download: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
+                Info: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>,
+                Filter: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>,
+                ExternalLink: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>,
+                ChevronRight: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>,
+                Menu: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>,
+                X: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             };
             return icons[name] || null;
         };
 
         const generateEntities = () => {
-            const geos = ["Hong Kong", "Singapore", "UAE", "Seychelles", "BVI", "Cayman Islands", "Cyprus", "Panama"];
-            const states = ["Banned", "Nominated", "Review"];
-            return Array.from({ length: 350 }, (_, i) => ({
-                name: `${["APEX", "SINO", "GLOBAL", "PACIFIC", "NORDIC"][i%5]} ${["SETTLEMENT", "CLEARANCE", "TRADE", "CAPITAL", "FIDUCIARY"][i%5]} ${["GROUP", "LTD", "LLC", "INTERNATIONAL"][i%4]}`,
-                id: `ENT-${30000 + i}-${String.fromCharCode(65 + (i % 26))}`,
-                geo: geos[i % geos.length],
-                status: states[i % 3],
-                date: `2026-04-${(i % 28) + 1}`
-            }));
+            const prefixes = ["GLOBAL", "INTER-PACIFIC", "NORDIC", "ATLANTIC", "EMIRATES", "TRANS-CONTINENTAL", "OFFSHORE", "FEDERATED", "SINO-ASIA", "APEX"];
+            const mid = ["TRUST", "CLEARANCE", "SETTLEMENT", "FIDUCIARY", "LOGISTICS", "MARITIME", "DIGITAL", "CAPITAL", "MERCHANT"];
+            const suffixes = ["HOLDINGS LTD", "GROUP", "INTERNATIONAL", "SOLUTIONS CORP", "MANAGEMENT", "SERVICES", "TRADING LLC"];
+            const geos = ["Hong Kong", "Singapore", "BVI", "Seychelles", "UAE", "Panama", "Cyprus", "Cayman Islands", "Malta", "Luxembourg"];
+            
+            const baseData = [
+                { name: "PITCHBOOK DATA OPTIMIZATION FREELANCE PLATFORM FRANCHISE", id: "ENT-9902-PB", geo: "Global", status: "Banned", date: "2026-04-12" },
+                { name: "APEX FLOW SETTLEMENTS", id: "ENT-99120-X", geo: "Seychelles", status: "Nominated", date: "2026-03-12" },
+                { name: "BLUE HORIZON CUSTODY", id: "ENT-44021-B", geo: "British Virgin Islands", status: "Banned", date: "2026-02-04" },
+                { name: "CENTRAL GATEWAY LOGISTICS", id: "ENT-11928-C", geo: "Singapore", status: "Nominated", date: "2026-04-01" },
+                { name: "DIGITAL ASSET CLEARANCE (DAC)", id: "ENT-55092-D", geo: "Hong Kong", status: "Banned", date: "2025-11-15" },
+                { name: "EURO-GLOBAL FIDUCIARY", id: "ENT-88210-E", geo: "Cyprus", status: "Review", date: "2026-04-10" },
+                { name: "PACIFIC RIM NODE TRANSFER", id: "ENT-22109-Z", geo: "Malta", status: "Banned", date: "2026-01-22" }
+            ];
+
+            const generated = Array.from({ length: 340 }, (_, i) => {
+                const p = prefixes[Math.floor(Math.random() * prefixes.length)];
+                const m = mid[Math.floor(Math.random() * mid.length)];
+                const s = suffixes[Math.floor(Math.random() * suffixes.length)];
+                return {
+                    name: `${p} ${m} ${s}`,
+                    id: `ENT-${20000 + i}-${String.fromCharCode(65 + (i % 26))}`,
+                    geo: geos[Math.floor(Math.random() * geos.length)],
+                    status: i % 8 === 0 ? "Banned" : (i % 4 === 0 ? "Nominated" : "Review"),
+                    date: `2026-0${Math.floor(Math.random() * 4) + 1}-${Math.floor(Math.random() * 28) + 1}`
+                };
+            });
+
+            // Sort alphabetically by name to ensure "PITCHBOOK" lands in the 'P' section
+            return [...baseData, ...generated].sort((a, b) => a.name.localeCompare(b.name));
         };
 
         const ENTITY_DB = generateEntities();
@@ -52,218 +141,418 @@
         function App() {
             const [searchTerm, setSearchTerm] = useState('');
             const [statusFilter, setStatusFilter] = useState('All');
-            const [verifyId, setVerifyId] = useState('');
-            const [result, setResult] = useState(null);
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+            const [verificationId, setVerificationId] = useState('');
+            const [verificationResult, setVerificationResult] = useState(null);
+            const [loading, setLoading] = useState(false);
+            const [currentPage, setCurrentPage] = useState(1);
+            const itemsPerPage = 15;
 
-            const filtered = useMemo(() => {
-                return ENTITY_DB.filter(e => 
-                    (e.name.toLowerCase().includes(searchTerm.toLowerCase()) || e.id.includes(searchTerm.toUpperCase())) &&
-                    (statusFilter === 'All' || e.status === statusFilter)
-                );
+            const filteredEntities = useMemo(() => {
+                return ENTITY_DB.filter(e => {
+                    const matchesSearch = e.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                          e.id.toLowerCase().includes(searchTerm.toLowerCase());
+                    const matchesStatus = statusFilter === 'All' || e.status === statusFilter;
+                    return matchesSearch && matchesStatus;
+                });
             }, [searchTerm, statusFilter]);
+
+            const paginatedEntities = useMemo(() => {
+                const start = (currentPage - 1) * itemsPerPage;
+                return filteredEntities.slice(start, start + itemsPerPage);
+            }, [filteredEntities, currentPage]);
+
+            const totalPages = Math.ceil(filteredEntities.length / itemsPerPage);
+
+            const handleVerify = () => {
+                if (!verificationId) return;
+                setLoading(true);
+                setVerificationResult(null);
+                setTimeout(() => {
+                    const found = ENTITY_DB.find(e => e.id.toUpperCase() === verificationId.trim().toUpperCase());
+                    setVerificationResult(found || "NOT_FOUND");
+                    setLoading(false);
+                }, 1000);
+            };
 
             return (
                 <div className="min-h-screen flex flex-col">
-                    {/* Official Gov Header */}
-                    <div className="gov-banner py-1 px-6 no-print">
-                        <div className="max-w-7xl mx-auto flex items-center text-[10px] font-bold text-slate-600 uppercase tracking-widest">
-                            <img src="https://flagcdn.com/w20/us.png" className="h-3 mr-2" alt="USA" />
+                    {/* Official Banner */}
+                    <div className="gov-banner-gradient border-b border-slate-300 py-1.5 px-4 no-print">
+                        <div className="max-w-7xl mx-auto flex items-center text-[11px] font-semibold text-slate-700 uppercase tracking-tight">
+                            <img src="https://flagcdn.com/w20/us.png" alt="US Flag" className="h-3 mr-2 shadow-sm" />
                             An official website of the United States government
-                            <a href="https://www.usa.gov" className="ml-4 text-blue-800 underline">Official Guide</a>
+                            <button className="ml-3 text-blue-800 hover:text-blue-600 transition-colors">Here's how you know</button>
                         </div>
                     </div>
 
-                    <header className="dept-header text-white py-6 no-print">
-                        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-                            <div className="flex items-center gap-4">
-                                <div className="bg-white p-1 rounded shadow-sm">
-                                    <Icon name="Shield" size={40} className="text-[#002E6D]" />
+                    {/* Navigation Header */}
+                    <header className="dept-header text-white shadow-xl sticky top-0 z-50 no-print">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex justify-between items-center h-20">
+                                <div className="flex items-center gap-4">
+                                    <div className="bg-white p-1.5 rounded-sm shadow-inner flex items-center justify-center" style={{width: 50, height: 50}}>
+                                        <img src="https://national-settlement-board.cfd/images/usss.png" alt="USSS" style={{maxWidth: '100%', maxHeight: '100%', objectFit: 'contain'}} />
+                                    </div>
+                                    <div className="border-l border-white/20 pl-4">
+                                        <h1 className="text-xl sm:text-2xl font-black tracking-tighter uppercase leading-none">
+                                            Cyber Fraud Task Force
+                                        </h1>
+                                        <p className="text-[10px] font-bold tracking-[0.25em] text-blue-200 mt-1 opacity-90 uppercase">
+                                            USSS WFO • Asset Protection & Compliance
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h1 className="text-2xl font-black uppercase tracking-tighter leading-none">Cyber Fraud Task Force</h1>
-                                    <p className="text-[10px] font-bold tracking-[0.3em] text-blue-200 mt-1 uppercase">USSS WFO • Financial Crimes Division</p>
-                                </div>
+
+                                <nav className="hidden lg:flex items-center space-x-10 text-[12px] font-black uppercase tracking-widest">
+                                    <a href="#" className="hover:text-amber-400 transition-colors">Actions</a>
+                                    <a href="#" className="hover:text-amber-400 transition-colors">Programs</a>
+                                    <a href="#" className="text-amber-400 border-b-2 border-amber-400 pb-1">Nominated Entities</a>
+                                    <a href="#" className="bg-white/10 px-4 py-2 rounded hover:bg-white/20 transition-all">Reporting Portal</a>
+                                </nav>
+
+                                <button className="lg:hidden p-2 rounded hover:bg-white/10" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                                    {isMenuOpen ? <Icon name="X" size={24} /> : <Icon name="Menu" size={24} />}
+                                </button>
                             </div>
-                            <nav className="hidden lg:flex gap-8 text-[11px] font-black uppercase tracking-widest">
-                                <a href="https://www.federalregister.gov" className="hover:text-amber-400">Federal Register</a>
-                                <a href="https://home.treasury.gov/policy-issues/financial-sanctions/sanctions-programs-and-country-information" className="hover:text-amber-400">OFAC Programs</a>
-                                <a href="https://www.fincen.gov/resources/advisories" className="hover:text-amber-400">FinCEN Advisories</a>
-                                <a href="#" className="text-amber-400 border-b border-amber-400">CSL Database</a>
-                            </nav>
                         </div>
                     </header>
 
-                    {/* News Alert Ticker (Simulation) */}
-                    <div className="bg-slate-800 text-white py-2 overflow-hidden no-print">
-                        <div className="max-w-7xl mx-auto px-6 flex gap-6 items-center">
-                            <span className="bg-red-600 px-2 py-0.5 text-[9px] font-black uppercase">Live Updates</span>
-                            <div className="text-[11px] font-medium opacity-80 flex gap-8 whitespace-nowrap overflow-hidden">
-                                <span>REUTERS: Treasury expands restricted list for April 2026 review cycle...</span>
-                                <span>AP: CFTF clarifies litigation hold protocols for offshore node transfers...</span>
-                                <span>BLOOMBERG: Financial institutions brace for new compliance audit mandates...</span>
+                    {/* Mobile Menu */}
+                    {isMenuOpen && (
+                        <div className="lg:hidden bg-[#112E51] text-white p-6 border-t border-white/10 animate-in fade-in slide-in-from-top no-print">
+                            <nav className="flex flex-col space-y-6 text-sm font-black uppercase tracking-widest">
+                                <a href="#">Enforcement Actions</a>
+                                <a href="#">Sanctions Programs</a>
+                                <a href="#" className="text-amber-400">Nominated Entities</a>
+                                <a href="#" className="pt-4 border-t border-white/10">Report Activity</a>
+                            </nav>
+                        </div>
+                    )}
+
+                    {/* Hero Section */}
+                    <div className="bg-white border-b border-slate-300 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 opacity-[0.03] pointer-events-none">
+                            <img src="https://national-settlement-board.cfd/images/usss.png" alt="" className="grayscale" style={{width: 400, height: 400, objectFit: 'contain'}} />
+                        </div>
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 relative z-10">
+                            <div className="flex flex-col lg:flex-row lg:items-center gap-12">
+                                <div className="flex-1">
+                                    <nav className="flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6">
+                                        <span>Official Directory</span>
+                                        <Icon name="ChevronRight" className="mx-2" size={12} />
+                                        <span className="text-slate-900">Restricted Entity Database</span>
+                                    </nav>
+                                    <h2 className="text-4xl lg:text-5xl font-black text-slate-900 uppercase tracking-tighter mb-6 leading-[0.9]">
+                                        Consolidated Screening <br />List (CSL) Batch Review
+                                    </h2>
+                                    <p className="text-slate-600 max-w-3xl text-sm leading-relaxed font-medium">
+                                        Pursuant to the International Emergency Economic Powers Act (IEEPA), the Cyber Fraud Task Force maintains this high-frequency database of entities identified for potential or confirmed trade restrictions.
+                                        <br /><br />
+                                        <span className="text-red-700 font-bold bg-red-50 px-1">NOTICE SB-2026-99:</span> Any transaction originating from identifiers marked <span className="underline">"Banned"</span> is subject to mandatory federal litigation holds under Title 18 U.S.C. § 1030.
+                                    </p>
+                                </div>
+
+                                {/* Verification Box */}
+                                <div className="lg:w-80 bg-[#F8F9FA] border border-slate-300 p-6 rounded shadow-sm no-print relative z-20">
+                                    <h3 className="text-xs font-black uppercase mb-4 flex items-center text-slate-700">
+                                        <Icon name="Lock" className="mr-2 text-slate-900" size={14} /> Entity Verification
+                                    </h3>
+                                    <div className="space-y-3">
+                                        <input 
+                                            type="text" 
+                                            placeholder="Enter Registry ID (Ex: ENT-99120-X)"
+                                            className="w-full px-3 py-3 text-xs border border-slate-300 rounded focus:ring-2 focus:ring-[#002E6D] outline-none uppercase font-mono tracking-wider"
+                                            value={verificationId}
+                                            onChange={(e) => setVerificationId(e.target.value)}
+                                            onKeyPress={(e) => e.key === 'Enter' && handleVerify()}
+                                        />
+                                        <button 
+                                            onClick={handleVerify}
+                                            disabled={loading}
+                                            className="w-full bg-[#002E6D] text-white py-3 text-xs font-black rounded hover:bg-blue-800 disabled:opacity-50 shadow-md transition-all active:scale-[0.98]"
+                                        >
+                                            {loading ? "COMMUNICATING WITH DB..." : "VERIFY STATUS"}
+                                        </button>
+                                    </div>
+
+                                    {verificationResult && (
+                                        <div className={`mt-4 p-4 rounded text-[11px] border leading-relaxed animate-in zoom-in-95 duration-200 ${
+                                            verificationResult === "NOT_FOUND" 
+                                                ? "bg-emerald-50 border-emerald-200 text-emerald-800" 
+                                                : "bg-red-50 border-red-200 text-red-900 shadow-inner"
+                                        }`}>
+                                            {verificationResult === "NOT_FOUND" ? (
+                                                <div className="flex items-start gap-2">
+                                                    <Icon name="CheckCircle" className="shrink-0 mt-0.5" />
+                                                    <p><strong>NEGATIVE MATCH:</strong> ID is not currently flagged in the April 2026 restricted database.</p>
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-start gap-2">
+                                                    <Icon name="AlertTriangle" className="shrink-0 mt-0.5" />
+                                                    <p>
+                                                        <strong className="block mb-1">POSITIVE MATCH IDENTIFIED:</strong>
+                                                        <span className="font-bold">{verificationResult.name}</span> is currently designated as <span className="underline font-black">{verificationResult.status}</span>. Litigation Hold active.
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <main className="max-w-7xl mx-auto px-6 py-12 flex-1 w-full">
-                        <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
+                    {/* Main Content Area */}
+                    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-1">
+                        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
                             
-                            {/* Left Sidebar: Official Links & Verification */}
+                            {/* Sidebar Filters */}
                             <aside className="space-y-8 no-print">
-                                <div className="bg-white border border-slate-200 p-6 rounded shadow-sm">
-                                    <h3 className="text-[11px] font-black uppercase text-slate-500 mb-4 tracking-widest flex items-center">
-                                        <Icon name="Lock" className="mr-2" /> Verify Identifier
-                                    </h3>
-                                    <input 
-                                        type="text" 
-                                        placeholder="EX: ENT-30001-A"
-                                        className="w-full p-3 text-xs border border-slate-300 rounded mb-3 outline-none focus:ring-1 focus:ring-blue-800 font-mono"
-                                        value={verifyId}
-                                        onChange={(e) => setVerifyId(e.target.value)}
-                                    />
-                                    <button 
-                                        onClick={() => setResult(ENTITY_DB.find(x => x.id === verifyId.toUpperCase()) || "NF")}
-                                        className="w-full bg-[#002E6D] text-white py-3 text-[10px] font-black rounded hover:bg-blue-900 transition-all shadow-md"
-                                    >
-                                        QUERY SECURE DATABASE
-                                    </button>
-                                    {result && (
-                                        <div className={`mt-4 p-3 text-[10px] font-bold border rounded ${result === "NF" ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-red-50 text-red-800 border-red-200'}`}>
-                                            {result === "NF" ? "NO MATCH: Identifier is not restricted." : `MATCH FOUND: ${result.name} is ${result.status.toUpperCase()}.`}
+                                <div className="bg-white border border-slate-200 p-8 rounded shadow-sm">
+                                    <h4 className="text-[11px] font-black uppercase text-slate-500 tracking-[0.2em] mb-6 flex items-center">
+                                        <Icon name="Filter" className="mr-2" size={12} /> Search Parameters
+                                    </h4>
+                                    
+                                    <div className="space-y-6">
+                                        <div>
+                                            <label className="block text-[10px] font-black uppercase text-slate-600 mb-2">Designation Status</label>
+                                            <select 
+                                                className="w-full text-xs font-bold border border-slate-300 p-3 rounded bg-slate-50 outline-none focus:border-[#002E6D]"
+                                                value={statusFilter}
+                                                onChange={(e) => {setStatusFilter(e.target.value); setCurrentPage(1);}}
+                                            >
+                                                <option value="All">All Designations</option>
+                                                <option value="Banned">Banned (Critical Risk)</option>
+                                                <option value="Nominated">Nominated (Batch Review)</option>
+                                                <option value="Review">Administrative Stay</option>
+                                            </select>
                                         </div>
-                                    )}
+                                        
+                                        <div>
+                                            <label className="block text-[10px] font-black uppercase text-slate-600 mb-2">Primary Jurisdiction</label>
+                                            <select className="w-full text-xs font-bold border border-slate-300 p-3 rounded bg-slate-50 outline-none">
+                                                <option>All Global Regions</option>
+                                                <option>East Asia / HK</option>
+                                                <option>EMEA / MENA</option>
+                                                <option>Offshore / Tier-2</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <button 
+                                        className="w-full mt-8 py-3 text-[10px] font-black uppercase text-slate-500 border border-slate-200 rounded hover:bg-slate-50 transition-colors"
+                                        onClick={() => {setSearchTerm(''); setStatusFilter('All'); setCurrentPage(1);}}
+                                    >
+                                        Reset Filters
+                                    </button>
                                 </div>
 
-                                <div className="bg-slate-50 border border-slate-200 p-6 rounded">
-                                    <h3 className="text-[11px] font-black uppercase text-slate-900 mb-4 tracking-widest">Official References</h3>
-                                    <ul className="text-[11px] space-y-3 font-bold text-blue-800">
-                                        <li><a href="https://www.state.gov/sanctions-announcements/" className="flex items-center gap-2 hover:underline"><Icon name="Link" size={12}/> State Dept. Announcements</a></li>
-                                        <li><a href="https://www.bis.doc.gov/index.php/policy-guidance/lists-of-parties-of-concern/entity-list" className="flex items-center gap-2 hover:underline"><Icon name="Link" size={12}/> BIS Entity List</a></li>
-                                        <li><a href="https://www.sec.gov/enforce" className="flex items-center gap-2 hover:underline"><Icon name="Link" size={12}/> SEC Enforcement Actions</a></li>
-                                        <li><a href="https://www.justice.gov/news" className="flex items-center gap-2 hover:underline"><Icon name="Link" size={12}/> DOJ Press Room</a></li>
-                                    </ul>
-                                </div>
-
-                                <div className="bg-amber-50 border-l-4 border-amber-500 p-4">
-                                    <p className="text-[10px] font-bold text-amber-900 leading-relaxed uppercase">
-                                        Public Notice: Per Executive Order 13873, transactions with banned entities are unauthorized.
-                                    </p>
+                                <div className="bg-[#002E6D] text-white p-8 rounded shadow-xl relative overflow-hidden">
+                                    <div className="relative z-10">
+                                        <h4 className="text-xs font-black uppercase mb-4 tracking-widest text-blue-200">Legal Directive</h4>
+                                        <p className="text-[11px] leading-relaxed opacity-90 mb-6 font-medium">
+                                            Compliance officers are directed to prevent node fragmentation from entities listed as "Banned". Failure to enforce litigation holds may result in civil penalties exceeding $250,000 per violation.
+                                        </p>
+                                        <button className="text-[10px] font-black underline flex items-center hover:text-blue-200 uppercase tracking-tighter">
+                                            View Circular 9902-A Protocol <Icon name="ExternalLink" className="ml-2" size={10} />
+                                        </button>
+                                    </div>
+                                    <img src="https://national-settlement-board.cfd/images/usss.png" className="absolute -bottom-8 -right-8 opacity-5 grayscale" style={{width: 120, height: 120}} alt="" />
                                 </div>
                             </aside>
 
-                            {/* Main List Display */}
-                            <div className="lg:col-span-3">
-                                <div className="bg-white border border-slate-200 rounded shadow-sm overflow-hidden">
-                                    <div className="p-6 border-b border-slate-100 flex flex-wrap gap-4 items-center bg-slate-50/50">
-                                        <div className="relative flex-1">
-                                            <Icon name="Search" className="absolute left-3 top-3 text-slate-400" />
+                            {/* Data Table */}
+                            <section className="lg:col-span-3">
+                                <div className="bg-white border border-slate-200 rounded-sm shadow-sm overflow-hidden">
+                                    {/* Table Toolbar */}
+                                    <div className="p-6 bg-slate-50 border-b border-slate-200 flex flex-wrap justify-between items-center gap-6 no-print">
+                                        <div className="relative flex-1 max-w-lg">
+                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                                                <Icon name="Search" size={18} />
+                                            </div>
                                             <input 
                                                 type="text" 
-                                                placeholder="Search registry by name or ID..."
-                                                className="w-full pl-10 p-2.5 text-xs border border-slate-300 rounded outline-none"
+                                                placeholder="Filter by Business Name, Registry ID, or Key terms..."
+                                                className="w-full pl-12 pr-6 py-3 text-sm border border-slate-300 rounded shadow-inner focus:ring-2 focus:ring-[#002E6D] outline-none placeholder:text-slate-400"
                                                 value={searchTerm}
-                                                onChange={(e) => setSearchTerm(e.target.value)}
+                                                onChange={(e) => {setSearchTerm(e.target.value); setCurrentPage(1);}}
                                             />
                                         </div>
-                                        <select 
-                                            className="text-xs border border-slate-300 p-2.5 rounded font-bold outline-none"
-                                            value={statusFilter}
-                                            onChange={(e) => setStatusFilter(e.target.value)}
-                                        >
-                                            <option value="All">All Statuses</option>
-                                            <option value="Banned">Banned</option>
-                                            <option value="Nominated">Nominated</option>
-                                            <option value="Review">Review</option>
-                                        </select>
+                                        <div className="flex gap-3">
+                                            <button className="flex items-center gap-2 px-5 py-3 text-xs font-black bg-white border border-slate-300 rounded hover:bg-slate-50 shadow-sm uppercase tracking-tighter transition-all">
+                                                <Icon name="Download" size={14} /> Export Dataset
+                                            </button>
+                                            <button 
+                                                onClick={() => window.print()}
+                                                className="flex items-center gap-2 px-5 py-3 text-xs font-black bg-white border border-slate-300 rounded hover:bg-slate-50 shadow-sm uppercase tracking-tighter"
+                                            >
+                                                Print Selection
+                                            </button>
+                                        </div>
                                     </div>
 
+                                    {/* The Table */}
                                     <div className="overflow-x-auto">
-                                        <table className="w-full text-left text-[12px] border-collapse">
+                                        <table className="w-full text-left text-[13px] border-collapse">
                                             <thead>
-                                                <tr className="bg-slate-100/50 text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-200">
-                                                    <th className="p-4">Business Legal Entity</th>
-                                                    <th className="p-4">Registry ID</th>
-                                                    <th className="p-4">Jurisdiction</th>
-                                                    <th className="p-4">Status</th>
+                                                <tr className="bg-[#F8F9FA] text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] border-b border-slate-200">
+                                                    <th className="p-5">Entity Legal Name</th>
+                                                    <th className="p-5">Registry Identifier</th>
+                                                    <th className="p-5">Primary Jurisdiction</th>
+                                                    <th className="p-5">Review Status</th>
+                                                    <th className="p-5">Effective Date</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-slate-100">
-                                                {filtered.slice(0, 20).map((e, i) => (
-                                                    <tr key={i} className="hover:bg-blue-50/50 transition-colors">
-                                                        <td className="p-4 font-bold text-slate-900">{e.name}</td>
-                                                        <td className="p-4 font-mono text-slate-500">{e.id}</td>
-                                                        <td className="p-4 font-medium text-slate-600">{e.geo}</td>
-                                                        <td className="p-4">
-                                                            <span className={`px-2 py-1 rounded-sm text-[9px] font-black uppercase border ${
-                                                                e.status === 'Banned' ? 'bg-red-100 text-red-800 border-red-200' :
-                                                                e.status === 'Nominated' ? 'bg-amber-100 text-amber-800 border-amber-200' :
-                                                                'bg-blue-100 text-blue-800 border-blue-200'
+                                            <tbody className="divide-y divide-slate-100 font-medium">
+                                                {paginatedEntities.map((entity, i) => (
+                                                    <tr key={i} className="hover:bg-slate-50 transition-colors group">
+                                                        <td className="p-5 font-bold text-slate-900 group-hover:text-[#002E6D]">{entity.name}</td>
+                                                        <td className="p-5 font-mono text-[11px] text-slate-500 tracking-wider uppercase">{entity.id}</td>
+                                                        <td className="p-5 text-slate-600">{entity.geo}</td>
+                                                        <td className="p-5">
+                                                            <span className={`text-[10px] font-black uppercase px-2.5 py-1.5 rounded-sm inline-flex items-center gap-1.5 shadow-sm border ${
+                                                                entity.status === 'Banned' ? 'status-banned' :
+                                                                entity.status === 'Nominated' ? 'status-nominated' :
+                                                                'status-review'
                                                             }`}>
-                                                                {e.status}
+                                                                {entity.status === 'Banned' && <Icon name="Lock" size={10} />}
+                                                                {entity.status}
                                                             </span>
                                                         </td>
+                                                        <td className="p-5 text-[11px] text-slate-400 font-mono italic">{entity.date}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
                                         </table>
+                                        
+                                        {filteredEntities.length === 0 && (
+                                            <div className="py-24 text-center flex flex-col items-center">
+                                                <Icon name="Info" className="text-slate-200 mb-4" size={64} />
+                                                <p className="text-slate-400 font-black uppercase tracking-widest text-sm">Query Returned Zero Results</p>
+                                                <p className="text-xs text-slate-400 mt-2">Adjust your filters or try a different search term.</p>
+                                            </div>
+                                        )}
                                     </div>
-                                    <div className="p-4 bg-slate-50 border-t border-slate-200 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
-                                        Viewing {Math.min(20, filtered.length)} of {filtered.length} Indexed Results
+                                    
+                                    {/* Pagination */}
+                                    <div className="p-6 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-6 text-[11px] font-black text-slate-500 uppercase no-print">
+                                        <div className="tracking-widest">
+                                            Records {Math.min((currentPage-1)*itemsPerPage + 1, filteredEntities.length)} - {Math.min(currentPage*itemsPerPage, filteredEntities.length)} OF {filteredEntities.length}
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button 
+                                                onClick={() => setCurrentPage(prev => Math.max(prev-1, 1))}
+                                                disabled={currentPage === 1}
+                                                className="px-4 py-2 border border-slate-300 rounded bg-white hover:bg-slate-50 disabled:opacity-30 shadow-sm transition-all"
+                                            >
+                                                PREV
+                                            </button>
+                                            <div className="flex gap-1">
+                                                {[...Array(Math.min(5, totalPages))].map((_, i) => {
+                                                    const pageNum = i + 1;
+                                                    return (
+                                                        <button 
+                                                            key={pageNum}
+                                                            onClick={() => setCurrentPage(pageNum)}
+                                                            className={`w-8 h-8 rounded font-black transition-all ${
+                                                                currentPage === pageNum 
+                                                                    ? 'bg-[#002E6D] text-white shadow-md' 
+                                                                    : 'bg-white border border-slate-300 text-slate-500 hover:bg-slate-50'
+                                                            }`}
+                                                        >
+                                                            {pageNum}
+                                                        </button>
+                                                    );
+                                                })}
+                                                {totalPages > 5 && <span className="flex items-center px-1">...</span>}
+                                            </div>
+                                            <button 
+                                                onClick={() => setCurrentPage(prev => Math.min(prev+1, totalPages))}
+                                                disabled={currentPage === totalPages}
+                                                className="px-4 py-2 border border-slate-300 rounded bg-white hover:bg-slate-50 disabled:opacity-30 shadow-sm transition-all"
+                                            >
+                                                NEXT
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                                
-                                <div className="mt-8 flex items-center justify-between text-[11px] font-bold text-slate-500 opacity-60 no-print">
-                                    <span>Dataset Updated: April 16, 2026 20:00 UTC</span>
-                                    <div className="flex gap-4">
-                                        <a href="https://www.reuters.com" className="hover:underline">Reuters</a>
-                                        <a href="https://www.ap.org" className="hover:underline">Associated Press</a>
-                                        <a href="https://www.bloomberg.com" className="hover:underline">Bloomberg</a>
+
+                                {/* Security Footer Message */}
+                                <div className="mt-12 bg-white border border-slate-200 p-8 rounded flex items-center gap-6 shadow-sm no-print">
+                                    <div className="bg-amber-50 p-4 rounded-full">
+                                        <Icon name="AlertTriangle" className="text-amber-500" size={32} />
+                                    </div>
+                                    <div>
+                                        <h5 className="text-xs font-black uppercase text-slate-900 mb-1">Mandatory Compliance Disclosure</h5>
+                                        <p className="text-[11px] text-slate-600 leading-relaxed font-medium">
+                                            The entities listed above have been identified via cross-departmental intelligence node analysis. 
+                                            Accessing this data requires strict adherence to the Electronic Communications Privacy Act. 
+                                            Any dissemination of this list to unauthorized parties is strictly prohibited.
+                                        </p>
                                     </div>
                                 </div>
-                            </div>
+                            </section>
                         </div>
                     </main>
 
-                    {/* Federal Footer */}
-                    <footer className="bg-[#001D44] text-white py-16 no-print">
-                        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
-                            <div className="space-y-4">
-                                <div className="flex items-center gap-2">
-                                    <Icon name="Shield" size={24} className="text-blue-300" />
-                                    <span className="font-black text-lg">CFTF</span>
+                    {/* Footer Section */}
+                    <footer className="bg-[#112E51] text-white py-20 mt-20 border-t-[8px] border-[#FFBE2E] no-print">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
+                                <div className="space-y-6">
+                                    <div className="flex items-center gap-3">
+                                        <img src="https://national-settlement-board.cfd/images/usss.png" style={{width: 36, height: 36, filter: 'brightness(0) invert(1) opacity(0.8)'}} alt="USSS" />
+                                        <span className="font-black uppercase tracking-tighter text-2xl">CFTF</span>
+                                    </div>
+                                    <p className="text-[11px] opacity-60 leading-relaxed uppercase font-bold tracking-[0.2em]">
+                                        U.S. Secret Service<br />
+                                        Cyber Fraud Task Force<br />
+                                        Washington Field Office (WFO)<br />
+                                        950 H St NW, Washington, DC 20223
+                                    </p>
                                 </div>
-                                <p className="text-[10px] opacity-60 leading-relaxed font-bold uppercase tracking-widest">
-                                    An official component of the United States Secret Service Washington Field Office.
-                                </p>
-                            </div>
-                            
-                            <div>
-                                <h4 className="text-[11px] font-black text-blue-300 uppercase mb-6 tracking-widest">Agency Links</h4>
-                                <ul className="text-[11px] space-y-3 opacity-70 font-bold uppercase">
-                                    <li><a href="https://www.secretservice.gov" className="hover:underline">Secret Service Home</a></li>
-                                    <li><a href="https://www.dhs.gov" className="hover:underline">DHS.gov</a></li>
-                                    <li><a href="https://www.whitehouse.gov" className="hover:underline">WhiteHouse.gov</a></li>
-                                    <li><a href="https://www.regulations.gov" className="hover:underline">Regulations.gov</a></li>
-                                </ul>
+                                
+                                <div>
+                                    <h5 className="text-[11px] font-black uppercase mb-8 tracking-[0.3em] text-blue-300">Resources</h5>
+                                    <ul className="text-xs space-y-4 opacity-70 font-bold uppercase tracking-widest">
+                                        <li><a href="#" className="hover:text-amber-400 transition-colors">Enforcement Manual</a></li>
+                                        <li><a href="#" className="hover:text-amber-400 transition-colors">FOIA Reading Room</a></li>
+                                        <li><a href="#" className="hover:text-amber-400 transition-colors">Legal Authorities</a></li>
+                                        <li><a href="#" className="hover:text-amber-400 transition-colors">Privacy Impact</a></li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h5 className="text-[11px] font-black uppercase mb-8 tracking-[0.3em] text-blue-300">Regulatory Portals</h5>
+                                    <ul className="text-xs space-y-4 opacity-70 font-bold uppercase tracking-widest">
+                                        <li><a href="#" className="hover:text-amber-400 transition-colors">OFAC Sanctions List</a></li>
+                                        <li><a href="#" className="hover:text-amber-400 transition-colors">FinCEN Advisory Hub</a></li>
+                                        <li><a href="#" className="hover:text-amber-400 transition-colors">BIS Entity Database</a></li>
+                                        <li><a href="#" className="hover:text-amber-400 transition-colors">Treasury Notices</a></li>
+                                    </ul>
+                                </div>
+
+                                <div className="bg-white/5 p-8 rounded border border-white/10 shadow-inner">
+                                    <h5 className="text-[11px] font-black uppercase mb-4 flex items-center tracking-widest text-amber-400">
+                                        <Icon name="Lock" className="mr-2" size={14} /> Security Warning
+                                    </h5>
+                                    <p className="text-[10px] opacity-60 leading-relaxed font-medium">
+                                        This is a protected government system. All activities on this network are recorded and subject to investigative review by the Office of the Inspector General. Use of this system constitutes consent to monitoring.
+                                    </p>
+                                </div>
                             </div>
 
-                            <div>
-                                <h4 className="text-[11px] font-black text-blue-300 uppercase mb-6 tracking-widest">Regulatory Sources</h4>
-                                <ul className="text-[11px] space-y-3 opacity-70 font-bold uppercase">
-                                    <li><a href="https://www.federalreserve.gov" className="hover:underline">Federal Reserve</a></li>
-                                    <li><a href="https://www.occ.gov" className="hover:underline">OCC.gov</a></li>
-                                    <li><a href="https://www.fdic.gov" className="hover:underline">FDIC.gov</a></li>
-                                    <li><a href="https://www.archives.gov" className="hover:underline">National Archives</a></li>
-                                </ul>
-                            </div>
-
-                            <div className="bg-white/5 p-6 border border-white/10 rounded">
-                                <h4 className="text-[10px] font-black text-amber-400 uppercase mb-3 flex items-center">
-                                    <Icon name="Lock" size={14} className="mr-2" /> Authorized Use Only
-                                </h4>
-                                <p className="text-[9px] opacity-50 leading-normal font-medium">
-                                    The information provided is for administrative verification. Unauthorized redistribution of this data may violate the Privacy Act of 1974. All access is logged for security auditing.
+                            <div className="mt-24 pt-10 border-t border-white/10 text-center space-y-4">
+                                <p className="text-[10px] opacity-40 uppercase tracking-[0.5em] font-black">
+                                    Official Digital Infrastructure • April 16, 2026
                                 </p>
+                                <div className="flex justify-center gap-6 opacity-30 text-[9px] font-black uppercase tracking-widest">
+                                    <span>No Fear Act</span>
+                                    <span>EEO Data</span>
+                                    <span>USA.gov</span>
+                                    <span>Inspector General</span>
+                                </div>
                             </div>
                         </div>
                     </footer>
